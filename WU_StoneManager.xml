@@ -1,0 +1,420 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Font name="WU_Font_Header" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<FontHeight>
+			<AbsValue val="8"/>
+		</FontHeight>
+		<Color r="0.5" g="0.5" b="0.5"/>
+	</Font>
+	<Font name="WU_Font_EditBox" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<FontHeight>
+			<AbsValue val="10"/>
+		</FontHeight>
+		<Color r="1" g="1" b="1"/>
+	</Font>
+	<Button name="WU_StoneManager_ActionButton_Template" inherits="SecureActionButtonTemplate, UIPanelButtonTemplate" virtual="true">
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
+		</Scripts>
+		<Size>
+			<AbsDimension x="175" y="25"/>
+		</Size>
+		<NormalText name="$parentText" inherits="GameFontNormalSmall" justifyH="CENTER">
+			<Size>
+				<AbsDimension x="175" y="25"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors> 
+		</NormalText>
+		<Frames>
+		</Frames>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parentTextName" inherits="GameFontNormalSmall" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="175" y="25"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Button>
+	<Button name="WU_StoneManager_HSTButton_Template" inherits="SecureActionButtonTemplate" virtual="true">
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
+			<PreClick>
+				WU:HST_ButtonClick(self, button);
+			</PreClick>
+		</Scripts>
+		<Size>
+			<AbsDimension x="175" y="15"/>
+		</Size>
+		<NormalText name="$parentText" inherits="GameFontNormalSmall" justifyH="CENTER">
+			<Size>
+				<AbsDimension x="175" y="10"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors> 
+		</NormalText>
+		<HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD">
+			<Size>
+				<AbsDimension x="175" y="15"/>
+			</Size>
+			<Anchors>
+				<Anchor point="TOP">
+					<Offset>
+						<AbsDimension x="0" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</HighlightTexture>
+		<Frames>
+		</Frames>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parentTextName" inherits="GameFontNormalSmall" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="175" y="15"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Button>
+	<Button name="WU_StoneManager_ActionButtonSmall_Template" inherits="SecureActionButtonTemplate, UIPanelButtonTemplate" virtual="true">
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
+		</Scripts>
+		<Size>
+			<AbsDimension x="100" y="25"/>
+		</Size>
+		<NormalText name="$parentText" inherits="GameFontNormalSmall" justifyH="CENTER">
+			<Size>
+				<AbsDimension x="100" y="25"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors> 
+		</NormalText>
+		<Frames>
+		</Frames>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parentTextName" inherits="GameFontNormalSmall" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="100" y="25"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Button>
+	<Button name="WU_StoneManager_Button_Template" inherits="UIPanelButtonTemplate" virtual="true">
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp");
+			</OnLoad>
+		</Scripts>
+		<Size>
+			<AbsDimension x="25" y="25"/>
+		</Size>
+		<NormalText name="$parent_Text" inherits="GameFontNormalSmall" justifyH="LEFT">
+			<Size>
+				<AbsDimension x="100" y="10"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors> 
+		</NormalText>
+		<Frames>
+		</Frames>
+	</Button>
+	<Frame name="WU_StoneManager" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
+		<Size>
+			<AbsDimension x="230" y="225"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parent_Header" inherits="WU_Font_Header" text="WU_StoneManager_Header" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-7"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32"></AbsValue>
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="16"></AbsValue>
+			</EdgeSize>
+		</Backdrop>
+		<Frames>
+			<Button name="WU_StoneManager_PanelToggle" id="1" inherits="WU_StoneManager_Button_Template">
+				<Size>
+					<AbsDimension x="100" y="25"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="WU_StoneManager" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="0" y="-20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						WU:StoneManager_ToggleType();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Frame name="WU_StoneManager_Healthstone" id="100">
+				<Size>
+					<AbsDimension x="200" y="130"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="WU_StoneManager_PanelToggle" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
+					</BackgroundInsets>
+					<TileSize>
+						<AbsValue val="32"></AbsValue>
+					</TileSize>
+					<EdgeSize>
+						<AbsValue val="16"></AbsValue>
+					</EdgeSize>
+				</Backdrop>
+				<Frames>
+					<Button name="WU_StoneManager_CreateHealthstone" id="110" inherits="WU_StoneManager_ActionButton_Template" hidden="false">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="WU_StoneManager_Healthstone" relativePoint="TOP">
+								<Offset>
+									<AbsDimension x="0" y="-40"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<PreClick>
+								WU:StoneManager_CreateHealthstone(self, button);
+							</PreClick>
+						</Scripts>
+					</Button>
+					<Button name="WU_StoneManager_HSRankDecrement" id="120" inherits="WU_StoneManager_Button_Template" text="-" hidden="false">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="WU_StoneManager_CreateHealthstone" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:StoneManager_DecrementHSRank();
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="WU_StoneManager_HSRankIncrement" id="130" inherits="WU_StoneManager_Button_Template" text="+" hidden="false">
+						<Anchors>
+							<Anchor point="BOTTOM" relativeTo="WU_StoneManager_CreateHealthstone" relativePoint="TOP">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:StoneManager_IncrementHSRank();
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="WU_StoneManager_TradeHealthstone" id="140" inherits="WU_StoneManager_ActionButtonSmall_Template" hidden="false">
+						<Anchors>
+							<Anchor point="BOTTOM" relativeTo="WU_StoneManager_Healthstone" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="10"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<PreClick>
+								WU:StoneManager_TradeHealthstone();
+							</PreClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+			<Frame name="WU_StoneManager_Soulstone" id="200" hidden="true">
+				<Size>
+					<AbsDimension x="200" y="130"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="WU_StoneManager_Healthstone" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
+					</BackgroundInsets>
+					<TileSize>
+						<AbsValue val="32"></AbsValue>
+					</TileSize>
+					<EdgeSize>
+						<AbsValue val="16"></AbsValue>
+					</EdgeSize>
+				</Backdrop>
+				<Frames>
+					<Button name="WU_StoneManager_CreateSoulstone" id="210" inherits="WU_StoneManager_ActionButton_Template" hidden="false">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="WU_StoneManager_Soulstone" relativePoint="TOP">
+								<Offset>
+									<AbsDimension x="0" y="-40"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<PreClick>
+								WU:StoneManager_CreateSoulstone(self, button);
+							</PreClick>
+						</Scripts>
+					</Button>
+					<Button name="WU_StoneManager_SSRankDecrement" id="220" inherits="WU_StoneManager_Button_Template" text="-" hidden="false">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="WU_StoneManager_CreateSoulstone" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:StoneManager_DecrementSSRank();
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="WU_StoneManager_SSRankIncrement" id="230" inherits="WU_StoneManager_Button_Template" text="+" hidden="false">
+						<Anchors>
+							<Anchor point="BOTTOM" relativeTo="WU_StoneManager_CreateSoulstone" relativePoint="TOP">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:StoneManager_IncrementSSRank();
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="WU_StoneManager_UseSoulstone" id="240" inherits="WU_StoneManager_ActionButtonSmall_Template" hidden="false">
+						<Anchors>
+							<Anchor point="BOTTOM" relativeTo="WU_StoneManager_Soulstone" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="10"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<PreClick>
+								WU:StoneManager_UseSoulstone(self, button);
+							</PreClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+			<Button name="WU_StoneManager_Close" id="300" inherits="WU_StoneManager_Button_Template" hidden="false">
+				<Size>
+					<AbsDimension x="100" y="25"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOM" relativeTo="WU_StoneManager" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						WU:ToggleStoneManager();
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton")
+			</OnLoad>
+			<OnDragStart>
+				if IsShiftKeyDown() then
+					self:StartMoving();
+				end
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+</Ui>

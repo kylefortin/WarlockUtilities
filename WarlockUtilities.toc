@@ -1,0 +1,19 @@
+## Title: WarlockUtilities |cff7fff7f -- AceAddon-3.0 --|r
+## Notes: Miscellaneous utilities for Warlocks in World of Warcraft Classic.
+## Version: 1.0.0
+## Author: |cff027dbfKopernikus-Windseeker|r
+## Interface: 39395
+## SavedVariables: WarlockUtilitiesOptionsDB
+## OptionalDeps:  Ace3
+
+#@no-lib-strip@
+Embeds.xml
+#@end-no-lib-strip@
+
+Locales\WarlockUtilities-enUS.lua
+
+WarlockUtilities.lua
+WU_ShardManager.xml
+WU_StoneManager.xml
+WU_DemonManager.xml
+WU_AppTray.xml

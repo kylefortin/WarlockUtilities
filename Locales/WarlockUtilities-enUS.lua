@@ -1,0 +1,139 @@
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
+local L = AceLocale:NewLocale("WarlockUtilities", "enUS", true, true)
+if not L then return end
+
+--AddOn name
+L["WU"] = "WarlockUtilities"
+
+--AddOn Enable/Disable messages
+L["AddonEnabled"] = function(v,a)
+	return "|cff7702bfWarlockUtilities:|r version " .. v .. " by " .. a .. " loaded."
+end
+L["AddonDisabled"] = function()
+	return L["WU"] .. " disabled."
+end
+
+--Comm messaging
+L["CommPrefix"] = "Ace3 Prefix"
+L["CommMessage"] = "Ace3 Comms Message"
+
+--Options
+L["Options_Desc_Name"] = "Options for the WarlockUtilities addon."
+L["ShardManager"] = "Shard Manager"
+L["ShardManager_Desc_Name"] = "Shard Manager options."
+L["ShardManager_OptionGroup_Type_Name"] = "Shard Manager Type"
+L["ShardManager_OptionGroup_Type_Desc"] = "Set whether the Shard Manager searched by bag or by number of shards."
+L["ShardManager_Option_TypeByBag"] = "Manage Shards by Bag"
+L["ShardManager_Option_TypeByNumber"] = "Manage Shards by Number"
+L["StoneManager"] = "Stone Manager"
+L["StoneManager_Desc_Name"] = "Stone Manager options."
+L["StoneManager_OptionGroup_Trading_Name"] = "Trade Options"
+L["StoneManager_OptionGroup_Trading_Desc"] = "Automatic stone trading options."
+L["StoneManager_Option_EnableParty_Name"] = "Party"
+L["StoneManager_Option_EnableParty_Desc"] = "Enable automatic healthstone trading for party members."
+L["StoneManager_Option_EnableRaid_Name"] = "Raid"
+L["StoneManager_Option_EnableRaid_Desc"] = "Enable automatic healthstone trading for raid members."
+L["StoneManager_SetOption_TradingParty"] = function(value)
+	if (value) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Trading - Party"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Trading - Party"
+	end
+end
+L["StoneManager_SetOption_TradingRaid"] = function(value)
+	if (value) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Trading - Raid"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Trading - Raid"
+	end
+end
+L["DemonManager"] = "Demon Manager"
+L["DemonManager_Desc_Name"] = "Demon Manager options."
+L["Option_Help_Name"] = "Help"
+L["Option_Help_Desc"] = "Shows a list of supported commands and options."
+L["Option_Help_Lines"] = function()
+	return {
+		"|cff7702bfWarlockUtilities usage:|r",
+		"/wu | /warlockutils | /warlockutilities",
+		"  { config | help | shards | stones | demons}",
+		"- |cff7702bfconfig|r: Opens the configuration menu.",
+		"- |cff7702bfhelp|r: Shows a list of supported options.",
+		"- |cff7702bfshards|r: Opens the Shard Manager utility frame.",
+		"- |cff7702bfstones|r: Opens the Stone Manager utility frame.",
+		"- |cff7702bfdemons|r: Opens the Demon Manager utility frame."
+	}
+end
+L["Option_Config_Name"] = "Config"
+L["Option_Config_Desc"] = "Opens the configuration menu."
+
+--Misc
+L["CombatLockdown"] = "Please wait until you are out of combat..."
+L["MissingTradeItem"] = function(item)
+	return "Missing AutoTrade Item: " .. item
+end
+
+--XML
+L["Bag"] = function(bag)
+	return "Bag " .. bag
+end
+L["ByBag"] = "By Bag"
+L["ByNumber"] = "By Number"
+L["TotalShards"] = function(shards)
+	return "Total Shards: " .. shards
+end
+L["ShardsToClear"] = function(shards)
+	return "Shards To Clear: " .. shards
+end
+L["Trade"] = "Trade"
+L["Use"] = "Use"
+L["ShardManager_FrameHeader"] = function(v)
+	return "Shard Manager v" .. v
+end
+L["StoneManager_FrameHeader"] = function(v)
+	return "Stone Manager v" .. v
+end
+L["DemonManager_FrameHeader"] = function(v)
+	return "Demon Manager v" .. v
+end
+L["Sacrifice"] = "Sacrifice"
+L["Dismiss"] = "Dismiss"
+L["Heal"] = "Heal"
+L["Healthstone"] = "Healthstone"
+L["CreateHealthstone"] = function(level)
+	t = {
+		"Create Healthstone (Minor)",
+		"Create Healthstone (Lesser)",
+		"Create Healthstone",
+		"Create Healthstone (Greater)",
+		"Create Healthstone (Major)"
+	}
+	return t[level]
+end
+L["CreateSoulstone"] = function(level)
+	t = {
+		"Create Soulstone (Minor)",
+		"Create Soulstone (Lesser)",
+		"Create Soulstone",
+		"Create Soulstone (Greater)",
+		"Create Soulstone (Major)"
+	}
+	return t[level]
+end
+L["Soulstone"] = "Soulstone"
+L["SummonDemon"] = function(level, shards)
+	demons = {
+		"Imp",
+		"Voidwalker",
+		"Succubus",
+		"Felhunter",
+		"Infernal",
+		"Doomguard",
+		"Enslave"
+	}
+	text = demons[level]
+	if not (level == 1) then
+		text = text .. " (" .. shards .. ")"
+	end
+	return text
+end
+L["Close"] = "Close"
