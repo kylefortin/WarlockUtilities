@@ -98,7 +98,7 @@
 	</EditBox>
 	<Frame name="WU_ShardManager" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
 		<Size>
-			<AbsDimension x="120" y="300"/>
+			<AbsDimension x="120" y="320"/>
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER">
@@ -131,7 +131,7 @@
 					<Anchors>
 						<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
 							<Offset>
-								<AbsDimension x="0" y="-50"/>
+								<AbsDimension x="0" y="-80"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -150,11 +150,25 @@
 			</EdgeSize>
 		</Backdrop>
 		<Frames>
-			<Button name="WU_ShardManager_Toggle_Type" id="100" inherits="WU_ShardManager_Button_Template" hidden="false">
+			<Button name="WU_ShardManager_Toggle_Action" id="0" inherits="WU_ShardManager_Button_Template" hidden="false">
 				<Anchors>
 					<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
 						<Offset>
 							<AbsDimension x="0" y="-20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						WU:ShardManager_ToggleAction();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="WU_ShardManager_Toggle_Type" id="100" inherits="WU_ShardManager_Button_Template" hidden="false">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="0" y="-50"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -185,7 +199,7 @@
 				<Anchors>
 					<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
 						<Offset>
-							<AbsDimension x="0" y="-70"/>
+							<AbsDimension x="0" y="-90"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -273,14 +287,14 @@
 					</CheckButton>
 				</Frames>
 			</Frame>
-			<Frame name="WU_ShardManager_Number" id="400">
+			<Frame name="WU_ShardManager_FillBags" id="400">
 				<Size>
 					<AbsDimension x="100" y="140"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
 						<Offset>
-							<AbsDimension x="0" y="-70"/>
+							<AbsDimension x="0" y="-90"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -296,7 +310,102 @@
 					</EdgeSize>
 				</Backdrop>
 				<Frames>
-					<EditBox name="WU_ShardManager_NumberInput" id="410" inherits="WU_ShardManager_EditBox_Template" hidden="false">
+					<CheckButton name="WU_ShardManager_FillBag1" id="410" inherits="WU_ShardManager_CheckButton_Template" hidden="false">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="WU_ShardManager_FillBags" relativePoint="TOPLEFT">
+								<Offset>
+									<AbsDimension x="5" y="-20"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:ShardManager_SetFillBagEnabled(1, self:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<CheckButton name="WU_ShardManager_FillBag2" id="420" inherits="WU_ShardManager_CheckButton_Template" hidden="false">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="WU_ShardManager_FillBag1" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:ShardManager_SetFillBagEnabled(2, self:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<CheckButton name="WU_ShardManager_FillBag3" id="430" inherits="WU_ShardManager_CheckButton_Template" hidden="false">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="WU_ShardManager_FillBag2" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:ShardManager_SetFillBagEnabled(3, self:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<CheckButton name="WU_ShardManager_FillBag4" id="440" inherits="WU_ShardManager_CheckButton_Template" hidden="false">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="WU_ShardManager_FillBag3" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:ShardManager_SetFillBagEnabled(4, self:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<CheckButton name="WU_ShardManager_FillBag5" id="450" inherits="WU_ShardManager_CheckButton_Template" hidden="false">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="WU_ShardManager_FillBag4" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:ShardManager_SetFillBagEnabled(5, self:GetChecked());
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+				</Frames>
+			</Frame>
+			<Frame name="WU_ShardManager_Number" id="500">
+				<Size>
+					<AbsDimension x="100" y="140"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="0" y="-90"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
+					</BackgroundInsets>
+					<TileSize>
+						<AbsValue val="32"></AbsValue>
+					</TileSize>
+					<EdgeSize>
+						<AbsValue val="16"></AbsValue>
+					</EdgeSize>
+				</Backdrop>
+				<Frames>
+					<EditBox name="WU_ShardManager_NumberInput" id="510" inherits="WU_ShardManager_EditBox_Template" hidden="false">
 						<Anchors>
 							<Anchor point="CENTER" relativeTo="WU_ShardManager_Number" relativePoint="CENTER">
 								<Offset>
@@ -316,7 +425,7 @@
 							</OnTabPressed>
 						</Scripts>
 					</EditBox>
-					<Button name="WU_ShardManager_NumberDecrement" id="420" inherits="WU_ShardManager_Button_Template" text="-" hidden="false">
+					<Button name="WU_ShardManager_NumberDecrement" id="520" inherits="WU_ShardManager_Button_Template" text="-" hidden="false">
 						<Size>
 							<AbsDimension x="25" y="25"/>
 						</Size>
@@ -333,7 +442,7 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="WU_ShardManager_NumberIncrement" id="430" inherits="WU_ShardManager_Button_Template" text="+" hidden="false">
+					<Button name="WU_ShardManager_NumberIncrement" id="530" inherits="WU_ShardManager_Button_Template" text="+" hidden="false">
 						<Size>
 							<AbsDimension x="25" y="25"/>
 						</Size>
@@ -352,7 +461,7 @@
 					</Button>
 				</Frames>
 			</Frame>
-			<Button name="WU_ShardManager_Delete" id="500" inherits="WU_ShardManager_Button_Template" text="Clear Shards" hidden="false">
+			<Button name="WU_ShardManager_Delete" id="600" inherits="WU_ShardManager_Button_Template" hidden="false">
 				<Anchors>
 					<Anchor point="BOTTOM" relativeTo="WU_ShardManager_Close" relativePoint="TOP">
 						<Offset>
@@ -363,6 +472,20 @@
 				<Scripts>
 					<OnClick>
 						WU:ShardManager_DeleteShards();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="WU_ShardManager_Fill" id="700" inherits="WU_ShardManager_Button_Template" hidden="false">
+				<Anchors>
+					<Anchor point="BOTTOM" relativeTo="WU_ShardManager_Close" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						WU:ShardManager_FillShards();
 					</OnClick>
 				</Scripts>
 			</Button>

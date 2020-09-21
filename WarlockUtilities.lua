@@ -89,7 +89,8 @@ local optionsShardManager = {
 			get = "GetOptionShardType",
 			set = "SetOptionShardType",
 			style = "radio",
-			order = 200
+			order = 200,
+			width = "full"
 		}
 	}
 }
@@ -104,11 +105,52 @@ local optionsStoneManager = {
 			name = L["StoneManager_Desc_Name"],
 			order = 100
 		},
+		level = {
+			type = "group",
+			name = L["StoneManager_OptionGroup_Level_Name"],
+			desc = L["StoneManager_OptionGroup_Level_Desc"],
+			order = 200,
+			inline = true,
+			args = {
+				hs = {
+					type = "select",
+					name = L["StoneManager_Option_HS_Name"],
+					desc = L["StoneManager_Option_HS_Desc"],
+					values = {L["StoneManager_Option_HS_1"],
+						L["StoneManager_Option_HS_2"],
+						L["StoneManager_Option_HS_3"],
+						L["StoneManager_Option_HS_4"],
+						L["StoneManager_Option_HS_5"]
+					},
+					get = "GetOptionHSLevel",
+					set = "SetOptionHSLevel",
+					style = "radio",
+					order = 201,
+					width = "full"
+				},
+				ss = {
+					type = "select",
+					name = L["StoneManager_Option_SS_Name"],
+					desc = L["StoneManager_Option_SS_Desc"],
+					values = {L["StoneManager_Option_SS_1"],
+						L["StoneManager_Option_SS_2"],
+						L["StoneManager_Option_SS_3"],
+						L["StoneManager_Option_SS_4"],
+						L["StoneManager_Option_SS_5"]
+					},
+					get = "GetOptionSSLevel",
+					set = "SetOptionSSLevel",
+					style = "radio",
+					order = 202,
+					width = "full"
+				}
+			}
+		},
 		trade = {
 			type = "group",
 			name = L["StoneManager_OptionGroup_Trading_Name"],
 			desc = L["StoneManager_OptionGroup_Trading_Desc"],
-			order = 200,
+			order = 300,
 			inline = true,
 			args = {
 				enableParty = {
@@ -117,7 +159,7 @@ local optionsStoneManager = {
 					desc = L["StoneManager_Option_EnableParty_Desc"],
 					get = "StoneManager_GetTradingParty",
 					set = "StoneManager_SetTradingParty",
-					order = 210,
+					order = 310,
 					width = "full"
 				},
 				enableRaid = {
@@ -126,7 +168,7 @@ local optionsStoneManager = {
 					desc = L["StoneManager_Option_EnableRaid_Desc"],
 					get = "StoneManager_GetTradingRaid",
 					set = "StoneManager_SetTradingRaid",
-					order = 220,
+					order = 320,
 					width = "full"
 				}
 			}
@@ -150,8 +192,10 @@ local optionsDemonManager = {
 --set default options
 local defaults = {
 	profile = {
+		ShardManager_Action = "clear",
 		ShardManager_Type = "bag",
 		ShardManager_Bags = {true, true, true, true, true},
+		ShardManager_FillBags = {false, false, false, false, false},
 		ShardManager_Number = 0,
 		StoneManager_Type = "hs",
 		StoneManager_HSLevel = 5,
@@ -269,6 +313,8 @@ function WU:OnInitialize()
 		ShowUIPanel(WU_AppTray, 1)
 		xmlText = {
 			{WU_ShardManager_Header, L["ShardManager_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
+			{WU_ShardManager_Fill, L["Fill"]},
+			{WU_ShardManager_Delete, L["Clear"]},
 			{WU_ShardManager_Bag1, L["Bag"](1)},
 			{WU_ShardManager_Bag2, L["Bag"](2)},
 			{WU_ShardManager_Bag3, L["Bag"](3)},
@@ -347,11 +393,9 @@ end
 function WU:ToggleShardManager()
 	if not InCombatLockdown() then
 		if WU_ShardManager:IsVisible() then
-			WU:ShardManager_StopTimer()
 			WU_ShardManager:Hide()
 		else
 			WU:ShardManager_RefreshUI()
-			WU:ShardManager_StartTimer()
 			ShowUIPanel(WU_ShardManager, 1)
 		end
 	else
@@ -364,6 +408,15 @@ function WU:ShardManager_ToggleType()
 		self.db.profile.ShardManager_Type = "number"
 	else
 		self.db.profile.ShardManager_Type = "bag"
+	end
+	WU:ShardManager_RefreshUI()
+end
+
+function WU:ShardManager_ToggleAction()
+	if (self.db.profile.ShardManager_Action == "clear") then
+		self.db.profile.ShardManager_Action = "fill"
+	else
+		self.db.profile.ShardManager_Action = "clear"
 	end
 	WU:ShardManager_RefreshUI()
 end
@@ -382,6 +435,15 @@ end
 
 function WU:ShardManager_SetBagEnabled(bag, value)
 	self.db.profile.ShardManager_Bags[bag] = value
+	WU:ShardManager_RefreshUI()
+end
+
+function WU:ShardManager_GetFillBagEnabled(bag)
+	return self.db.profile.ShardManager_FillBags[bag]
+end
+
+function WU:ShardManager_SetFillBagEnabled(bag, value)
+	self.db.profile.ShardManager_FillBags[bag] = value
 	WU:ShardManager_RefreshUI()
 end
 
@@ -439,43 +501,118 @@ function WU:ShardManager_DeleteShards()
 			end
 		end
 	end
+	WU:ShardManager_RefreshUI()
+end
+
+function WU:ShardManager_FillShards()
+	local bagsComplete = {false, false, false, false, false}
+	local attempts = 0
+	local totalSlots = 0
+	for b=0,4 do
+		totalSlots = totalSlots + GetContainerNumSlots(b)
+	end
+
+	for i,v in ipairs(self.db.profile.ShardManager_FillBags) do
+		if v then
+			while (WU:GetBagFreeSlotCount(i-1) > 0) and attempts < totalSlots do
+				for b=0,4 do
+					if not (b == i-1) then
+						if not (bagsComplete[b+1]) then
+							for s=1,GetContainerNumSlots(b) do
+								attempts = attempts + 1
+								n = GetContainerItemLink(b, s)
+								if n and string.find(n, "Soul Shard") then
+									PickupContainerItem(b, s)
+									if (i == 1) then
+										PutItemInBackpack()
+									else
+										bagNum = {0, 20, 21, 22, 23}
+										PutItemInBag(bagNum[i])
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+			bagsComplete[i] = true
+		end
+	end
+	WU:ShardManager_RefreshUI()
 end
 
 function WU:ShardManager_RefreshUI()
-	shardCount = 
+	local inCombat = InCombatLockdown()
+	-- If try again timer is running
+	if (self:TimeLeft(self.ShardManager_Timer) > 0) then
+		WU:ShardManager_StopTimer()
+	end
 	WU_ShardManager_TotalShardCount:SetText(L["TotalShards"](WU:GetInventoryItemCount("Soul Shard")))
-	if (self.db.profile.ShardManager_Type == "bag") then
-		WU_ShardManager_Toggle_Type:SetText(L["ByBag"])
-		WU_ShardManager_Number:Hide()
-		ShowUIPanel(WU_ShardManager_Bags, 1)
-		clearCount = 0
-		for i,v in ipairs(self.db.profile.ShardManager_Bags) do
-			_G["WU_ShardManager_Bag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagItemCount("Soul Shard", i-1) ..")")
-			_G["WU_ShardManager_Bag" .. i]:SetChecked(v)
-			if v then
-				clearCount = clearCount + WU:GetBagItemCount("Soul Shard", i-1)
+	if (self.db.profile.ShardManager_Action == "clear") then
+		if not inCombat then
+			WU_ShardManager_Toggle_Action:SetText(L["Clear"])
+			WU_ShardManager_Delete:Show()
+			WU_ShardManager_Toggle_Type:Show()
+			WU_ShardManager_Fill:Hide()
+			WU_ShardManager_FillBags:Hide()
+		end
+		if (self.db.profile.ShardManager_Type == "bag") then
+			WU_ShardManager_Toggle_Type:SetText(L["ByBag"])
+			if not inCombat then
+				WU_ShardManager_Number:Hide()
+				ShowUIPanel(WU_ShardManager_Bags, 1)
+			end
+			clearCount = 0
+			for i,v in ipairs(self.db.profile.ShardManager_Bags) do
+				_G["WU_ShardManager_Bag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagItemCount("Soul Shard", i-1) ..")")
+				if not inCombat then
+					_G["WU_ShardManager_Bag" .. i]:SetChecked(v)
+				end
+				if v then
+					clearCount = clearCount + WU:GetBagItemCount("Soul Shard", i-1)
+				end
+			end
+			WU_ShardManager_DeleteShardCount:SetText(L["ShardsToClear"](clearCount))
+		else
+			WU_ShardManager_Toggle_Type:SetText(L["ByNumber"])
+			if not inCombat then
+				WU_ShardManager_Bags:Hide()
+				ShowUIPanel(WU_ShardManager_Number, 1)
+			end
+			if not (WU_ShardManager_NumberInput:HasFocus()) then
+				WU_ShardManager_NumberInput:SetText(self.db.profile.ShardManager_Number)
+			end
+			WU_ShardManager_DeleteShardCount:SetText(L["ShardsToClear"](self.db.profile.ShardManager_Number))
+		end
+	else
+		for i,v in ipairs(self.db.profile.ShardManager_FillBags) do
+			_G["WU_ShardManager_FillBag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagFreeSlotCount(i-1) ..")")
+			if not inCombat then
+				_G["WU_ShardManager_FillBag" .. i]:SetChecked(v)
 			end
 		end
-		WU_ShardManager_DeleteShardCount:SetText(L["ShardsToClear"](clearCount))
-	else
-		WU_ShardManager_Toggle_Type:SetText(L["ByNumber"])
-		WU_ShardManager_Bags:Hide()
-		ShowUIPanel(WU_ShardManager_Number, 1)
-		if not (WU_ShardManager_NumberInput:HasFocus()) then
-			WU_ShardManager_NumberInput:SetText(self.db.profile.ShardManager_Number)
+		WU_ShardManager_Toggle_Action:SetText(L["Fill"])
+		if not inCombat then
+			WU_ShardManager_Fill:Show()
+			WU_ShardManager_FillBags:Show()
+			WU_ShardManager_Toggle_Type:Hide()
+			WU_ShardManager_Bags:Hide()
+			WU_ShardManager_Number:Hide()
+			WU_ShardManager_Delete:Hide()
 		end
-		WU_ShardManager_DeleteShardCount:SetText(L["ShardsToClear"](self.db.profile.ShardManager_Number))
+	end
+	if inCombat then
+		-- start try again timer
+		WU:ShardManager_StartTimer()
 	end
 end
 
 function WU:ToggleStoneManager()
 	if not InCombatLockdown() then
 		if WU_StoneManager:IsVisible() then
-			WU:StoneManager_StopTimer()
 			WU_StoneManager:Hide()
 		else
 			WU:StoneManager_RefreshUI()
-			WU:StoneManager_StartTimer()
 			ShowUIPanel(WU_StoneManager, 1)
 		end
 	else
@@ -490,6 +627,24 @@ function WU:StoneManager_ToggleType()
 		self.db.profile.StoneManager_Type = "hs"
 	end
 	WU:StoneManager_RefreshUI()
+end
+
+function WU:GetOptionHSLevel()
+	return self.db.profile.StoneManager_HSLevel
+end
+
+function WU:SetOptionHSLevel(info, value)
+	self.db.profile.StoneManager_HSLevel = value
+	print(L["StoneManager_SetOption_HSLevel"](value))
+end
+
+function WU:GetOptionSSLevel()
+	return self.db.profile.StoneManager_SSLevel
+end
+
+function WU:SetOptionSSLevel(info, value)
+	self.db.profile.StoneManager_SSLevel = value
+	print(L["StoneManager_SetOption_SSLevel"](value))
 end
 
 function WU:StoneManager_GetTradingParty(info)
@@ -522,50 +677,14 @@ function WU:StoneManager_CreateHealthstone(source, button)
 	if not InCombatLockdown() then
 		source:SetAttribute("type", "spell")
 		source:SetAttribute("spell", hsLookup[self.db.profile.StoneManager_HSLevel])
-	else
-		print(L["CombatLockdown"])
 	end
-end
-
-function WU:StoneManager_DecrementHSRank()
-	self.db.profile.StoneManager_HSLevel = self.db.profile.StoneManager_HSLevel - 1
-	if self.db.profile.StoneManager_HSLevel < 1 then
-		self.db.profile.StoneManager_HSLevel = 1
-	end
-	WU:StoneManager_RefreshUI()
-end
-
-function WU:StoneManager_IncrementHSRank()
-	self.db.profile.StoneManager_HSLevel = self.db.profile.StoneManager_HSLevel + 1
-	if self.db.profile.StoneManager_HSLevel > 5 then
-		self.db.profile.StoneManager_HSLevel = 5
-	end
-	WU:StoneManager_RefreshUI()
 end
 
 function WU:StoneManager_CreateSoulstone(source, button)
 	if not InCombatLockdown() then
 		source:SetAttribute("type", "spell")
 		source:SetAttribute("spell", ssLookup[self.db.profile.StoneManager_SSLevel])
-	else
-		print(L["Lockdown"])
 	end
-end
-
-function WU:StoneManager_DecrementSSRank()
-	self.db.profile.StoneManager_SSLevel = self.db.profile.StoneManager_SSLevel - 1
-	if self.db.profile.StoneManager_SSLevel < 1 then
-		self.db.profile.StoneManager_SSLevel = 1
-	end
-	WU:StoneManager_RefreshUI()
-end
-
-function WU:StoneManager_IncrementSSRank()
-	self.db.profile.StoneManager_SSLevel = self.db.profile.StoneManager_SSLevel + 1
-	if self.db.profile.StoneManager_SSLevel > 5 then
-		self.db.profile.StoneManager_SSLevel = 5
-	end
-	WU:StoneManager_RefreshUI()
 end
 
 function WU:StoneManager_CheckBagsForHSLevel()
@@ -589,13 +708,15 @@ end
 
 function WU:StoneManager_UseSoulstone(source, button)
 	local loc = WU:GetInventorySlotLocation(ssItemLookup[self.db.profile.StoneManager_SSLevel])
-	if not ((loc.bag == nil) and (loc.slot == nil)) then
-		source:SetAttribute("type", "item")
-		source:SetAttribute("item", loc.bag .. " " .. loc.slot)
-		if UnitExists("target") then
-			source:SetAttribute("unit", "target")
-		else
-			source:SetAttribute("unit", "player")
+	if not InCombatLockdown() then
+		if not ((loc.bag == nil) and (loc.slot == nil)) then
+			source:SetAttribute("type", "item")
+			source:SetAttribute("item", loc.bag .. " " .. loc.slot)
+			if UnitExists("target") then
+				source:SetAttribute("unit", "target")
+			else
+				source:SetAttribute("unit", "player")
+			end
 		end
 	end
 end
@@ -610,36 +731,38 @@ function WU:StoneManager_CheckBagsForSSLevel()
 end
 
 function WU:StoneManager_RefreshUI()
-	WU_StoneManager_CreateHealthstoneTextName:SetText(L["CreateHealthstone"](self.db.profile.StoneManager_HSLevel))
-	WU_StoneManager_CreateHealthstone:SetEnabled(not WU:StoneManager_CheckBagsForHSLevel(self.db.profile.StoneManager_HSLevel))
-	WU_StoneManager_CreateSoulstoneTextName:SetText(L["CreateSoulstone"](self.db.profile.StoneManager_SSLevel))
-	WU_StoneManager_CreateSoulstone:SetEnabled(not WU:StoneManager_CheckBagsForSSLevel(self.db.profile.StoneManager_SSLevel))
-	WU_StoneManager_HSRankIncrement:SetEnabled(not (self.db.profile.StoneManager_HSLevel >= 5))
-	WU_StoneManager_SSRankIncrement:SetEnabled(not (self.db.profile.StoneManager_SSLevel >= 5))
-	WU_StoneManager_HSRankDecrement:SetEnabled(not (self.db.profile.StoneManager_HSLevel <= 1))
-	WU_StoneManager_SSRankDecrement:SetEnabled(not (self.db.profile.StoneManager_SSLevel <= 1))
-	WU_StoneManager_TradeHealthstone:SetEnabled(WU:StoneManager_CheckBagsForHSLevel(self.db.profile.StoneManager_HSLevel))
-	WU_StoneManager_UseSoulstone:SetEnabled(WU:StoneManager_CheckBagsForSSLevel(self.db.profile.StoneManager_SSLevel))
+	local inCombat = InCombatLockdown()
+	-- If try again timer is running
+	if (self:TimeLeft(self.StoneManager_Timer) > 0) then
+		WU:StoneManager_StopTimer()
+	end
 	if (self.db.profile.StoneManager_Type == "hs") then
-		WU_StoneManager_Healthstone:Show()
-		WU_StoneManager_Soulstone:Hide()
 		WU_StoneManager_PanelToggle:SetText(L["Healthstone"])
+		if not inCombat then
+			WU_StoneManager_Healthstone:Show()
+			WU_StoneManager_Soulstone:Hide()
+		end
 	else
 		WU_StoneManager_PanelToggle:SetText(L["Soulstone"])
-		WU_StoneManager_Healthstone:Hide()
-		WU_StoneManager_Soulstone:Show()
+		if not inCombat then
+			WU_StoneManager_Healthstone:Hide()
+			WU_StoneManager_Soulstone:Show()
+		end
+	end
+	if inCombat then
+		WU:StoneManager_StartTimer()
 	end
 end
 
 function WU:ToggleDemonManager()
 	if not InCombatLockdown() then
 		if WU_DemonManager:IsVisible() then
-			WU:DemonManager_StopTimer()
 			WU_DemonManager:Hide()
+			WU:DemonManager_StopStaticTimer()
 		else
 			WU:DemonManager_RefreshUI()
-			WU:DemonManager_StartTimer()
 			ShowUIPanel(WU_DemonManager, 1)
+			WU:DemonManager_StartStaticTimer()
 		end
 	else
 		print(L["CombatLockdown"])
@@ -652,6 +775,14 @@ end
 
 function WU:DemonManager_StopTimer()
 	self:CancelTimer(self.DemonManager_Timer)
+end
+
+function WU:DemonManager_StartStaticTimer()
+	self.DemonManager_StaticTimer = self:ScheduleRepeatingTimer("DemonManager_RefreshUI", 10)
+end
+
+function WU:DemonManager_StopStaticTimer()
+	self:CancelTimer(self.DemonManager_StaticTimer)
 end
 
 function WU:DemonManager_GetDemonLevel()
@@ -683,8 +814,6 @@ function WU:DemonManager_SummonDemon(source, button)
 	if not InCombatLockdown() then
 		source:SetAttribute("type", "spell")
 		source:SetAttribute("spell", demonLookup[self.db.profile.DemonManager_DemonLevel])
-	else
-		print(L["CombatLockdown"])
 	end
 end
 
@@ -695,22 +824,31 @@ function WU:DemonManager_DismissDemon(source, button)
 end
 
 function WU:DemonManager_SacrificeDemon(source, button)
-	if (WU:DemonManager_HasDemon()) then
-		if (WU:SpellKnown("18788")) then --If Demonic Sacrifice is known
-			source:SetAttribute("type", "spell")
-			source:SetAttribute("spell", "18788")
+	if not InCombatLockdown() then
+		if (WU:DemonManager_HasDemon()) then
+			if (WU:SpellKnown("18788")) then --If Demonic Sacrifice is known
+				source:SetAttribute("type", "spell")
+				source:SetAttribute("spell", "18788")
+			end
 		end
 	end
 end
 
 function WU:DemonManager_HealDemon(source, button)
-	if (WU:DemonManager_HasDemon()) then
-		source:SetAttribute("type", "spell")
-		source:SetAttribute("spell", "11695")
+	if not InCombatLockdown() then
+		if (WU:DemonManager_HasDemon()) then
+			source:SetAttribute("type", "spell")
+			source:SetAttribute("spell", "11695")
+		end
 	end
 end
 
 function WU:DemonManager_RefreshUI()
+	local inCombat = InCombatLockdown()
+	-- If try again timer is running
+	if (self:TimeLeft(self.DemonManager_Timer) > 0) then
+		WU:DemonManager_StopTimer()
+	end
 	if (self.db.profile.DemonManager_DemonLevel == 1) then
 		WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel))
 	elseif (self.db.profile.DemonManager_DemonLevel == 5) then
@@ -722,9 +860,34 @@ function WU:DemonManager_RefreshUI()
 	end
 	WU_DemonManager_IncrementSummon:SetEnabled(not (self.db.profile.DemonManager_DemonLevel >= 7))
 	WU_DemonManager_DecrementSummon:SetEnabled(not (self.db.profile.DemonManager_DemonLevel <= 1))
-	WU_DemonManager_Dismiss:SetEnabled(WU:DemonManager_HasDemon())
-	WU_DemonManager_Heal:SetEnabled(WU:DemonManager_HasDemon())
-	WU_DemonManager_Sacrifice:SetEnabled((WU:DemonManager_HasDemon() and WU:SpellKnown("18788")))
+	if not inCombat then
+		WU_DemonManager_Dismiss:SetEnabled(WU:DemonManager_HasDemon())
+		WU_DemonManager_Heal:SetEnabled(WU:DemonManager_HasDemon())
+		WU_DemonManager_Sacrifice:SetEnabled((WU:DemonManager_HasDemon() and WU:SpellKnown("18788")))
+	else
+		WU:DemonManager_StartTimer()
+	end
+
+end
+
+function WU:AppTray_StartTimer()
+	self.AppTray_Timer = self:ScheduleRepeatingTimer("AppTray_RefreshUI", 5)
+end
+
+function WU:AppTray_StopTimer()
+	self:CancelTimer(self.AppTray_Timer)
+end
+
+function WU:AppTray_RefreshUI()
+	if not InCombatLockdown() then
+		if WU_AppTray:IsVisible() then
+			if not MouseIsOver(WU_AppTray) then
+				WU_AppTray_PullTab:SetAlpha(0.75)
+				WU_AppTray:ClearAllPoints()
+				WU_AppTray:SetPoint("BOTTOM", UIParent, "TOP", 0, -10)
+			end
+		end
+	end
 end
 
 function WU:SpellKnown(id, pet)
@@ -790,6 +953,11 @@ function WU:GetBagItemCount(item, bag)
 		end
 	end
 	return count
+end
+
+function WU:GetBagFreeSlotCount(bag)
+	slots, _ = GetContainerNumFreeSlots(bag)
+	return slots
 end
 
 function WU:RefreshConfig()

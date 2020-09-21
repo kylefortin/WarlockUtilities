@@ -178,20 +178,25 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				getglobal("WU_AppTray_PullTab"):SetAlpha(0.75)
+				getglobal("WU_AppTray_PullTab"):SetAlpha(0.75);
 				self:ClearAllPoints();
 				self:SetPoint("BOTTOM", UIParent, "TOP", 0, -10);
+				WU:AppTray_StartTimer();
 			</OnLoad>
 			<OnEnter>
-				getglobal("WU_AppTray_PullTab"):SetAlpha(0.0)
-				self:ClearAllPoints();
-				self:SetPoint("TOP", UIParent, "TOP", 0, 0);
+				if not InCombatLockdown() then
+					getglobal("WU_AppTray_PullTab"):SetAlpha(0.0);
+					self:ClearAllPoints();
+					self:SetPoint("TOP", UIParent, "TOP", 0, 0);
+				end
 			</OnEnter>
 			<OnLeave>
-				if not (MouseIsOver(self)) then
-					getglobal("WU_AppTray_PullTab"):SetAlpha(0.75)
-					self:ClearAllPoints();
-					self:SetPoint("BOTTOM", UIParent, "TOP", 0, -10);
+				if not InCombatLockdown() then
+					if not (MouseIsOver(self)) then
+						getglobal("WU_AppTray_PullTab"):SetAlpha(0.75);
+						self:ClearAllPoints();
+						self:SetPoint("BOTTOM", UIParent, "TOP", 0, -10);
+					end
 				end
 			</OnLeave>
 		</Scripts>

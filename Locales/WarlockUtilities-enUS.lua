@@ -27,12 +27,54 @@ L["ShardManager_Option_TypeByBag"] = "Manage Shards by Bag"
 L["ShardManager_Option_TypeByNumber"] = "Manage Shards by Number"
 L["StoneManager"] = "Stone Manager"
 L["StoneManager_Desc_Name"] = "Stone Manager options."
+L["StoneManager_OptionGroup_Level_Name"] = "Stone Rank Options"
+L["StoneManager_OptionGroup_Level_Desc"] = "Stone rank options."
+L["StoneManager_Option_HS_Name"] = "Healthstone Rank"
+L["StoneManager_Option_HS_Desc"] = "Rank of Healthstone to create."
+L["StoneManager_Option_SS_Name"] = "Soulstone Rank"
+L["StoneManager_Option_HS_Desc"] = "Rank of Soulstone to create."
+L["StoneManager_Option_HS_1"] = "Minor"
+L["StoneManager_Option_HS_2"] = "Lesser"
+L["StoneManager_Option_HS_3"] = "Normal"
+L["StoneManager_Option_HS_4"] = "Greater"
+L["StoneManager_Option_HS_5"] = "Major"
+L["StoneManager_Option_SS_1"] = "Minor"
+L["StoneManager_Option_SS_2"] = "Lesser"
+L["StoneManager_Option_SS_3"] = "Normal"
+L["StoneManager_Option_SS_4"] = "Greater"
+L["StoneManager_Option_SS_5"] = "Major"
 L["StoneManager_OptionGroup_Trading_Name"] = "Trade Options"
 L["StoneManager_OptionGroup_Trading_Desc"] = "Automatic stone trading options."
 L["StoneManager_Option_EnableParty_Name"] = "Party"
 L["StoneManager_Option_EnableParty_Desc"] = "Enable automatic healthstone trading for party members."
 L["StoneManager_Option_EnableRaid_Name"] = "Raid"
 L["StoneManager_Option_EnableRaid_Desc"] = "Enable automatic healthstone trading for raid members."
+L["StoneManager_SetOption_HSLevel"] = function(value)
+	if (value == 1) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Minor"
+	elseif (value == 2) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Lesser"
+	elseif (value == 3) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Normal"
+	elseif (value == 4) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Greater"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Major"
+	end
+end
+L["StoneManager_SetOption_SSLevel"] = function(value)
+	if (value == 1) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Minor"
+	elseif (value == 2) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Lesser"
+	elseif (value == 3) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Normal"
+	elseif (value == 4) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Greater"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Major"
+	end
+end
 L["StoneManager_SetOption_TradingParty"] = function(value)
 	if (value) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Trading - Party"
@@ -73,6 +115,8 @@ L["MissingTradeItem"] = function(item)
 end
 
 --XML
+L["Fill"] = "Fill Bags"
+L["Clear"] = "Clear Shards"
 L["Bag"] = function(bag)
 	return "Bag " .. bag
 end
@@ -136,4 +180,4 @@ L["SummonDemon"] = function(level, shards)
 	end
 	return text
 end
-L["Close"] = "Close"
+L["Close"] = "X"
