@@ -1,6 +1,6 @@
 # WarlockUtilities
 
-*Current version is : `1.0.1`*  
+*Current version is : `1.0.2`*  
 
 ## Simple tools for Warlocks.  
 ### Shard Manager - clear out excess shards from bags quickly and efficiently.  

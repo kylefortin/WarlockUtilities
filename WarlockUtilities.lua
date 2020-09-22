@@ -185,6 +185,11 @@ local optionsDemonManager = {
 			type = "description",
 			name = L["DemonManager_Desc_Name"],
 			order = 100
+		},
+		hint = {
+			type = "description",
+			name = L["DemonManager_Hint_Name"],
+			order = 200
 		}
 	}
 }
@@ -858,8 +863,6 @@ function WU:DemonManager_RefreshUI()
 	else
 		WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Soul Shard")))
 	end
-	WU_DemonManager_IncrementSummon:SetEnabled(not (self.db.profile.DemonManager_DemonLevel >= 7))
-	WU_DemonManager_DecrementSummon:SetEnabled(not (self.db.profile.DemonManager_DemonLevel <= 1))
 	if not inCombat then
 		WU_DemonManager_Dismiss:SetEnabled(WU:DemonManager_HasDemon())
 		WU_DemonManager_Heal:SetEnabled(WU:DemonManager_HasDemon())

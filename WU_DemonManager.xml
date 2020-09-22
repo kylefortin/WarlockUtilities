@@ -77,7 +77,7 @@
 	</Button>
 	<Frame name="WU_DemonManager" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
 		<Size>
-			<AbsDimension x="130" y="240"/>
+			<AbsDimension x="140" y="165"/>
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER">
@@ -113,7 +113,7 @@
 		<Frames>
 			<Frame name="WU_DemonManager_Summoning" id="100">
 				<Size>
-					<AbsDimension x="110" y="90"/>
+					<AbsDimension x="120" y="40"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOP" relativeTo="WU_DemonManager" relativePoint="TOP">
@@ -146,34 +146,13 @@
 							<PreClick>
 								WU:DemonManager_SummonDemon(self, button);
 							</PreClick>
-						</Scripts>
-					</Button>
-					<Button name="WU_DemonManager_IncrementSummon" id="120" inherits="WU_DemonManager_Button_Template" text="+" hidden="false">
-						<Anchors>
-							<Anchor point="BOTTOM" relativeTo="WU_DemonManager_Summon" relativePoint="TOP">
-								<Offset>
-									<AbsDimension x="0" y="0"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Scripts>
-							<OnClick>
-								WU:DemonManager_IncrementDemonLevel();
-							</OnClick>
-						</Scripts>
-					</Button>
-					<Button name="WU_DemonManager_DecrementSummon" id="130" inherits="WU_DemonManager_Button_Template" text="-" hidden="false">
-						<Anchors>
-							<Anchor point="TOP" relativeTo="WU_DemonManager_Summon" relativePoint="BOTTOM">
-								<Offset>
-									<AbsDimension x="0" y="0"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Scripts>
-							<OnClick>
-								WU:DemonManager_DecrementDemonLevel();
-							</OnClick>
+							<OnMouseWheel>
+								if delta > 0 then
+									WU:DemonManager_IncrementDemonLevel();
+								else
+									WU:DemonManager_DecrementDemonLevel();
+								end
+							</OnMouseWheel>
 						</Scripts>
 					</Button>
 				</Frames>
@@ -222,12 +201,12 @@
 			</Button>
 			<Button name="WU_DemonManager_Close" id="500" inherits="WU_DemonManager_Button_Template" hidden="false">
 				<Size>
-					<AbsDimension x="100" y="25"/>
+					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="WU_DemonManager" relativePoint="BOTTOM">
+					<Anchor point="TOPLEFT" relativeTo="WU_DemonManager" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="0" y="10"/>
+							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>

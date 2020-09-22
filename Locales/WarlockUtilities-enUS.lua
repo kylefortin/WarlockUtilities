@@ -91,6 +91,7 @@ L["StoneManager_SetOption_TradingRaid"] = function(value)
 end
 L["DemonManager"] = "Demon Manager"
 L["DemonManager_Desc_Name"] = "Demon Manager options."
+L["DemonManager_Hint_Name"] = "Hint: Scroll the mouse wheel on the Summon Demon button to change the demon to summon."
 L["Option_Help_Name"] = "Help"
 L["Option_Help_Desc"] = "Shows a list of supported commands and options."
 L["Option_Help_Lines"] = function()

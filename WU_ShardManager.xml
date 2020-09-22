@@ -98,7 +98,7 @@
 	</EditBox>
 	<Frame name="WU_ShardManager" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
 		<Size>
-			<AbsDimension x="120" y="320"/>
+			<AbsDimension x="140" y="285"/>
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER">
@@ -120,9 +120,9 @@
 				</FontString>
 				<FontString name="WU_ShardManager_DeleteShardCount" inherits="GameFontNormalSmall" justifyH="CENTER">
 					<Anchors>
-						<Anchor point="BOTTOM" relativeTo="WU_ShardManager" relativePoint="BOTTOM">
+						<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
 							<Offset>
-								<AbsDimension x="0" y="65"/>
+								<AbsDimension x="0" y="-235"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -131,7 +131,7 @@
 					<Anchors>
 						<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
 							<Offset>
-								<AbsDimension x="0" y="-80"/>
+								<AbsDimension x="0" y="-75"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -166,9 +166,9 @@
 			</Button>
 			<Button name="WU_ShardManager_Toggle_Type" id="100" inherits="WU_ShardManager_Button_Template" hidden="false">
 				<Anchors>
-					<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
+					<Anchor point="TOP" relativeTo="WU_ShardManager_Toggle_Action" relativePoint="BOTTOM">
 						<Offset>
-							<AbsDimension x="0" y="-50"/>
+							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -179,10 +179,13 @@
 				</Scripts>
 			</Button>
 			<Button name="WU_ShardManager_Close" id="200" inherits="WU_ShardManager_Button_Template" hidden="false">
+				<Size>
+					<AbsDimension x="20" y="20"/>
+				</Size>
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="WU_ShardManager" relativePoint="BOTTOM">
+					<Anchor point="TOPLEFT" relativeTo="WU_ShardManager" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="0" y="10"/>
+							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -194,7 +197,7 @@
 			</Button>
 			<Frame name="WU_ShardManager_Bags" id="300">
 				<Size>
-					<AbsDimension x="100" y="140"/>
+					<AbsDimension x="120" y="140"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
@@ -289,7 +292,7 @@
 			</Frame>
 			<Frame name="WU_ShardManager_FillBags" id="400">
 				<Size>
-					<AbsDimension x="100" y="140"/>
+					<AbsDimension x="120" y="140"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOP" relativeTo="WU_ShardManager" relativePoint="TOP">
@@ -463,9 +466,9 @@
 			</Frame>
 			<Button name="WU_ShardManager_Delete" id="600" inherits="WU_ShardManager_Button_Template" hidden="false">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="WU_ShardManager_Close" relativePoint="TOP">
+					<Anchor point="TOP" relativeTo="WU_ShardManager_DeleteShardCount" relativePoint="BOTTOM">
 						<Offset>
-							<AbsDimension x="0" y="0"/>
+							<AbsDimension x="0" y="-5"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -477,7 +480,7 @@
 			</Button>
 			<Button name="WU_ShardManager_Fill" id="700" inherits="WU_ShardManager_Button_Template" hidden="false">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="WU_ShardManager_Close" relativePoint="TOP">
+					<Anchor point="TOP" relativeTo="WU_ShardManager_Delete" relativePoint="TOP">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
