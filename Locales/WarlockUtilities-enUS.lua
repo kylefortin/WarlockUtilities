@@ -137,6 +137,9 @@ end
 L["StoneManager_FrameHeader"] = function(v)
 	return "Stone Manager v" .. v
 end
+L["StoneManager_Counter"] = function(v)
+	return "Total: " .. v
+end
 L["DemonManager_FrameHeader"] = function(v)
 	return "Demon Manager v" .. v
 end
@@ -182,3 +185,4 @@ L["SummonDemon"] = function(level, shards)
 	return text
 end
 L["Close"] = "X"
+L["Reset"] = "O"

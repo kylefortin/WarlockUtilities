@@ -208,7 +208,20 @@ local defaults = {
 		StoneManager_TradingRaid = true,
 		StoneManager_TradingParty = true,
 		DemonManager_DemonLevel = 1
+	},
+	char = {
+		StoneManager_Counter = 0
 	}
+}
+
+local healthFunnelLookup = {
+	"755", --Health Funnel (Rank 1)
+	"3698", --Health Funnel (Rank 2)
+	"3699", --Health Funnel (Rank 3)
+	"3700", --Health Funnel (Rank 4)
+	"11693", --Health Funnel (Rank 5)
+	"11694", --Health Funnel (Rank 6)
+	"11695", --Health Funnel (Rank 7)
 }
 
 local hsLookup = {
@@ -281,20 +294,38 @@ function WU:OnInitialize()
 	if (classFilename == "WARLOCK") then
 
 		--Chat commands
-		self:RegisterChatCommand("wu", "ChatCommand")
-		self:RegisterChatCommand("warlockutils", "ChatCommand")
-		self:RegisterChatCommand("warlockutilities", "ChatCommand")
+		local chatCommands = {
+			wu="ChatCommand",
+			warlockutils="ChatCommand",
+			warlockutilities="ChatCommand"
+		}
+		for k,v in pairs(chatCommands) do
+			self:RegisterChatCommand(k, v)
+		end
 
 		--Events
-		self:RegisterEvent("TRADE_SHOW", "TradeOpened")
-		self:RegisterEvent("TRADE_CLOSED", "TradeClosed")
+		local events = {
+			TRADE_SHOW="TradeOpened",
+			TRADE_CLOSED="TradeClosed",
+			COMBAT_LOG_EVENT_UNFILTERED=function(event)
+				WU:CombatLogEvent(CombatLogGetCurrentEventInfo())
+			end
+		}
+		for k,v in pairs(events) do
+			self:RegisterEvent(k, v)
+		end
 
 		--Options DB
 		self.db = LibStub("AceDB-3.0"):New("WarlockUtilitiesOptionsDB", defaults, true)
-		self.db.RegisterCallback(self, "OnNewProfile", "RefreshConfig")
-		self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
-		self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
-		self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig")
+		local dbActions = {
+			OnNewProfile="RefreshConfig",
+			OnProfileChanged="RefreshConfig",
+			OnProfileCopied="RefreshConfig",
+			OnProfileReset="RefreshConfig"
+		}
+		for k,v in pairs(dbActions) do
+			self.db.RegisterCallback(self, k, v)
+		end
 
 		--Profile
 		local optionsProfile = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
@@ -304,15 +335,22 @@ function WU:OnInitialize()
 		--Options frames
 		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(L["WU"], options)
 		self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["WU"], L["WU"])
-
-		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(L["WU"] .. "-ShardManager", optionsShardManager)
-		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["WU"] .. "-ShardManager", L["ShardManager"], L["WU"])
-
-		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(L["WU"] .. "-StoneManager", optionsStoneManager)
-		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["WU"] .. "-StoneManager", L["StoneManager"], L["WU"])
-
-		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(L["WU"] .. "-DemonManager", optionsDemonManager)
-		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["WU"] .. "-DemonManager", L["DemonManager"], L["WU"])
+		local optionTables = {
+			{L["WU"] .. "-ShardManager", optionsShardManager},
+			{L["WU"] .. "-StoneManager", optionsStoneManager},
+			{L["WU"] .. "-DemonManager", optionsDemonManager}
+		}
+		for i,v in ipairs(optionTables) do
+			LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(v[1], v[2])
+		end
+		local blizzOptions = {
+			{L["WU"] .. "-ShardManager", L["ShardManager"]},
+			{L["WU"] .. "-StoneManager", L["StoneManager"]},
+			{L["WU"] .. "-DemonManager", L["DemonManager"]}
+		}
+		for i,v in ipairs(blizzOptions) do
+			LibStub("AceConfigDialog-3.0"):AddToBlizOptions(v[1], v[2], L["WU"])
+		end
 
 		--XML
 		ShowUIPanel(WU_AppTray, 1)
@@ -334,10 +372,19 @@ function WU:OnInitialize()
 			{WU_DemonManager_Sacrifice, L["Sacrifice"]},
 			{WU_DemonManager_Dismiss, L["Dismiss"]},
 			{WU_DemonManager_Heal, L["Heal"]},
-			{WU_DemonManager_Close, L["Close"]}
+			{WU_DemonManager_Close, L["Close"]},
+			{WU_StoneManager_ResetCounter, L["Reset"]},
+			{WU_StoneManager_HSCounter, L["StoneManager_Counter"](0)}
 		}
 		for i,v in ipairs(xmlText) do
 			xmlText[i][1]:SetText(xmlText[i][2])
+		end
+
+		--Get Health Funnel level
+		for _,spellID in ipairs(healthFunnelLookup) do
+			if WU:SpellKnown(spellID) then
+				self.db.profile.healthFunnel = spellID
+			end
 		end
 
 	end
@@ -383,6 +430,34 @@ end
 
 function WU:TradeClosed()
 	autoTrading = false
+end
+
+function WU:CombatLogEvent(...)
+	local timestamp, event, hideCaster, srcGuid, srcName, srcFlags, srcRaidFlags, dstGuid, dstName, dstFlags, dstRaidFlags = ...
+	local isPlayer = bit.band(srcFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0
+	local playerName,_ = UnitName("player")
+	if (event == "SPELL_CAST_SUCCESS" and isPlayer) then
+		if (srcName == playerName) then
+			local spellName = select(13, ...)
+			local trackSpellNames = {}
+			for _, spellID in ipairs(hsLookup) do
+				local spellIDName = GetSpellInfo(spellID)
+				trackSpellNames[spellIDName] = true
+			end
+			for _, spellID in ipairs(ssLookup) do
+				local spellIDName = GetSpellInfo(spellID)
+				trackSpellNames[spellIDName] = true
+			end
+			for _, spellID in ipairs({"698"}) do
+				local spellIDName = GetSpellInfo(spellID)
+				trackSpellNames[spellIDName] = true
+			end
+			if (spellName and trackSpellNames[spellName]) then
+				self.db.char.StoneManager_Counter = self.db.char.StoneManager_Counter + 1
+				WU:StoneManager_RefreshUI()
+			end
+		end
+	end
 end
 
 function WU:GetOptionShardType()
@@ -547,14 +622,13 @@ function WU:ShardManager_FillShards()
 end
 
 function WU:ShardManager_RefreshUI()
-	local inCombat = InCombatLockdown()
 	-- If try again timer is running
 	if (self:TimeLeft(self.ShardManager_Timer) > 0) then
 		WU:ShardManager_StopTimer()
 	end
 	WU_ShardManager_TotalShardCount:SetText(L["TotalShards"](WU:GetInventoryItemCount("Soul Shard")))
 	if (self.db.profile.ShardManager_Action == "clear") then
-		if not inCombat then
+		if not InCombatLockdown() then
 			WU_ShardManager_Toggle_Action:SetText(L["Clear"])
 			WU_ShardManager_Delete:Show()
 			WU_ShardManager_Toggle_Type:Show()
@@ -563,14 +637,14 @@ function WU:ShardManager_RefreshUI()
 		end
 		if (self.db.profile.ShardManager_Type == "bag") then
 			WU_ShardManager_Toggle_Type:SetText(L["ByBag"])
-			if not inCombat then
+			if not InCombatLockdown() then
 				WU_ShardManager_Number:Hide()
 				ShowUIPanel(WU_ShardManager_Bags, 1)
 			end
 			clearCount = 0
 			for i,v in ipairs(self.db.profile.ShardManager_Bags) do
 				_G["WU_ShardManager_Bag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagItemCount("Soul Shard", i-1) ..")")
-				if not inCombat then
+				if not InCombatLockdown() then
 					_G["WU_ShardManager_Bag" .. i]:SetChecked(v)
 				end
 				if v then
@@ -580,7 +654,7 @@ function WU:ShardManager_RefreshUI()
 			WU_ShardManager_DeleteShardCount:SetText(L["ShardsToClear"](clearCount))
 		else
 			WU_ShardManager_Toggle_Type:SetText(L["ByNumber"])
-			if not inCombat then
+			if not InCombatLockdown() then
 				WU_ShardManager_Bags:Hide()
 				ShowUIPanel(WU_ShardManager_Number, 1)
 			end
@@ -592,12 +666,12 @@ function WU:ShardManager_RefreshUI()
 	else
 		for i,v in ipairs(self.db.profile.ShardManager_FillBags) do
 			_G["WU_ShardManager_FillBag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagFreeSlotCount(i-1) ..")")
-			if not inCombat then
+			if not InCombatLockdown() then
 				_G["WU_ShardManager_FillBag" .. i]:SetChecked(v)
 			end
 		end
 		WU_ShardManager_Toggle_Action:SetText(L["Fill"])
-		if not inCombat then
+		if not InCombatLockdown() then
 			WU_ShardManager_Fill:Show()
 			WU_ShardManager_FillBags:Show()
 			WU_ShardManager_Toggle_Type:Hide()
@@ -606,7 +680,7 @@ function WU:ShardManager_RefreshUI()
 			WU_ShardManager_Delete:Hide()
 		end
 	end
-	if inCombat then
+	if InCombatLockdown() then
 		-- start try again timer
 		WU:ShardManager_StartTimer()
 	end
@@ -694,11 +768,7 @@ end
 
 function WU:StoneManager_CheckBagsForHSLevel()
 	local loc = WU:GetInventorySlotLocation(hsItemLookup[self.db.profile.StoneManager_HSLevel])
-	if (loc.bag == nil) and (loc.slot == nil) then
-		return false
-	else
-		return true
-	end
+	return not((loc.bag == nil) and (loc.slot == nil))
 end
 
 function WU:StoneManager_TradeHealthstone(source, button)
@@ -726,35 +796,35 @@ function WU:StoneManager_UseSoulstone(source, button)
 	end
 end
 
+function WU:StoneManager_ResetCounter()
+	self.db.char.StoneManager_Counter = 0
+end
+
 function WU:StoneManager_CheckBagsForSSLevel()
 	local loc = WU:GetInventorySlotLocation(ssItemLookup[self.db.profile.StoneManager_SSLevel])
-	if (loc.bag == nil) and (loc.slot == nil) then
-		return false
-	else
-		return true
-	end
+	return not((loc.bag == nil) and (loc.slot == nil))
 end
 
 function WU:StoneManager_RefreshUI()
-	local inCombat = InCombatLockdown()
 	-- If try again timer is running
 	if (self:TimeLeft(self.StoneManager_Timer) > 0) then
 		WU:StoneManager_StopTimer()
 	end
 	if (self.db.profile.StoneManager_Type == "hs") then
 		WU_StoneManager_PanelToggle:SetText(L["Healthstone"])
-		if not inCombat then
+		WU_StoneManager_HSCounter:SetText(L["StoneManager_Counter"](self.db.char.StoneManager_Counter))
+		if not InCombatLockdown() then
 			WU_StoneManager_Healthstone:Show()
 			WU_StoneManager_Soulstone:Hide()
 		end
 	else
 		WU_StoneManager_PanelToggle:SetText(L["Soulstone"])
-		if not inCombat then
+		if not InCombatLockdown() then
 			WU_StoneManager_Healthstone:Hide()
 			WU_StoneManager_Soulstone:Show()
 		end
 	end
-	if inCombat then
+	if InCombatLockdown() then
 		WU:StoneManager_StartTimer()
 	end
 end
@@ -843,13 +913,12 @@ function WU:DemonManager_HealDemon(source, button)
 	if not InCombatLockdown() then
 		if (WU:DemonManager_HasDemon()) then
 			source:SetAttribute("type", "spell")
-			source:SetAttribute("spell", "11695")
+			source:SetAttribute("spell", self.db.profile.healthFunnel)
 		end
 	end
 end
 
 function WU:DemonManager_RefreshUI()
-	local inCombat = InCombatLockdown()
 	-- If try again timer is running
 	if (self:TimeLeft(self.DemonManager_Timer) > 0) then
 		WU:DemonManager_StopTimer()
@@ -863,7 +932,7 @@ function WU:DemonManager_RefreshUI()
 	else
 		WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Soul Shard")))
 	end
-	if not inCombat then
+	if not InCombatLockdown() then
 		WU_DemonManager_Dismiss:SetEnabled(WU:DemonManager_HasDemon())
 		WU_DemonManager_Heal:SetEnabled(WU:DemonManager_HasDemon())
 		WU_DemonManager_Sacrifice:SetEnabled((WU:DemonManager_HasDemon() and WU:SpellKnown("18788")))
@@ -887,7 +956,7 @@ function WU:AppTray_RefreshUI()
 			if not MouseIsOver(WU_AppTray) then
 				WU_AppTray_PullTab:SetAlpha(0.75)
 				WU_AppTray:ClearAllPoints()
-				WU_AppTray:SetPoint("BOTTOM", UIParent, "TOP", 0, -10)
+				WU_AppTray:SetPoint("LEFT", UIParent, "RIGHT", -10, 0)
 			end
 		end
 	end

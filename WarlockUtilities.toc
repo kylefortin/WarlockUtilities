@@ -1,6 +1,6 @@
 ## Title: WarlockUtilities |cff7fff7f -- AceAddon-3.0 --|r
 ## Notes: Miscellaneous utilities for Warlocks in World of Warcraft Classic.
-## Version: 1.0.2
+## Version: 1.0.3
 ## Author: |cff027dbfKopernikus-Windseeker|r
 ## Interface: 35753
 ## SavedVariables: WarlockUtilitiesOptionsDB

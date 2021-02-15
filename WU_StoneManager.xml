@@ -118,7 +118,7 @@
 	</Button>
 	<Frame name="WU_StoneManager" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
 		<Size>
-			<AbsDimension x="140" y="160"/>
+			<AbsDimension x="140" y="170"/>
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER">
@@ -171,7 +171,7 @@
 			</Button>
 			<Frame name="WU_StoneManager_Healthstone" id="100">
 				<Size>
-					<AbsDimension x="100" y="100"/>
+					<AbsDimension x="100" y="110"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOP" relativeTo="WU_StoneManager_PanelToggle" relativePoint="BOTTOM">
@@ -191,6 +191,19 @@
 						<AbsValue val="16"></AbsValue>
 					</EdgeSize>
 				</Backdrop>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="WU_StoneManager_HSCounter" inherits="GameFontNormalSmall" justifyH="CENTER" text="TEST">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="WU_StoneManager_Healthstone" relativePoint="TOP">
+									<Offset>
+										<AbsDimension x="0" y="-5"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
 				<Frames>
 					<Button name="WU_StoneManager_CreateHealthstone" id="110" inherits="WU_StoneManager_ActionButton_Template" hidden="false">
 						<NormalTexture file="Interface\ICONS\inv_stone_04"/>
@@ -209,7 +222,7 @@
 						<Anchors>
 							<Anchor point="TOP" relativeTo="WU_StoneManager_Healthstone" relativePoint="TOP">
 								<Offset>
-									<AbsDimension x="0" y="-10"/>
+									<AbsDimension x="0" y="-20"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -231,6 +244,24 @@
 							<PreClick>
 								WU:StoneManager_TradeHealthstone();
 							</PreClick>
+						</Scripts>
+					</Button>
+					<Button name="WU_StoneManager_ResetCounter" id="150" inherits="WU_StoneManager_Button_Template" hidden="false">
+						<Size>
+							<AbsDimension x="20" y="20"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="WU_StoneManager_Healthstone" relativePoint="TOPRIGHT">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								WU:StoneManager_ResetCounter();
+								WU:StoneManager_RefreshUI();
+							</OnClick>
 						</Scripts>
 					</Button>
 				</Frames>

@@ -69,12 +69,12 @@
 				</FontString>
 				<Texture name="WU_AppTray_PullTab">
 					<Size>
-						<AbsDimension x="175" y="5"/>
+						<AbsDimension x="5" y="60"/>
 					</Size>
 					<Anchors>
-						<Anchor point="BOTTOM">
+						<Anchor point="LEFT">
 							<Offset>
-								<AbsDimension x="0" y="5"/>
+								<AbsDimension x="5" y="0"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -180,14 +180,14 @@
 			<OnLoad>
 				_G["WU_AppTray_PullTab"]:SetAlpha(0.75);
 				self:ClearAllPoints();
-				self:SetPoint("BOTTOM", UIParent, "TOP", 0, -10);
+				self:SetPoint("LEFT", UIParent, "RIGHT", -10, 0);
 				WU:AppTray_StartTimer();
 			</OnLoad>
 			<OnEnter>
 				if not InCombatLockdown() then
 					_G["WU_AppTray_PullTab"]:SetAlpha(0.0);
 					self:ClearAllPoints();
-					self:SetPoint("TOP", UIParent, "TOP", 0, 0);
+					self:SetPoint("RIGHT", UIParent, "RIGHT", 0, 0);
 				end
 			</OnEnter>
 			<OnLeave>
@@ -195,7 +195,7 @@
 					if not (MouseIsOver(self)) then
 						_G["WU_AppTray_PullTab"]:SetAlpha(0.75);
 						self:ClearAllPoints();
-						self:SetPoint("BOTTOM", UIParent, "TOP", 0, -10);
+						self:SetPoint("LEFT", UIParent, "RIGHT", -10, 0);
 					end
 				end
 			</OnLeave>
