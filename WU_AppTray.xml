@@ -175,6 +175,23 @@
 					</OnClick>
 				</Scripts>
 			</Button>
+			<Button name="WU_AppTray_Stats" id="100" inherits="UIPanelInfoButton">
+				<Size>
+					<AbsDimension x="15" y="15"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="WU_AppTray" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="-5" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						WU:ToggleStatsPanel();
+					</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>

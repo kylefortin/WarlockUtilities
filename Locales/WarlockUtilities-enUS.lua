@@ -143,6 +143,9 @@ end
 L["DemonManager_FrameHeader"] = function(v)
 	return "Demon Manager v" .. v
 end
+L["StatsPanel_FrameHeader"] = function(v)
+	return "Shard Usage Stats v" .. v
+end
 L["Sacrifice"] = "Sacrifice"
 L["Dismiss"] = "Dismiss"
 L["Heal"] = "Heal"

@@ -16,4 +16,5 @@ WarlockUtilities.lua
 WU_ShardManager.xml
 WU_StoneManager.xml
 WU_DemonManager.xml
+WU_StatsPanel.xml
 WU_AppTray.xml

@@ -210,7 +210,12 @@ local defaults = {
 		DemonManager_DemonLevel = 1
 	},
 	char = {
-		StoneManager_Counter = 0
+		Healthstone_Counter = 0,
+		Healthstone_Session_Counter = 0,
+		Soulstone_Counter = 0,
+		Soulstone_Session_Counter = 0,
+		Summon_Counter = 0,
+		Summon_Session_Counter = 0
 	}
 }
 
@@ -369,12 +374,11 @@ function WU:OnInitialize()
 			{WU_StoneManager_UseSoulstoneTextName, L["Use"]},
 			{WU_StoneManager_Close, L["Close"]},
 			{WU_DemonManager_Header, L["DemonManager_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
+			{WU_StatsPanel_Header, L["StatsPanel_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
 			{WU_DemonManager_Sacrifice, L["Sacrifice"]},
 			{WU_DemonManager_Dismiss, L["Dismiss"]},
 			{WU_DemonManager_Heal, L["Heal"]},
-			{WU_DemonManager_Close, L["Close"]},
-			{WU_StoneManager_ResetCounter, L["Reset"]},
-			{WU_StoneManager_HSCounter, L["StoneManager_Counter"](0)}
+			{WU_DemonManager_Close, L["Close"]}
 		}
 		for i,v in ipairs(xmlText) do
 			xmlText[i][1]:SetText(xmlText[i][2])
@@ -386,6 +390,11 @@ function WU:OnInitialize()
 				self.db.profile.healthFunnel = spellID
 			end
 		end
+
+		-- Reset session counters
+		self.db.char.Healthstone_Session_Counter = 0
+		self.db.char.Soulstone_Session_Counter = 0
+		self.db.char.Summon_Session_Counter = 0
 
 	end
 
@@ -441,20 +450,31 @@ function WU:CombatLogEvent(...)
 			local spellName = select(13, ...)
 			local trackSpellNames = {}
 			for _, spellID in ipairs(hsLookup) do
-				local spellIDName = GetSpellInfo(spellID)
-				trackSpellNames[spellIDName] = true
+				local lookupName = GetSpellInfo(spellID)
+				if (lookupName == spellName) then
+					self.db.char.Healthstone_Counter = self.db.char.Healthstone_Counter + 1
+					self.db.char.Healthstone_Session_Counter = self.db.char.Healthstone_Session_Counter + 1
+					WU:StatsPanel_RefreshUI()
+					break
+				end
 			end
 			for _, spellID in ipairs(ssLookup) do
-				local spellIDName = GetSpellInfo(spellID)
-				trackSpellNames[spellIDName] = true
+				local lookupName = GetSpellInfo(spellID)
+				if (lookupName == spellName) then
+					self.db.char.Soulstone_Counter = self.db.char.Soulstone_Counter + 1
+					self.db.char.Soulstone_Session_Counter = self.db.char.Soulstone_Session_Counter + 1
+					WU:StatsPanel_RefreshUI()
+					break
+				end
 			end
 			for _, spellID in ipairs({"698"}) do
-				local spellIDName = GetSpellInfo(spellID)
-				trackSpellNames[spellIDName] = true
-			end
-			if (spellName and trackSpellNames[spellName]) then
-				self.db.char.StoneManager_Counter = self.db.char.StoneManager_Counter + 1
-				WU:StoneManager_RefreshUI()
+				local lookupName = GetSpellInfo(spellID)
+				if (lookupName == spellName) then
+					self.db.char.Summon_Counter = self.db.char.Summon_Counter + 1
+					self.db.char.Summon_Session_Counter = self.db.char.Summon_Session_Counter + 1
+					WU:StatsPanel_RefreshUI()
+					break
+				end
 			end
 		end
 	end
@@ -796,10 +816,6 @@ function WU:StoneManager_UseSoulstone(source, button)
 	end
 end
 
-function WU:StoneManager_ResetCounter()
-	self.db.char.StoneManager_Counter = 0
-end
-
 function WU:StoneManager_CheckBagsForSSLevel()
 	local loc = WU:GetInventorySlotLocation(ssItemLookup[self.db.profile.StoneManager_SSLevel])
 	return not((loc.bag == nil) and (loc.slot == nil))
@@ -810,21 +826,17 @@ function WU:StoneManager_RefreshUI()
 	if (self:TimeLeft(self.StoneManager_Timer) > 0) then
 		WU:StoneManager_StopTimer()
 	end
-	if (self.db.profile.StoneManager_Type == "hs") then
-		WU_StoneManager_PanelToggle:SetText(L["Healthstone"])
-		WU_StoneManager_HSCounter:SetText(L["StoneManager_Counter"](self.db.char.StoneManager_Counter))
-		if not InCombatLockdown() then
+	if not InCombatLockdown() then
+		if (self.db.profile.StoneManager_Type == "hs") then
+			WU_StoneManager_PanelToggle:SetText(L["Healthstone"])
 			WU_StoneManager_Healthstone:Show()
 			WU_StoneManager_Soulstone:Hide()
-		end
-	else
-		WU_StoneManager_PanelToggle:SetText(L["Soulstone"])
-		if not InCombatLockdown() then
+		else
+			WU_StoneManager_PanelToggle:SetText(L["Soulstone"])
 			WU_StoneManager_Healthstone:Hide()
 			WU_StoneManager_Soulstone:Show()
 		end
-	end
-	if InCombatLockdown() then
+	else
 		WU:StoneManager_StartTimer()
 	end
 end
@@ -923,16 +935,16 @@ function WU:DemonManager_RefreshUI()
 	if (self:TimeLeft(self.DemonManager_Timer) > 0) then
 		WU:DemonManager_StopTimer()
 	end
-	if (self.db.profile.DemonManager_DemonLevel == 1) then
-		WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel))
-	elseif (self.db.profile.DemonManager_DemonLevel == 5) then
-		WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Infernal Stone")))
-	elseif (self.db.profile.DemonManager_DemonLevel == 6) then
-		WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Demonic Figurine")))
-	else
-		WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Soul Shard")))
-	end
 	if not InCombatLockdown() then
+		if (self.db.profile.DemonManager_DemonLevel == 1) then
+			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel))
+		elseif (self.db.profile.DemonManager_DemonLevel == 5) then
+			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Infernal Stone")))
+		elseif (self.db.profile.DemonManager_DemonLevel == 6) then
+			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Demonic Figurine")))
+		else
+			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Soul Shard")))
+		end
 		WU_DemonManager_Dismiss:SetEnabled(WU:DemonManager_HasDemon())
 		WU_DemonManager_Heal:SetEnabled(WU:DemonManager_HasDemon())
 		WU_DemonManager_Sacrifice:SetEnabled((WU:DemonManager_HasDemon() and WU:SpellKnown("18788")))
@@ -960,6 +972,46 @@ function WU:AppTray_RefreshUI()
 			end
 		end
 	end
+end
+
+function WU:ToggleStatsPanel()
+	if not InCombatLockdown() then
+		if WU_StatsPanel:IsVisible() then
+			WU_StatsPanel:Hide()
+		else
+			WU_StatsPanel:Show()
+			WU:StatsPanel_RefreshUI()
+		end
+	else
+		print(L["CombatLockdown"])
+	end
+end
+
+function WU:StatsPanel_ResetHealthstoneCounter()
+	self.db.char.Healthstone_Counter = 0
+	self.db.char.Healthstone_Session_Counter = 0
+	WU:StatsPanel_RefreshUI()
+end
+
+function WU:StatsPanel_ResetSoulstoneCounter()
+	self.db.char.Soulstone_Counter = 0
+	self.db.char.Soulstone_Session_Counter = 0
+	WU:StatsPanel_RefreshUI()
+end
+
+function WU:StatsPanel_ResetSummonCounter()
+	self.db.char.Summon_Counter = 0
+	self.db.char.Summon_Session_Counter = 0
+	WU:StatsPanel_RefreshUI()
+end
+
+function WU:StatsPanel_RefreshUI()
+	WU_StatsPanel_HS_Counter:SetText("Total: " .. self.db.char.Healthstone_Counter)
+	WU_StatsPanel_HS_Session_Counter:SetText("Current session: " .. self.db.char.Healthstone_Session_Counter)
+	WU_StatsPanel_SS_Counter:SetText("Total: " .. self.db.char.Soulstone_Counter)
+	WU_StatsPanel_SS_Session_Counter:SetText("Current session: " .. self.db.char.Soulstone_Session_Counter)
+	WU_StatsPanel_Summon_Counter:SetText("Total: " .. self.db.char.Summon_Counter)
+	WU_StatsPanel_Summon_Session_Counter:SetText("Current session: " .. self.db.char.Summon_Session_Counter)
 end
 
 function WU:SpellKnown(id, pet)
