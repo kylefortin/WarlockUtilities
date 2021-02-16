@@ -187,5 +187,3 @@ L["SummonDemon"] = function(level, shards)
 	end
 	return text
 end
-L["Close"] = "X"
-L["Reset"] = "O"

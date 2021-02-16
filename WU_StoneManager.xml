@@ -301,12 +301,12 @@
 					</Button>
 				</Frames>
 			</Frame>
-			<Button name="WU_StoneManager_Close" id="300" inherits="WU_StoneManager_Button_Template" hidden="false">
+			<Button name="WU_StoneManager_Close" id="300" inherits="UIPanelCloseButton" hidden="false">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="WU_StoneManager" relativePoint="TOPLEFT">
+					<Anchor point="TOPRIGHT" relativeTo="WU_StoneManager" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>

@@ -1,5 +1,8 @@
 # WarlockUtilities Change Log  
 
+## Version `1.0.5`  
+- Minor UI tweaks  
+
 ## Version `1.0.4`  
 - Add StatsPanel to collect shard usage statistics  
 - Segregrate counters for HS, SS and summoning stats  

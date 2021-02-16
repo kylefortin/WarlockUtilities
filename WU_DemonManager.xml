@@ -199,12 +199,12 @@
 					</PreClick>
 				</Scripts>
 			</Button>
-			<Button name="WU_DemonManager_Close" id="500" inherits="WU_DemonManager_Button_Template" hidden="false">
+			<Button name="WU_DemonManager_Close" id="500" inherits="UIPanelCloseButton" hidden="false">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="WU_DemonManager" relativePoint="TOPLEFT">
+					<Anchor point="TOPRIGHT" relativeTo="WU_DemonManager" relativePoint="TOPRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>

@@ -368,17 +368,14 @@ function WU:OnInitialize()
 			{WU_ShardManager_Bag3, L["Bag"](3)},
 			{WU_ShardManager_Bag4, L["Bag"](4)},
 			{WU_ShardManager_Bag5, L["Bag"](5)},
-			{WU_ShardManager_Close, L["Close"]},
 			{WU_StoneManager_Header, L["StoneManager_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
 			{WU_StoneManager_TradeHealthstoneTextName, L["Trade"]},
 			{WU_StoneManager_UseSoulstoneTextName, L["Use"]},
-			{WU_StoneManager_Close, L["Close"]},
 			{WU_DemonManager_Header, L["DemonManager_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
 			{WU_StatsPanel_Header, L["StatsPanel_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
 			{WU_DemonManager_Sacrifice, L["Sacrifice"]},
 			{WU_DemonManager_Dismiss, L["Dismiss"]},
-			{WU_DemonManager_Heal, L["Heal"]},
-			{WU_DemonManager_Close, L["Close"]}
+			{WU_DemonManager_Heal, L["Heal"]}
 		}
 		for i,v in ipairs(xmlText) do
 			xmlText[i][1]:SetText(xmlText[i][2])
