@@ -2,6 +2,7 @@
 
 ## Version `1.0.5`  
 - Minor UI tweaks  
+- Add SpellAnnounce module and related options  
 
 ## Version `1.0.4`  
 - Add StatsPanel to collect shard usage statistics  

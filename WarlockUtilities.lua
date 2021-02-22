@@ -194,6 +194,82 @@ local optionsDemonManager = {
 	}
 }
 
+local optionsSpellAnnouncer = {
+	name = L["SpellAnnouncer"],
+	handler = WU,
+	type = "group",
+	args = {
+		desc = {
+			type = "description",
+			name = L["SpellAnnouncer_Desc_Name"],
+			order = 100
+		},
+		summon = {
+			type = "group",
+			name = L["SpellAnnouncer_OptionGroup_Summon_Name"],
+			desc = L["SpellAnnouncer_OptionGroup_Summon_Desc"],
+			order = 200,
+			inline = true,
+			args = {
+				enableParty = {
+					type = "toggle",
+					name = L["SpellAnnouncer_Option_Summon_EnableParty_Name"],
+					desc = L["SpellAnnouncer_Option_Summon_EnableParty_Desc"],
+					get = "SpellAnnouncer_Summon_GetParty",
+					set = "SpellAnnouncer_Summon_SetParty",
+					order = 210,
+					width = "full"
+				},
+				enableRaid = {
+					type = "toggle",
+					name = L["SpellAnnouncer_Option_Summon_EnableRaid_Name"],
+					desc = L["SpellAnnouncer_Option_Summon_EnableRaid_Desc"],
+					get = "SpellAnnouncer_Summon_GetRaid",
+					set = "SpellAnnouncer_Summon_SetRaid",
+					order = 210,
+					width = "full" 
+				}
+			}
+		},
+		soulstone = {
+			type = "group",
+			name = L["SpellAnnouncer_OptionGroup_SS_Name"],
+			desc = L["SpellAnnouncer_OptionGroup_SS_Desc"],
+			order = 300,
+			inline = true,
+			args = {
+				enableSolo = {
+					type = "toggle",
+					name = L["SpellAnnouncer_Option_SS_EnableSolo_Name"],
+					desc = L["SpellAnnouncer_Option_SS_EnableSolo_Desc"],
+					get = "SpellAnnouncer_SS_GetSolo",
+					set = "SpellAnnouncer_SS_SetSolo",
+					order = 310,
+					width = "full"
+				},
+				enableParty = {
+					type = "toggle",
+					name = L["SpellAnnouncer_Option_SS_EnableParty_Name"],
+					desc = L["SpellAnnouncer_Option_SS_EnableParty_Desc"],
+					get = "SpellAnnouncer_SS_GetParty",
+					set = "SpellAnnouncer_SS_SetParty",
+					order = 320,
+					width = "full"
+				},
+				enableRaid = {
+					type = "toggle",
+					name = L["SpellAnnouncer_Option_SS_EnableRaid_Name"],
+					desc = L["SpellAnnouncer_Option_SS_EnableRaid_Desc"],
+					get = "SpellAnnouncer_SS_GetRaid",
+					set = "SpellAnnouncer_SS_SetRaid",
+					order = 330,
+					width = "full" 
+				}
+			}
+		}
+	}
+}
+
 --set default options
 local defaults = {
 	profile = {
@@ -207,7 +283,12 @@ local defaults = {
 		StoneManager_SSLevel = 5,
 		StoneManager_TradingRaid = true,
 		StoneManager_TradingParty = true,
-		DemonManager_DemonLevel = 1
+		DemonManager_DemonLevel = 1,
+		AnnounceSummon_Raid = false,
+		AnnounceSummon_Party = false,
+		AnnounceSS_Solo = false,
+		AnnounceSS_Raid = false,
+		AnnounceSS_Party = false
 	},
 	char = {
 		Healthstone_Counter = 0,
@@ -259,6 +340,14 @@ local ssItemLookup = {
 	"Soulstone",
 	"Greater Soulstone",
 	"Major Soulstone"
+}
+
+local ssUsageLookup = {
+	"20707",
+	"20762",
+	"20763",
+	"20764",
+	"20765"
 }
 
 local demonLookup = {
@@ -343,7 +432,8 @@ function WU:OnInitialize()
 		local optionTables = {
 			{L["WU"] .. "-ShardManager", optionsShardManager},
 			{L["WU"] .. "-StoneManager", optionsStoneManager},
-			{L["WU"] .. "-DemonManager", optionsDemonManager}
+			{L["WU"] .. "-DemonManager", optionsDemonManager},
+			{L["WU"] .. "-SpellAnnouncer", optionsSpellAnnouncer}
 		}
 		for i,v in ipairs(optionTables) do
 			LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(v[1], v[2])
@@ -351,7 +441,8 @@ function WU:OnInitialize()
 		local blizzOptions = {
 			{L["WU"] .. "-ShardManager", L["ShardManager"]},
 			{L["WU"] .. "-StoneManager", L["StoneManager"]},
-			{L["WU"] .. "-DemonManager", L["DemonManager"]}
+			{L["WU"] .. "-DemonManager", L["DemonManager"]},
+			{L["WU"] .. "-SpellAnnouncer", L["SpellAnnouncer"]}
 		}
 		for i,v in ipairs(blizzOptions) do
 			LibStub("AceConfigDialog-3.0"):AddToBlizOptions(v[1], v[2], L["WU"])
@@ -443,9 +534,11 @@ function WU:CombatLogEvent(...)
 	local isPlayer = bit.band(srcFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0
 	local playerName,_ = UnitName("player")
 	if (event == "SPELL_CAST_SUCCESS" and isPlayer) then
+		-- If spell source was player
 		if (srcName == playerName) then
 			local spellName = select(13, ...)
 			local trackSpellNames = {}
+			-- Check if spell was create healthstone
 			for _, spellID in ipairs(hsLookup) do
 				local lookupName = GetSpellInfo(spellID)
 				if (lookupName == spellName) then
@@ -455,6 +548,7 @@ function WU:CombatLogEvent(...)
 					break
 				end
 			end
+			-- Check if spell was create soulstone
 			for _, spellID in ipairs(ssLookup) do
 				local lookupName = GetSpellInfo(spellID)
 				if (lookupName == spellName) then
@@ -464,6 +558,7 @@ function WU:CombatLogEvent(...)
 					break
 				end
 			end
+			-- Check if spell was ritual of summoning
 			for _, spellID in ipairs({"698"}) do
 				local lookupName = GetSpellInfo(spellID)
 				if (lookupName == spellName) then
@@ -471,6 +566,32 @@ function WU:CombatLogEvent(...)
 					self.db.char.Summon_Session_Counter = self.db.char.Summon_Session_Counter + 1
 					WU:StatsPanel_RefreshUI()
 					break
+				end
+			end
+			-- Check if spell was soulstone resurrection
+			for _, spellID in ipairs(ssUsageLookup) do
+				local lookupName = GetSpellInfo(spellID)
+				if (lookupName == spellName) then
+					if (self.db.profile.AnnounceSS_Raid and UnitInRaid("player")) then
+						WU:SpellAnnouncer_AnnounceSS("RAID", dstName)
+					elseif (self.db.profile.AnnounceSS_Party and UnitInParty("player") and not UnitInRaid("player")) then
+						WU:SpellAnnouncer_AnnounceSS("PARTY", dstName)
+					elseif (self.db.profile.AnnounceSS_Solo) then
+						WU:SpellAnnouncer_AnnounceSS("EMOTE", dstName)
+					end
+					break
+				end
+			end
+		end
+	elseif (event == "SPELL_CAST_START" and isPlayer) then
+		if (srcName == playerName) then
+			local spellName = select(13, ...)
+			local lookupName = GetSpellInfo("698")
+			if (spellName == lookupName) then
+				if (self.db.profile.AnnounceSummon_Raid and UnitInRaid("player")) then
+					WU:SpellAnnouncer_AnnounceSummon("RAID", UnitName("target"))
+				elseif (self.db.profile.AnnounceSummon_Party and UnitInParty("player") and not UnitInRaid("player")) then
+					WU:SpellAnnouncer_AnnounceSummon("PARTY", UnitName("target"))
 				end
 			end
 		end
@@ -949,6 +1070,78 @@ function WU:DemonManager_RefreshUI()
 		WU:DemonManager_StartTimer()
 	end
 
+end
+
+function WU:SpellAnnouncer_Summon_GetParty()
+	return self.db.profile.AnnounceSummon_Party
+end
+
+function WU:SpellAnnouncer_Summon_GetRaid()
+	return self.db.profile.AnnounceSummon_Raid
+end
+
+function WU:SpellAnnouncer_Summon_SetParty(info, value)
+	self.db.profile.AnnounceSummon_Party = value
+	print(L["SpellAnnouncer_SetOption_Summon_Party"](value))
+end
+
+function WU:SpellAnnouncer_Summon_SetRaid(info, value)
+	self.db.profile.AnnounceSummon_Raid = value
+	print(L["SpellAnnouncer_SetOption_Summon_Raid"](value))
+end
+
+function WU:SpellAnnouncer_SS_GetSolo()
+	return self.db.profile.AnnounceSS_Solo
+end
+
+function WU:SpellAnnouncer_SS_GetParty()
+	return self.db.profile.AnnounceSS_Party
+end
+
+function WU:SpellAnnouncer_SS_GetRaid()
+	return self.db.profile.AnnounceSS_Raid
+end
+
+function WU:SpellAnnouncer_SS_SetSolo(info, value)
+	self.db.profile.AnnounceSS_Solo = value
+	print(L["SpellAnnouncer_SetOption_SS_Solo"](value))
+end
+
+function WU:SpellAnnouncer_SS_SetParty(info, value)
+	self.db.profile.AnnounceSS_Party = value
+	print(L["SpellAnnouncer_SetOption_SS_Party"](value))
+end
+
+function WU:SpellAnnouncer_SS_SetRaid(info, value)
+	self.db.profile.AnnounceSS_Raid = value
+	print(L["SpellAnnouncer_SetOption_SS_Raid"](value))
+end
+
+function WU:SpellAnnouncer_AnnounceSummon(channel, target)
+	local dest, zoneText, subZoneText
+	if not (GetZoneText() == "") then
+		zoneText = GetZoneText()
+	end
+	if not (GetSubZoneText() == "") then
+		subZoneText = GetSubZoneText()
+	end
+	if (zoneText) then
+		dest = zoneText
+		if (subZoneText) then
+			dest = dest .. " - " .. subZoneText
+		end
+	else
+		dest = L["UnknownDestination"]
+	end
+	SendChatMessage(L["AnnounceSummon"](target, dest), channel)
+end
+
+function WU:SpellAnnouncer_AnnounceSS(channel, target)
+	if (channel == "EMOTE") then
+		SendChatMessage(L["AnnounceSSEmote"](target), channel)
+	else
+		SendChatMessage(L["AnnounceSS"](target), channel)
+	end
 end
 
 function WU:AppTray_StartTimer()

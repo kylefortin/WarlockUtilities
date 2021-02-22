@@ -108,6 +108,67 @@ L["Option_Help_Lines"] = function()
 end
 L["Option_Config_Name"] = "Config"
 L["Option_Config_Desc"] = "Opens the configuration menu."
+L["SpellAnnouncer"] = "Spell Announcer"
+L["SpellAnnouncer_Desc_Name"] = "Spell Announcer Options"
+L["SpellAnnouncer_OptionGroup_Summon_Name"] = "Summon Announce Options"
+L["SpellAnnouncer_OptionGroup_Summon_Desc"] = "Automatic summon announcing options."
+L["SpellAnnouncer_Option_Summon_EnableParty_Name"] = "Party"
+L["SpellAnnouncer_Option_Summon_EnableParty_Desc"] = "Enable summon announces when in party."
+L["SpellAnnouncer_Option_Summon_EnableRaid_Name"] = "Raid"
+L["SpellAnnouncer_Option_Summon_EnableRaid_Desc"] = "Enable summon announces when in raid."
+L["SpellAnnouncer_OptionGroup_SS_Name"] = "Soulstone Announce Options"
+L["SpellAnnouncer_OptionGroup_SS_Desc"] = "Automatic soulstone announcing options."
+L["SpellAnnouncer_Option_SS_EnableSolo_Name"] = "Solo"
+L["SpellAnnouncer_Option_SS_EnableSolo_Desc"] = "Enable soulstone announces when solo."
+L["SpellAnnouncer_Option_SS_EnableParty_Name"] = "Party"
+L["SpellAnnouncer_Option_SS_EnableParty_Desc"] = "Enable soulstone announces when in party."
+L["SpellAnnouncer_Option_SS_EnableRaid_Name"] = "Raid"
+L["SpellAnnouncer_Option_SS_EnableRaid_Desc"] = "Enable soulstone announces when in raid."
+L["SpellAnnouncer_SetOption_Summon_Party"] = function(v)
+	if (v) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Summon Announce - Party"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Summon Announce - Party"
+	end
+end
+L["SpellAnnouncer_SetOption_Summon_Raid"] = function(v)
+	if (v) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Summon Announce - Raid"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Summon Announce - Raid"
+	end
+end
+L["SpellAnnouncer_SetOption_SS_Solo"] = function(v)
+	if (v) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Soulstone Announce - Solo"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Soulstone Announce - Solo"
+	end
+end
+L["SpellAnnouncer_SetOption_SS_Party"] = function(v)
+	if (v) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Soulstone Announce - Party"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Soulstone Announce - Party"
+	end
+end
+L["SpellAnnouncer_SetOption_SS_Raid"] = function(v)
+	if (v) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Soulstone Announce - Raid"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Soulstone Announce - Raid"
+	end
+end
+L["AnnounceSummon"] = function(t, d)
+	return "Summoning " .. t .. " to " .. d .. ". Please click."
+end
+L["AnnounceSS"] = function(t)
+	return "Soulstone on " .. t .. "."
+end
+L["AnnounceSSEmote"] = function(t)
+	return "stores " .. t .. "'s soul."
+end
+L["UnknownDestination"] = " ...somewhere?... "
 
 --Misc
 L["CombatLockdown"] = "Please wait until you are out of combat..."
