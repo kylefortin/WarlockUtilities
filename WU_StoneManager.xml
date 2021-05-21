@@ -116,7 +116,7 @@
 		<Frames>
 		</Frames>
 	</Button>
-	<Frame name="WU_StoneManager" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
+	<Frame name="WU_StoneManager" frameStrata="DIALOG" toplevel="true" inherits="InsetFrameTemplate3" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
 		<Size>
 			<AbsDimension x="140" y="160"/>
 		</Size>
@@ -140,17 +140,6 @@
 				</FontString>
 			</Layer>
 		</Layers>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32"></AbsValue>
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="16"></AbsValue>
-			</EdgeSize>
-		</Backdrop>
 		<Frames>
 			<Button name="WU_StoneManager_PanelToggle" id="1" inherits="WU_StoneManager_Button_Template">
 				<Size>
@@ -169,7 +158,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Frame name="WU_StoneManager_Healthstone" id="100">
+			<Frame name="WU_StoneManager_Healthstone" inherits="InsetFrameTemplate3" id="100">
 				<Size>
 					<AbsDimension x="100" y="100"/>
 				</Size>
@@ -180,17 +169,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<BackgroundInsets>
-						<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
-					</BackgroundInsets>
-					<TileSize>
-						<AbsValue val="32"></AbsValue>
-					</TileSize>
-					<EdgeSize>
-						<AbsValue val="16"></AbsValue>
-					</EdgeSize>
-				</Backdrop>
 				<Frames>
 					<Button name="WU_StoneManager_CreateHealthstone" id="110" inherits="WU_StoneManager_ActionButton_Template" hidden="false">
 						<NormalTexture file="Interface\ICONS\inv_stone_04"/>
@@ -235,7 +213,7 @@
 					</Button>
 				</Frames>
 			</Frame>
-			<Frame name="WU_StoneManager_Soulstone" id="200" hidden="true">
+			<Frame name="WU_StoneManager_Soulstone" inherits="InsetFrameTemplate3" id="200" hidden="true">
 				<Size>
 					<AbsDimension x="100" y="100"/>
 				</Size>
@@ -246,17 +224,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<BackgroundInsets>
-						<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
-					</BackgroundInsets>
-					<TileSize>
-						<AbsValue val="32"></AbsValue>
-					</TileSize>
-					<EdgeSize>
-						<AbsValue val="16"></AbsValue>
-					</EdgeSize>
-				</Backdrop>
 				<Frames>
 					<Button name="WU_StoneManager_CreateSoulstone" id="210" inherits="WU_StoneManager_ActionButton_Template" hidden="false">
 						<NormalTexture file="Interface\ICONS\inv_misc_orb_04"/>

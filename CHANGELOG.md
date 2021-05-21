@@ -1,5 +1,9 @@
 # WarlockUtilities Change Log  
 
+## Version `2.0.0`
+- Change frames to inherit InsetFrameTemplate3
+- Update to comply with BCC game client
+
 ## Version `1.0.5`  
 - Minor UI tweaks  
 - Add SpellAnnounce module and related options  

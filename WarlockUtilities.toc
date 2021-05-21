@@ -1,8 +1,8 @@
 ## Title: WarlockUtilities |cff7fff7f -- AceAddon-3.0 --|r
-## Notes: Miscellaneous utilities for Warlocks in World of Warcraft Classic.
-## Version: 1.0.5
+## Notes: Miscellaneous utilities for Warlocks in World of Warcraft Burning Crusade Classic.
+## Version: 2.0.0
 ## Author: |cff027dbfKopernikus-Windseeker|r
-## Interface: 36935
+## Interface: 38707
 ## SavedVariables: WarlockUtilitiesOptionsDB
 ## OptionalDeps:  Ace3
 

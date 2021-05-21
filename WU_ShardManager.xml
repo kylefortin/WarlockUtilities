@@ -96,7 +96,7 @@
 			</OnLoad>
 		</Scripts>
 	</EditBox>
-	<Frame name="WU_ShardManager" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
+	<Frame name="WU_ShardManager" frameStrata="DIALOG" toplevel="true" inherits="InsetFrameTemplate3" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
 		<Size>
 			<AbsDimension x="140" y="285"/>
 		</Size>
@@ -138,17 +138,6 @@
 				</FontString>
 			</Layer>
 		</Layers>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32"></AbsValue>
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="16"></AbsValue>
-			</EdgeSize>
-		</Backdrop>
 		<Frames>
 			<Button name="WU_ShardManager_Toggle_Action" id="0" inherits="WU_ShardManager_Button_Template" hidden="false">
 				<Anchors>
@@ -195,7 +184,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Frame name="WU_ShardManager_Bags" id="300">
+			<Frame name="WU_ShardManager_Bags" inherits="InsetFrameTemplate3" id="300">
 				<Size>
 					<AbsDimension x="120" y="140"/>
 				</Size>
@@ -206,17 +195,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<BackgroundInsets>
-						<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
-					</BackgroundInsets>
-					<TileSize>
-						<AbsValue val="32"></AbsValue>
-					</TileSize>
-					<EdgeSize>
-						<AbsValue val="16"></AbsValue>
-					</EdgeSize>
-				</Backdrop>
 				<Frames>
 					<CheckButton name="WU_ShardManager_Bag1" id="310" inherits="WU_ShardManager_CheckButton_Template" hidden="false">
 						<Anchors>
@@ -290,7 +268,7 @@
 					</CheckButton>
 				</Frames>
 			</Frame>
-			<Frame name="WU_ShardManager_FillBags" id="400">
+			<Frame name="WU_ShardManager_FillBags" inherits="InsetFrameTemplate3" id="400">
 				<Size>
 					<AbsDimension x="120" y="140"/>
 				</Size>
@@ -301,17 +279,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<BackgroundInsets>
-						<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
-					</BackgroundInsets>
-					<TileSize>
-						<AbsValue val="32"></AbsValue>
-					</TileSize>
-					<EdgeSize>
-						<AbsValue val="16"></AbsValue>
-					</EdgeSize>
-				</Backdrop>
 				<Frames>
 					<CheckButton name="WU_ShardManager_FillBag1" id="410" inherits="WU_ShardManager_CheckButton_Template" hidden="false">
 						<Anchors>
@@ -385,7 +352,7 @@
 					</CheckButton>
 				</Frames>
 			</Frame>
-			<Frame name="WU_ShardManager_Number" id="500">
+			<Frame name="WU_ShardManager_Number" inherits="InsetFrameTemplate3" id="500">
 				<Size>
 					<AbsDimension x="100" y="140"/>
 				</Size>
@@ -396,17 +363,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<BackgroundInsets>
-						<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
-					</BackgroundInsets>
-					<TileSize>
-						<AbsValue val="32"></AbsValue>
-					</TileSize>
-					<EdgeSize>
-						<AbsValue val="16"></AbsValue>
-					</EdgeSize>
-				</Backdrop>
 				<Frames>
 					<EditBox name="WU_ShardManager_NumberInput" id="510" inherits="WU_ShardManager_EditBox_Template" hidden="false">
 						<Anchors>

@@ -75,7 +75,7 @@
 		<Frames>
 		</Frames>
 	</Button>
-	<Frame name="WU_DemonManager" frameStrata="DIALOG" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
+	<Frame name="WU_DemonManager" frameStrata="DIALOG" toplevel="true" inherits="InsetFrameTemplate3" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
 		<Size>
 			<AbsDimension x="140" y="165"/>
 		</Size>
@@ -99,19 +99,8 @@
 				</FontString>
 			</Layer>
 		</Layers>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32"></AbsValue>
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="16"></AbsValue>
-			</EdgeSize>
-		</Backdrop>
 		<Frames>
-			<Frame name="WU_DemonManager_Summoning" id="100">
+			<Frame name="WU_DemonManager_Summoning" inherits="InsetFrameTemplate3" id="100">
 				<Size>
 					<AbsDimension x="120" y="40"/>
 				</Size>
@@ -122,17 +111,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<BackgroundInsets>
-						<AbsInset bottom="4" left="4" right="4" top="4"></AbsInset>
-					</BackgroundInsets>
-					<TileSize>
-						<AbsValue val="32"></AbsValue>
-					</TileSize>
-					<EdgeSize>
-						<AbsValue val="16"></AbsValue>
-					</EdgeSize>
-				</Backdrop>
 				<Frames>
 					<Button name="WU_DemonManager_Summon" id="110" inherits="WU_DemonManager_ActionButton_Template" hidden="false">
 						<Anchors>
