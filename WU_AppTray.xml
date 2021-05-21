@@ -56,7 +56,6 @@
 		<Size>
 			<AbsDimension x="190" y="75"/>
 		</Size>
-		</Backdrop> -->
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString name="$parent_Header" inherits="WU_Font_Header" justifyH="CENTER">
