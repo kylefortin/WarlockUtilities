@@ -238,6 +238,7 @@ L["SummonDemon"] = function(level, shards)
 		"Voidwalker",
 		"Succubus",
 		"Felhunter",
+		"Felguard",
 		"Infernal",
 		"Doomguard",
 		"Enslave"

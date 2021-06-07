@@ -1,5 +1,9 @@
 # WarlockUtilities Change Log  
 
+## Version `2.0.1`  
+- Update Clear Shards function to delete by item ID  
+- Add Felguard to summon manager  
+
 ## Version `2.0.0`
 - Change frames to inherit InsetFrameTemplate3
 - Update to comply with BCC game client

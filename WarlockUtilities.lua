@@ -355,6 +355,7 @@ local demonLookup = {
 	"697", --Summon Voidwalker
 	"712", --Summon Succubus
 	"691", --Summon Felhunter
+	"30146", --Summon Felguard
 	"1122", --Inferno
 	"18540", --Ritual of Doom
 	"11725" --Ensalve Demon (Rank 3)
@@ -365,10 +366,13 @@ local demonNameLookup = {
 	"Voidwalker",
 	"Succubus",
 	"Felhunter",
+	"Felguard",
 	"Infernal",
 	"Doomguard",
 	"Enslave Demon"
 }
+
+local soulShardID = "6265"
 
 local autoTrading = False
 
@@ -697,7 +701,11 @@ function WU:ShardManager_DeleteShards()
 			if v then
 				for s=1,GetContainerNumSlots(i-1) do
 					n = GetContainerItemLink(i-1, s)
-					if n and string.find(n, "Soul Shard") then
+					isShard = false
+					if n then
+						isShard = WU:IsItemSoulShard(n)
+					end
+					if isShard then
 						PickupContainerItem(i-1, s)
 						DeleteCursorItem()
 					end
@@ -709,7 +717,11 @@ function WU:ShardManager_DeleteShards()
 		for b=0,4 do
 			for s=1,GetContainerNumSlots(b) do
 				n = GetContainerItemLink(b, s)
-				if n and string.find(n, "Soul Shard") then
+				isShard = false
+				if n then
+					isShard = WU:IsItemSoulShard(n)
+				end
+				if isShard then
 					if cleared < self.db.profile.ShardManager_Number then
 						PickupContainerItem(b, s)
 						DeleteCursorItem()
@@ -739,7 +751,11 @@ function WU:ShardManager_FillShards()
 							for s=1,GetContainerNumSlots(b) do
 								attempts = attempts + 1
 								n = GetContainerItemLink(b, s)
-								if n and string.find(n, "Soul Shard") then
+								isShard = false
+								if n then
+									isShard = WU:IsItemSoulShard(n)
+								end
+								if isShard then
 									PickupContainerItem(b, s)
 									if (i == 1) then
 										PutItemInBackpack()
@@ -996,8 +1012,8 @@ end
 
 function WU:DemonManager_IncrementDemonLevel()
 	self.db.profile.DemonManager_DemonLevel = self.db.profile.DemonManager_DemonLevel + 1
-	if self.db.profile.DemonManager_DemonLevel > 7 then
-		self.db.profile.DemonManager_DemonLevel = 7
+	if self.db.profile.DemonManager_DemonLevel > 8 then
+		self.db.profile.DemonManager_DemonLevel = 8
 	end
 	WU:DemonManager_RefreshUI()
 end
@@ -1056,12 +1072,17 @@ function WU:DemonManager_RefreshUI()
 	if not InCombatLockdown() then
 		if (self.db.profile.DemonManager_DemonLevel == 1) then
 			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel))
-		elseif (self.db.profile.DemonManager_DemonLevel == 5) then
-			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Infernal Stone")))
 		elseif (self.db.profile.DemonManager_DemonLevel == 6) then
+			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Infernal Stone")))
+		elseif (self.db.profile.DemonManager_DemonLevel == 7) then
 			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Demonic Figurine")))
 		else
 			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Soul Shard")))
+		end
+		if self.db.profile.DemonManager_DemonLevel == 5 then
+			WU_DemonManager_Summon:SetEnabled(WU:SpellKnown(demonLookup[5]))
+		else
+			WU_DemonManager_Summon:SetEnabled(true)
 		end
 		WU_DemonManager_Dismiss:SetEnabled(WU:DemonManager_HasDemon())
 		WU_DemonManager_Heal:SetEnabled(WU:DemonManager_HasDemon())
@@ -1223,6 +1244,21 @@ function WU:ExecuteConfig()
 	InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
 	InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
 end
+
+function WU:GetItemID(itemLink)
+	local regex = "([^:]+)"
+	local segments = {}
+	for w in itemLink:gmatch(regex) do
+		table.insert(segments, w)
+	end
+	return segments[2]
+end
+
+function WU:IsItemSoulShard(itemLink)
+	local itemID = WU:GetItemID(itemLink)
+	return (itemID == soulShardID)
+end
+	
 
 function WU:GetInventorySlotLocation(item)
 	local bag = nil
