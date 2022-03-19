@@ -120,7 +120,8 @@ local optionsStoneManager = {
 						L["StoneManager_Option_HS_2"],
 						L["StoneManager_Option_HS_3"],
 						L["StoneManager_Option_HS_4"],
-						L["StoneManager_Option_HS_5"]
+						L["StoneManager_Option_HS_5"],
+						L["StoneManager_Option_HS_6"]
 					},
 					get = "GetOptionHSLevel",
 					set = "SetOptionHSLevel",
@@ -136,7 +137,8 @@ local optionsStoneManager = {
 						L["StoneManager_Option_SS_2"],
 						L["StoneManager_Option_SS_3"],
 						L["StoneManager_Option_SS_4"],
-						L["StoneManager_Option_SS_5"]
+						L["StoneManager_Option_SS_5"],
+						L["StoneManager_Option_SS_6"]
 					},
 					get = "GetOptionSSLevel",
 					set = "SetOptionSSLevel",
@@ -190,6 +192,15 @@ local optionsDemonManager = {
 			type = "description",
 			name = L["DemonManager_Hint_Name"],
 			order = 200
+		},
+		incubus = {
+			type = "toggle",
+			name = L["DemonManager_Option_Incubus_Name"],
+			desc = L["DemonManager_Option_Incubus_Desc"],
+			get = "DemonManager_GetIncubus",
+			set = "DemonManager_SetIncubus",
+			order = 300,
+			width = "full"
 		}
 	}
 }
@@ -270,6 +281,56 @@ local optionsSpellAnnouncer = {
 	}
 }
 
+local optionsAppTray = {
+	name = L["AppTray"],
+	handler = WU,
+	type = "group",
+	args = {
+		desc = {
+			type = "description",
+			name = L["AppTray_Desc_Name"],
+			order = 100
+		},
+		position = {
+			type = "group",
+			name = L["AppTray_OptionGroup_Position_Name"],
+			desc = L["AppTray_OptionGroup_Position_Desc"],
+			order = 200,
+			inline = true,
+			args = {
+				border = {
+					type = "select",
+					name = L["AppTray_Option_Border_Name"],
+					desc = L["AppTray_Option_Border_Desc"],
+					values = {L["AppTray_Option_Border_Top"],
+						L["AppTray_Option_Border_Bottom"],
+						L["AppTray_Option_Border_Left"],
+						L["AppTray_Option_Border_Right"]
+					},
+					get = "GetOptionBorder",
+					set = "SetOptionBorder",
+					style = "radio",
+					order = 201,
+					width = "full"
+				},
+				offset = {
+					name = L["AppTray_Option_Offset_Name"],
+					desc = L["AppTray_Option_Offset_Desc"],
+					type = "range",
+					min = -1920,
+					max = 1920,
+					softMin = -1000,
+					softMax = 1000,
+					step = 1,
+					get = "GetOptionOffset",
+					set = "SetOptionOffset",
+					isPercent = false
+				}
+			}
+		}
+	}
+}
+
 --set default options
 local defaults = {
 	profile = {
@@ -279,16 +340,19 @@ local defaults = {
 		ShardManager_FillBags = {false, false, false, false, false},
 		ShardManager_Number = 0,
 		StoneManager_Type = "hs",
-		StoneManager_HSLevel = 5,
-		StoneManager_SSLevel = 5,
+		StoneManager_HSLevel = 6,
+		StoneManager_SSLevel = 6,
 		StoneManager_TradingRaid = true,
 		StoneManager_TradingParty = true,
 		DemonManager_DemonLevel = 1,
+		DemonManager_Incubus = false,
 		AnnounceSummon_Raid = false,
 		AnnounceSummon_Party = false,
 		AnnounceSS_Solo = false,
 		AnnounceSS_Raid = false,
-		AnnounceSS_Party = false
+		AnnounceSS_Party = false,
+		AppTray_Border = 4,
+		AppTray_Offset = 0
 	},
 	char = {
 		Healthstone_Counter = 0,
@@ -308,6 +372,7 @@ local healthFunnelLookup = {
 	"11693", --Health Funnel (Rank 5)
 	"11694", --Health Funnel (Rank 6)
 	"11695", --Health Funnel (Rank 7)
+	"27259" --Health Funnel (Rank 8)
 }
 
 local hsLookup = {
@@ -315,7 +380,8 @@ local hsLookup = {
 	"6202", --Create Healthstone (Lesser)
 	"5699", --Create Healthstone
 	"11729", --Create Healthstone (Greater)
-	"11730" --Create Healthstone (Major)
+	"11730", --Create Healthstone (Major)
+	"27230" --Create Healthstone (Master)
 }
 
 local hsItemLookup = {
@@ -323,7 +389,8 @@ local hsItemLookup = {
 	"Lesser Healthstone",
 	"Healthstone",
 	"Greater Healthstone",
-	"Major Healthstone"
+	"Major Healthstone",
+	"Master Healthstone"
 }
 
 local ssLookup = {
@@ -331,7 +398,8 @@ local ssLookup = {
 	"20752", --Create Soulstone (Lesser)
 	"20755", --Create Soulstone
 	"20756", --Create Soulstone (Greater)
-	"20757" --Create Soulstone (Major)
+	"20757", --Create Soulstone (Major)
+	"27238" --Create Soulstone (Master)
 }
 
 local ssItemLookup = {
@@ -339,7 +407,8 @@ local ssItemLookup = {
 	"Lesser Soulstone",
 	"Soulstone",
 	"Greater Soulstone",
-	"Major Soulstone"
+	"Major Soulstone",
+	"Master Soulstone"
 }
 
 local ssUsageLookup = {
@@ -347,7 +416,8 @@ local ssUsageLookup = {
 	"20762",
 	"20763",
 	"20764",
-	"20765"
+	"20765",
+	"27239"
 }
 
 local demonLookup = {
@@ -437,7 +507,8 @@ function WU:OnInitialize()
 			{L["WU"] .. "-ShardManager", optionsShardManager},
 			{L["WU"] .. "-StoneManager", optionsStoneManager},
 			{L["WU"] .. "-DemonManager", optionsDemonManager},
-			{L["WU"] .. "-SpellAnnouncer", optionsSpellAnnouncer}
+			{L["WU"] .. "-SpellAnnouncer", optionsSpellAnnouncer},
+			{L["WU"] .. "-AppTray", optionsAppTray}
 		}
 		for i,v in ipairs(optionTables) do
 			LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(v[1], v[2])
@@ -446,7 +517,8 @@ function WU:OnInitialize()
 			{L["WU"] .. "-ShardManager", L["ShardManager"]},
 			{L["WU"] .. "-StoneManager", L["StoneManager"]},
 			{L["WU"] .. "-DemonManager", L["DemonManager"]},
-			{L["WU"] .. "-SpellAnnouncer", L["SpellAnnouncer"]}
+			{L["WU"] .. "-SpellAnnouncer", L["SpellAnnouncer"]},
+			{L["WU"] .. "-AppTray", L["AppTray"]}
 		}
 		for i,v in ipairs(blizzOptions) do
 			LibStub("AceConfigDialog-3.0"):AddToBlizOptions(v[1], v[2], L["WU"])
@@ -1006,6 +1078,21 @@ function WU:DemonManager_StopStaticTimer()
 	self:CancelTimer(self.DemonManager_StaticTimer)
 end
 
+function WU:DemonManager_GetIncubus()
+	return self.db.profile.DemonManager_Incubus
+end
+
+function WU:DemonManager_SetIncubus(info, value)
+	if (value and WU:SpellKnown("713")) then
+		self.db.profile.DemonManager_Incubus = value
+		print(L["DemonManager_SetOption_Incubus"](value))
+	else
+		self.db.profile.DemonManager_Incubus = false
+		print(L["DemonManager_SetOption_IncubusError"])
+	end
+	
+end
+
 function WU:DemonManager_GetDemonLevel()
 	return self.db.profile.DemonManager_DemonLevel
 end
@@ -1034,7 +1121,12 @@ end
 function WU:DemonManager_SummonDemon(source, button)
 	if not InCombatLockdown() then
 		source:SetAttribute("type", "spell")
-		source:SetAttribute("spell", demonLookup[self.db.profile.DemonManager_DemonLevel])
+		if (self.db.profile.DemonManager_DemonLevel == 3 and WU:DemonManager_GetIncubus()) then
+			spellID = "713"
+		else
+			spellID = demonLookup[self.db.profile.DemonManager_DemonLevel]
+		end
+		source:SetAttribute("spell", spellID)
 	end
 end
 
@@ -1069,6 +1161,10 @@ function WU:DemonManager_RefreshUI()
 	if (self:TimeLeft(self.DemonManager_Timer) > 0) then
 		WU:DemonManager_StopTimer()
 	end
+	-- If static timer is running
+	if (self:TimeLeft(self.DemonManager_StaticTimer) > 0) then
+		WU:DemonManager_StopStaticTimer()
+	end
 	if not InCombatLockdown() then
 		if (self.db.profile.DemonManager_DemonLevel == 1) then
 			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel))
@@ -1077,7 +1173,7 @@ function WU:DemonManager_RefreshUI()
 		elseif (self.db.profile.DemonManager_DemonLevel == 7) then
 			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Demonic Figurine")))
 		else
-			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Soul Shard")))
+			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Soul Shard"), WU:DemonManager_GetIncubus()))
 		end
 		if self.db.profile.DemonManager_DemonLevel == 5 then
 			WU_DemonManager_Summon:SetEnabled(WU:SpellKnown(demonLookup[5]))
@@ -1090,7 +1186,7 @@ function WU:DemonManager_RefreshUI()
 	else
 		WU:DemonManager_StartTimer()
 	end
-
+	WU:DemonManager_StartStaticTimer()
 end
 
 function WU:SpellAnnouncer_Summon_GetParty()
@@ -1165,8 +1261,29 @@ function WU:SpellAnnouncer_AnnounceSS(channel, target)
 	end
 end
 
+function WU:GetOptionBorder()
+	return self.db.profile.AppTray_Border
+end
+
+function WU:SetOptionBorder(info, value)
+	self.db.profile.AppTray_Offset = 0
+	self.db.profile.AppTray_Border = value
+	WU:AppTray_RefreshUI()
+	print(L["AppTray_SetOption_Border"](value))
+end
+
+function WU:GetOptionOffset()
+	return self.db.profile.AppTray_Offset
+end
+
+function WU:SetOptionOffset(info, value)
+	self.db.profile.AppTray_Offset = value
+	WU:AppTray_RefreshUI()
+end
+
 function WU:AppTray_StartTimer()
-	self.AppTray_Timer = self:ScheduleRepeatingTimer("AppTray_RefreshUI", 5)
+	WU:AppTray_RefreshUI()
+	self.AppTray_Timer = self:ScheduleRepeatingTimer("AppTray_RefreshUI", 2)
 end
 
 function WU:AppTray_StopTimer()
@@ -1176,10 +1293,47 @@ end
 function WU:AppTray_RefreshUI()
 	if not InCombatLockdown() then
 		if WU_AppTray:IsVisible() then
+			border = WU:GetOptionBorder()
+			offset = WU:GetOptionOffset()
+			WU_AppTray_Stats:ClearAllPoints()
+			if (border == 1) then
+				WU_AppTray_Stats:SetPoint("BOTTOMRIGHT", WU_AppTray, "BOTTOMRIGHT", 5, -5)
+			elseif (border == 2) then
+				WU_AppTray_Stats:SetPoint("TOPRIGHT", WU_AppTray, "TOPRIGHT", 5, 5)
+			elseif (border == 3) then
+				WU_AppTray_Stats:SetPoint("BOTTOMRIGHT", WU_AppTray, "BOTTOMRIGHT", 5, -5)
+			elseif (border == 4) then
+				WU_AppTray_Stats:SetPoint("BOTTOMLEFT", WU_AppTray, "BOTTOMLEFT", -5, -5)
+			end
+			WU_AppTray:ClearAllPoints()
 			if not MouseIsOver(WU_AppTray) then
-				WU_AppTray_PullTab:SetAlpha(0.75)
-				WU_AppTray:ClearAllPoints()
-				WU_AppTray:SetPoint("LEFT", UIParent, "RIGHT", -10, 0)
+				if (border == 1) then
+					WU_AppTray_PullTab_Top:SetAlpha(0.75)
+					WU_AppTray:SetPoint("BOTTOM", UIParent, "TOP", offset, -10)
+				elseif (border == 2) then
+					WU_AppTray_PullTab_Bottom:SetAlpha(0.75)
+					WU_AppTray:SetPoint("TOP", UIParent, "BOTTOM", offset, 10)
+				elseif (border == 3) then
+					WU_AppTray_PullTab_Left:SetAlpha(0.75)
+					WU_AppTray:SetPoint("RIGHT", UIParent, "LEFT", 10, offset)
+				elseif (border == 4) then
+					WU_AppTray_PullTab_Right:SetAlpha(0.75)
+					WU_AppTray:SetPoint("LEFT", UIParent, "RIGHT", -10, offset)
+				end
+			else
+				WU_AppTray_PullTab_Top:SetAlpha(0)
+				WU_AppTray_PullTab_Bottom:SetAlpha(0)
+				WU_AppTray_PullTab_Left:SetAlpha(0)
+				WU_AppTray_PullTab_Right:SetAlpha(0)
+				if (border == 1) then
+					WU_AppTray:SetPoint("TOP", UIParent, "TOP", offset, 0);
+				elseif (border == 2) then
+					WU_AppTray:SetPoint("BOTTOM", UIParent, "BOTTOM", offset, 0);
+				elseif (border == 3) then
+					WU_AppTray:SetPoint("LEFT", UIParent, "LEFT", 0, offset);
+				elseif (border == 4) then
+					WU_AppTray:SetPoint("RIGHT", UIParent, "RIGHT", 0, offset);
+				end
 			end
 		end
 	end

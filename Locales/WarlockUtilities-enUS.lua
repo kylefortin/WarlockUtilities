@@ -38,11 +38,13 @@ L["StoneManager_Option_HS_2"] = "Lesser"
 L["StoneManager_Option_HS_3"] = "Normal"
 L["StoneManager_Option_HS_4"] = "Greater"
 L["StoneManager_Option_HS_5"] = "Major"
+L["StoneManager_Option_HS_6"] = "Master"
 L["StoneManager_Option_SS_1"] = "Minor"
 L["StoneManager_Option_SS_2"] = "Lesser"
 L["StoneManager_Option_SS_3"] = "Normal"
 L["StoneManager_Option_SS_4"] = "Greater"
 L["StoneManager_Option_SS_5"] = "Major"
+L["StoneManager_Option_SS_6"] = "Master"
 L["StoneManager_OptionGroup_Trading_Name"] = "Trade Options"
 L["StoneManager_OptionGroup_Trading_Desc"] = "Automatic stone trading options."
 L["StoneManager_Option_EnableParty_Name"] = "Party"
@@ -58,8 +60,10 @@ L["StoneManager_SetOption_HSLevel"] = function(value)
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Normal"
 	elseif (value == 4) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Greater"
-	else
+	elseif (value == 5) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Major"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Master"
 	end
 end
 L["StoneManager_SetOption_SSLevel"] = function(value)
@@ -71,8 +75,10 @@ L["StoneManager_SetOption_SSLevel"] = function(value)
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Normal"
 	elseif (value == 4) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Greater"
-	else
+	elseif (value == 5) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Major"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Master"
 	end
 end
 L["StoneManager_SetOption_TradingParty"] = function(value)
@@ -92,6 +98,16 @@ end
 L["DemonManager"] = "Demon Manager"
 L["DemonManager_Desc_Name"] = "Demon Manager options."
 L["DemonManager_Hint_Name"] = "Hint: Scroll the mouse wheel on the Summon Demon button to change the demon to summon."
+L["DemonManager_Option_Incubus_Name"] = "Use Incubus"
+L["DemonManager_Option_Incubus_Desc"] = "Enable to summon Incubus instead of Succubus."
+L["DemonManager_SetOption_Incubus"] = function(value)
+	if (value) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Incubus"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Incubus"
+	end
+end
+L["DemonManager_SetOption_IncubusError"] = "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Incubus (Spell not trained.)"
 L["Option_Help_Name"] = "Help"
 L["Option_Help_Desc"] = "Shows a list of supported commands and options."
 L["Option_Help_Lines"] = function()
@@ -169,6 +185,29 @@ L["AnnounceSSEmote"] = function(t)
 	return "stores " .. t .. "'s soul."
 end
 L["UnknownDestination"] = " ...somewhere?... "
+L["AppTray"] = "App Tray"
+L["AppTray_Desc_Name"] = "App Tray Options"
+L["AppTray_OptionGroup_Position_Name"] = "App Tray Positioning Options"
+L["AppTray_OptionGroup_Position_Desc"] = "Controls which side of the screen the app tray docks to, and the offset from the center of that side."
+L["AppTray_Option_Border_Name"] = "Anchor to Screen Border"
+L["AppTray_Option_Border_Desc"] = "Sets which side of the screen to anchor the app tray to."
+L["AppTray_Option_Border_Top"] = "Top"
+L["AppTray_Option_Border_Bottom"] = "Bottom"
+L["AppTray_Option_Border_Left"] = "Left"
+L["AppTray_Option_Border_Right"] = "Right"
+L["AppTray_SetOption_Border"] = function(v)
+	if (v == 1) then
+		return "|cff7702bfWarlockUtilities:|r AppTray anchored to |cff12ad0cTop|r border."
+	elseif (v == 2) then
+		return "|cff7702bfWarlockUtilities:|r AppTray anchored to |cff12ad0cBottom|r border."
+	elseif (v == 3) then
+		return "|cff7702bfWarlockUtilities:|r AppTray anchored to |cff12ad0cLeft|r border."
+	else
+		return "|cff7702bfWarlockUtilities:|r AppTray anchored to |cff12ad0cRight|r border."
+	end
+end
+L["AppTray_Option_Offset_Name"] = "Offset"
+L["AppTray_Option_Offset_Desc"] = "Sets the offset from the center of the anchored screen border."
 
 --Misc
 L["CombatLockdown"] = "Please wait until you are out of combat..."
@@ -232,7 +271,7 @@ L["CreateSoulstone"] = function(level)
 	return t[level]
 end
 L["Soulstone"] = "Soulstone"
-L["SummonDemon"] = function(level, shards)
+L["SummonDemon"] = function(level, shards, incubus)
 	demons = {
 		"Imp",
 		"Voidwalker",
@@ -243,7 +282,11 @@ L["SummonDemon"] = function(level, shards)
 		"Doomguard",
 		"Enslave"
 	}
-	text = demons[level]
+	if (level == 3 and incubus) then
+		text = "Incubus"
+	else
+		text = demons[level]
+	end
 	if not (level == 1) then
 		text = text .. " (" .. shards .. ")"
 	end

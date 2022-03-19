@@ -67,7 +67,46 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
-				<Texture name="WU_AppTray_PullTab">
+				<Texture name="WU_AppTray_PullTab_Top">
+					<Size>
+						<AbsDimension x="175" y="5"/>
+					</Size>
+					<Anchors>
+						<Anchor point="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="5"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="0.466" g="0.008" b="0.749" a="0.75"/>
+				</Texture>
+				<Texture name="WU_AppTray_PullTab_Bottom">
+					<Size>
+						<AbsDimension x="175" y="5"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-5"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="0.466" g="0.008" b="0.749" a="0.75"/>
+				</Texture>
+				<Texture name="WU_AppTray_PullTab_Left">
+					<Size>
+						<AbsDimension x="5" y="60"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT">
+							<Offset>
+								<AbsDimension x="-5" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="0.466" g="0.008" b="0.749" a="0.75"/>
+				</Texture>
+				<Texture name="WU_AppTray_PullTab_Right">
 					<Size>
 						<AbsDimension x="5" y="60"/>
 					</Size>
@@ -184,26 +223,13 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				_G["WU_AppTray_PullTab"]:SetAlpha(0.75);
-				self:ClearAllPoints();
-				self:SetPoint("LEFT", UIParent, "RIGHT", -10, 0);
 				WU:AppTray_StartTimer();
 			</OnLoad>
 			<OnEnter>
-				if not InCombatLockdown() then
-					_G["WU_AppTray_PullTab"]:SetAlpha(0.0);
-					self:ClearAllPoints();
-					self:SetPoint("RIGHT", UIParent, "RIGHT", 0, 0);
-				end
+				WU:AppTray_RefreshUI();
 			</OnEnter>
 			<OnLeave>
-				if not InCombatLockdown() then
-					if not (MouseIsOver(self)) then
-						_G["WU_AppTray_PullTab"]:SetAlpha(0.75);
-						self:ClearAllPoints();
-						self:SetPoint("LEFT", UIParent, "RIGHT", -10, 0);
-					end
-				end
+				WU:AppTray_RefreshUI();
 			</OnLeave>
 		</Scripts>
 	</Frame>

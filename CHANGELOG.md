@@ -1,5 +1,11 @@
 # WarlockUtilities Change Log  
 
+## Version `2.1.0`  
+- Update stone manager for Rank 6 stones  
+- Redesign DemonManager UI refresh strategy
+- Add support for Incubus
+- Allow AppTray to be docked to any side of screen  
+
 ## Version `2.0.1`  
 - Update Clear Shards function to delete by item ID  
 - Add Felguard to summon manager  
