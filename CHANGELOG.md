@@ -1,5 +1,10 @@
 # WarlockUtilities Change Log  
 
+- - -
+
+## Version `2.2.0`  
+- Add support for Soulwell over Healthstone
+
 ## Version `2.1.0`  
 - Update stone manager for Rank 6 stones  
 - Redesign DemonManager UI refresh strategy

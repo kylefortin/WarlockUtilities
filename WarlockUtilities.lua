@@ -105,6 +105,24 @@ local optionsStoneManager = {
 			name = L["StoneManager_Desc_Name"],
 			order = 100
 		},
+		soulwell = {
+			type = "group",
+			name = L["StoneManager_OptionGroup_Soulwell_Name"],
+			desc = L["StoneManager_OptionGroup_Soulwell_Desc"],
+			order = 150,
+			inline = true,
+			args = {
+				enable = {
+					type = "toggle",
+					name = L["StoneManager_Option_Soulwell_Enable_Name"],
+					desc = L["StoneManager_Option_Soulwell_Enable_Desc"],
+					get = "StoneManager_GetSoulwellEnabled",
+					set = "StoneManager_SetSoulwellEnabled",
+					order = 100,
+					width = "full"
+				},
+			}
+		},
 		level = {
 			type = "group",
 			name = L["StoneManager_OptionGroup_Level_Name"],
@@ -339,6 +357,8 @@ local defaults = {
 		ShardManager_Bags = {true, true, true, true, true},
 		ShardManager_FillBags = {false, false, false, false, false},
 		ShardManager_Number = 0,
+		StoneManager_SoulwellEnabled = true,
+		StoneManager_SoulwellLevel = 1,
 		StoneManager_Type = "hs",
 		StoneManager_HSLevel = 6,
 		StoneManager_SSLevel = 6,
@@ -362,6 +382,10 @@ local defaults = {
 		Summon_Counter = 0,
 		Summon_Session_Counter = 0
 	}
+}
+
+local soulwellLookup = {
+	"29893" --Ritual of Souls (Rank 1)
 }
 
 local healthFunnelLookup = {
@@ -552,6 +576,13 @@ function WU:OnInitialize()
 		for _,spellID in ipairs(healthFunnelLookup) do
 			if WU:SpellKnown(spellID) then
 				self.db.profile.healthFunnel = spellID
+			end
+		end
+
+		--Get Soulwell level
+		for _,spellID in ipairs(soulwellLookup) do
+			if WU:SpellKnown(spellID) then
+				self.db.profile.soulwell = spellID
 			end
 		end
 
@@ -848,7 +879,6 @@ function WU:ShardManager_FillShards()
 end
 
 function WU:ShardManager_RefreshUI()
-	-- If try again timer is running
 	if (self:TimeLeft(self.ShardManager_Timer) > 0) then
 		WU:ShardManager_StopTimer()
 	end
@@ -952,6 +982,15 @@ function WU:SetOptionSSLevel(info, value)
 	print(L["StoneManager_SetOption_SSLevel"](value))
 end
 
+function WU:StoneManager_GetSoulwellEnabled(info)
+	return self.db.profile.StoneManager_SoulwellEnabled
+end
+
+function WU:StoneManager_SetSoulwellEnabled(info, value)
+	self.db.profile.StoneManager_SoulwellEnabled = value
+	print(L["StoneManager_SetOption_SoulwellEnabled"](value))
+end
+
 function WU:StoneManager_GetTradingParty(info)
 	return self.db.profile.StoneManager_TradingParty
 end
@@ -980,8 +1019,16 @@ end
 
 function WU:StoneManager_CreateHealthstone(source, button)
 	if not InCombatLockdown() then
+		local spellID
 		source:SetAttribute("type", "spell")
-		source:SetAttribute("spell", hsLookup[self.db.profile.StoneManager_HSLevel])
+		if (self.db.profile.StoneManager_SoulwellEnabled) then
+			local s,d,_ = GetSpellCooldown(self.db.profile.soulwell)
+			if not (s > 0 and d > 0) then spellID = self.db.profile.soulwell end
+		else
+			spellID = hsLookup[self.db.profile.StoneManager_HSLevel]
+		end
+		if not spellID then spellID = hsLookup[self.db.profile.StoneManager_HSLevel] end
+		source:SetAttribute("spell", spellID)
 	end
 end
 
@@ -1028,13 +1075,32 @@ function WU:StoneManager_CheckBagsForSSLevel()
 end
 
 function WU:StoneManager_RefreshUI()
-	-- If try again timer is running
 	if (self:TimeLeft(self.StoneManager_Timer) > 0) then
 		WU:StoneManager_StopTimer()
 	end
 	if not InCombatLockdown() then
 		if (self.db.profile.StoneManager_Type == "hs") then
-			WU_StoneManager_PanelToggle:SetText(L["Healthstone"])
+			local icon, text
+			if (self.db.profile.StoneManager_SoulwellEnabled) then
+				icon = "Interface\\ICONS\\Spell_shadow_shadesofdarkness"
+				text = L["Soulwell"]
+				local s,d,_ = GetSpellCooldown(self.db.profile.soulwell)
+				if (s > 0 and d > 0) then
+					WU_StoneManager_CreateHealthstone:Disable()
+					WU_StoneManager_CreateHealthstone:SetAlpha(0.5)
+				else
+					WU_StoneManager_CreateHealthstone:Enable()
+					WU_StoneManager_CreateHealthstone:SetAlpha(1)
+				end
+			else
+				icon = "Interface\\ICONS\\inv_stone_04"
+				text = L["Healthstone"]
+			end
+			if not icon then icon = "Interface\\ICONS\\inv_stone_04" end
+			if not text then text = L["Healthstone"] end
+			WU_StoneManager_CreateHealthstone:SetNormalTexture(icon)
+			WU_StoneManager_CreateHealthstone:SetPushedTexture(icon)
+			WU_StoneManager_PanelToggle:SetText(text)
 			WU_StoneManager_Healthstone:Show()
 			WU_StoneManager_Soulstone:Hide()
 		else

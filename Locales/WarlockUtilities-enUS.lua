@@ -27,6 +27,10 @@ L["ShardManager_Option_TypeByBag"] = "Manage Shards by Bag"
 L["ShardManager_Option_TypeByNumber"] = "Manage Shards by Number"
 L["StoneManager"] = "Stone Manager"
 L["StoneManager_Desc_Name"] = "Stone Manager options."
+L["StoneManager_OptionGroup_Soulwell_Name"] = "Soulwell Options"
+L["StoneManager_OptionGroup_Soulwell_Desc"] = "Soulwell options"
+L["StoneManager_Option_Soulwell_Enable_Name"] = "Enable Soulwell"
+L["StoneManager_Option_Soulwell_Enable_Desc"] = "Enable use of soulwell instead of healthstone, if known and not on cooldown."
 L["StoneManager_OptionGroup_Level_Name"] = "Stone Rank Options"
 L["StoneManager_OptionGroup_Level_Desc"] = "Stone rank options."
 L["StoneManager_Option_HS_Name"] = "Healthstone Rank"
@@ -51,6 +55,13 @@ L["StoneManager_Option_EnableParty_Name"] = "Party"
 L["StoneManager_Option_EnableParty_Desc"] = "Enable automatic healthstone trading for party members."
 L["StoneManager_Option_EnableRaid_Name"] = "Raid"
 L["StoneManager_Option_EnableRaid_Desc"] = "Enable automatic healthstone trading for raid members."
+L["StoneManager_SetOption_SoulwellEnabled"] = function(value)
+	if (value) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Soulwell"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Soulwell"
+	end
+end
 L["StoneManager_SetOption_HSLevel"] = function(value)
 	if (value == 1) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Minor"
@@ -249,6 +260,7 @@ end
 L["Sacrifice"] = "Sacrifice"
 L["Dismiss"] = "Dismiss"
 L["Heal"] = "Heal"
+L["Soulwell"] = "Soulwell"
 L["Healthstone"] = "Healthstone"
 L["CreateHealthstone"] = function(level)
 	t = {
