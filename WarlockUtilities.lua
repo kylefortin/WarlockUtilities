@@ -295,6 +295,42 @@ local optionsSpellAnnouncer = {
 					width = "full" 
 				}
 			}
+		},
+		deathcoil = {
+			type = "group",
+			name = L["SpellAnnouncer_OptionGroup_DC_Name"],
+			desc = L["SpellAnnouncer_OptionGroup_DC_Desc"],
+			order = 400,
+			inline = true,
+			args = {
+				enableSolo = {
+					type = "toggle",
+					name = L["SpellAnnouncer_Option_DC_EnableSolo_Name"],
+					desc = L["SpellAnnouncer_Option_DC_EnableSolo_Desc"],
+					get = "SpellAnnouncer_DC_GetSolo",
+					set = "SpellAnnouncer_DC_SetSolo",
+					order = 410,
+					width = "full"
+				},
+				enableParty = {
+					type = "toggle",
+					name = L["SpellAnnouncer_Option_DC_EnableParty_Name"],
+					desc = L["SpellAnnouncer_Option_DC_EnableParty_Desc"],
+					get = "SpellAnnouncer_DC_GetParty",
+					set = "SpellAnnouncer_DC_SetParty",
+					order = 420,
+					width = "full"
+				},
+				enableRaid = {
+					type = "toggle",
+					name = L["SpellAnnouncer_Option_DC_EnableRaid_Name"],
+					desc = L["SpellAnnouncer_Option_DC_EnableRaid_Desc"],
+					get = "SpellAnnouncer_DC_GetRaid",
+					set = "SpellAnnouncer_DC_SetRaid",
+					order = 430,
+					width = "full" 
+				}
+			}
 		}
 	}
 }
@@ -371,6 +407,9 @@ local defaults = {
 		AnnounceSS_Solo = false,
 		AnnounceSS_Raid = false,
 		AnnounceSS_Party = false,
+		AnnounceDC_Solo = false,
+		AnnounceDC_Raid = false,
+		AnnounceDC_Party = false,
 		AppTray_Border = 4,
 		AppTray_Offset = 0
 	},
@@ -444,6 +483,17 @@ local ssUsageLookup = {
 	"27239"
 }
 
+local summonLookup = {
+	"698" --Ritual of Summoning
+}
+
+local dcLookup = {
+	"6789", --Death Coil (Rank 1)
+	"17925", --Death Coil (Rank 2)
+	"17926", --Death Coil (Rank 3)
+	"27223" --Death Coil (Rank 4)
+}
+
 local demonLookup = {
 	"688", --Summon Imp
 	"697", --Summon Voidwalker
@@ -463,12 +513,12 @@ local demonNameLookup = {
 	"Felguard",
 	"Infernal",
 	"Doomguard",
-	"Enslave Demon"
+	"Subjugate Demon"
 }
 
 local soulShardID = "6265"
 
-local autoTrading = False
+local autoTrading = false
 
 function WU:OnEnable()
 	--Enabled message
@@ -620,8 +670,8 @@ function WU:TradeOpened()
 			if TradeFrame:IsShown() then
 				ClearCursor()
 				PickupContainerItem(loc.bag, loc.slot)
-				tradePos=TradeFrame_GetAvailableSlot()
-				if tradePos==nil then
+				local tradePos = TradeFrame_GetAvailableSlot()
+				if (tradePos == nil) then
 					return
 				end
 				ClickTradeButton(tradePos)
@@ -637,18 +687,15 @@ function WU:TradeClosed()
 end
 
 function WU:CombatLogEvent(...)
-	local timestamp, event, hideCaster, srcGuid, srcName, srcFlags, srcRaidFlags, dstGuid, dstName, dstFlags, dstRaidFlags = ...
+	local _, event, _, _, srcName, srcFlags, _, _, dstName, _, _ = ...
 	local isPlayer = bit.band(srcFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0
-	local playerName,_ = UnitName("player")
+	local playerName, _ = UnitName("player")
 	if (event == "SPELL_CAST_SUCCESS" and isPlayer) then
-		-- If spell source was player
 		if (srcName == playerName) then
-			local spellName = select(13, ...)
-			local trackSpellNames = {}
 			-- Check if spell was create healthstone
 			for _, spellID in ipairs(hsLookup) do
 				local lookupName = GetSpellInfo(spellID)
-				if (lookupName == spellName) then
+				if (lookupName == select(13, ...)) then
 					self.db.char.Healthstone_Counter = self.db.char.Healthstone_Counter + 1
 					self.db.char.Healthstone_Session_Counter = self.db.char.Healthstone_Session_Counter + 1
 					WU:StatsPanel_RefreshUI()
@@ -658,7 +705,7 @@ function WU:CombatLogEvent(...)
 			-- Check if spell was create soulstone
 			for _, spellID in ipairs(ssLookup) do
 				local lookupName = GetSpellInfo(spellID)
-				if (lookupName == spellName) then
+				if (lookupName == select(13, ...)) then
 					self.db.char.Soulstone_Counter = self.db.char.Soulstone_Counter + 1
 					self.db.char.Soulstone_Session_Counter = self.db.char.Soulstone_Session_Counter + 1
 					WU:StatsPanel_RefreshUI()
@@ -668,17 +715,31 @@ function WU:CombatLogEvent(...)
 			-- Check if spell was ritual of summoning
 			for _, spellID in ipairs({"698"}) do
 				local lookupName = GetSpellInfo(spellID)
-				if (lookupName == spellName) then
+				if (lookupName == select(13, ...)) then
 					self.db.char.Summon_Counter = self.db.char.Summon_Counter + 1
 					self.db.char.Summon_Session_Counter = self.db.char.Summon_Session_Counter + 1
 					WU:StatsPanel_RefreshUI()
 					break
 				end
 			end
+			-- Check if spell was death coil
+			for _, spellID in ipairs(dcLookup) do
+				local lookupName = GetSpellInfo(spellID)
+				if (lookupName == select(13, ...)) then
+					if (self.db.profile.AnnounceDC_Raid and UnitInRaid("player")) then
+						WU:SpellAnnouncer_AnnounceDC("SAY")
+					elseif (self.db.profile.AnnounceDC_Party and UnitInParty("player") and not UnitInRaid("player")) then
+						WU:SpellAnnouncer_AnnounceDC("SAY")
+					elseif (self.db.profile.AnnounceDC_Solo) then
+						WU:SpellAnnouncer_AnnounceDC("EMOTE")
+					end
+					break
+				end
+			end
 			-- Check if spell was soulstone resurrection
 			for _, spellID in ipairs(ssUsageLookup) do
 				local lookupName = GetSpellInfo(spellID)
-				if (lookupName == spellName) then
+				if (lookupName == select(13, ...)) then
 					if (self.db.profile.AnnounceSS_Raid and UnitInRaid("player")) then
 						WU:SpellAnnouncer_AnnounceSS("RAID", dstName)
 					elseif (self.db.profile.AnnounceSS_Party and UnitInParty("player") and not UnitInRaid("player")) then
@@ -692,14 +753,26 @@ function WU:CombatLogEvent(...)
 		end
 	elseif (event == "SPELL_CAST_START" and isPlayer) then
 		if (srcName == playerName) then
-			local spellName = select(13, ...)
 			local lookupName = GetSpellInfo("698")
-			if (spellName == lookupName) then
+			if (lookupName == select(13, ...)) then
 				if (self.db.profile.AnnounceSummon_Raid and UnitInRaid("player")) then
 					WU:SpellAnnouncer_AnnounceSummon("RAID", UnitName("target"))
 				elseif (self.db.profile.AnnounceSummon_Party and UnitInParty("player") and not UnitInRaid("player")) then
 					WU:SpellAnnouncer_AnnounceSummon("PARTY", UnitName("target"))
 				end
+			end
+		end
+	elseif (event == "SPELL_UPDATE_COOLDOWN" and isPlayer) then
+		if (srcName == playerName) then
+			--Refresh open UIs on cooldown update
+			if (WU_StoneManager:IsVisible()) then
+				WU:StoneManager_RefreshUI()
+			end
+			if (WU_ShardManager:IsVisible()) then
+				WU:ShardManager_RefreshUI()
+			end
+			if (WU_DemonManager:IsVisible()) then
+				WU:DemonManager_RefreshUI()
 			end
 		end
 	end
@@ -803,8 +876,8 @@ function WU:ShardManager_DeleteShards()
 		for i,v in ipairs(self.db.profile.ShardManager_Bags) do
 			if v then
 				for s=1,GetContainerNumSlots(i-1) do
-					n = GetContainerItemLink(i-1, s)
-					isShard = false
+					local n = GetContainerItemLink(i-1, s)
+					local isShard = false
 					if n then
 						isShard = WU:IsItemSoulShard(n)
 					end
@@ -816,11 +889,11 @@ function WU:ShardManager_DeleteShards()
 			end
 		end
 	else
-		cleared = 0
+		local cleared = 0
 		for b=0,4 do
 			for s=1,GetContainerNumSlots(b) do
-				n = GetContainerItemLink(b, s)
-				isShard = false
+				local n = GetContainerItemLink(b, s)
+				local isShard = false
 				if n then
 					isShard = WU:IsItemSoulShard(n)
 				end
@@ -1017,6 +1090,14 @@ function WU:StoneManager_StopTimer()
 	self:CancelTimer(self.StoneManager_Timer)
 end
 
+function WU:StoneManager_StartStaticTimer()
+	self.StoneManager_StaticTimer = self:ScheduleRepeatingTimer("StoneManager_RefreshUI", 5)
+end
+
+function WU:StoneManager_StopStaticTimer()
+	self:CancelTimer(self.StoneManager_StaticTimer)
+end
+
 function WU:StoneManager_CreateHealthstone(source, button)
 	if not InCombatLockdown() then
 		local spellID
@@ -1078,6 +1159,10 @@ function WU:StoneManager_RefreshUI()
 	if (self:TimeLeft(self.StoneManager_Timer) > 0) then
 		WU:StoneManager_StopTimer()
 	end
+	-- If static timer is running
+	if (self:TimeLeft(self.StoneManager_StaticTimer) > 0) then
+		WU:StoneManager_StopStaticTimer()
+	end
 	if not InCombatLockdown() then
 		if (self.db.profile.StoneManager_Type == "hs") then
 			local icon, text
@@ -1086,11 +1171,13 @@ function WU:StoneManager_RefreshUI()
 				text = L["Soulwell"]
 				local s,d,_ = GetSpellCooldown(self.db.profile.soulwell)
 				if (s > 0 and d > 0) then
+					WU_StoneManager_CreateHealthstone_Cooldown:SetCooldown(s, d)
+					WU_StoneManager_CreateHealthstone_Cooldown:Show()
 					WU_StoneManager_CreateHealthstone:Disable()
-					WU_StoneManager_CreateHealthstone:SetAlpha(0.5)
 				else
+					WU_StoneManager_CreateHealthstone_Cooldown:Clear()
+					WU_StoneManager_CreateHealthstone_Cooldown:Hide()
 					WU_StoneManager_CreateHealthstone:Enable()
-					WU_StoneManager_CreateHealthstone:SetAlpha(1)
 				end
 			else
 				icon = "Interface\\ICONS\\inv_stone_04"
@@ -1111,6 +1198,7 @@ function WU:StoneManager_RefreshUI()
 	else
 		WU:StoneManager_StartTimer()
 	end
+	WU:StoneManager_StartStaticTimer()
 end
 
 function WU:ToggleDemonManager()
@@ -1327,6 +1415,41 @@ function WU:SpellAnnouncer_AnnounceSS(channel, target)
 	end
 end
 
+function WU:SpellAnnouncer_AnnounceDC(channel)
+	if (channel == "EMOTE") then
+		SendChatMessage(L["AnnounceDCEmote"], channel)
+	else
+		SendChatMessage(L["AnnounceDC"], channel)
+	end
+end
+
+function WU:SpellAnnouncer_DC_GetSolo()
+	return self.db.profile.AnnounceDC_Solo
+end
+
+function WU:SpellAnnouncer_DC_GetParty()
+	return self.db.profile.AnnounceDC_Party
+end
+
+function WU:SpellAnnouncer_DC_GetRaid()
+	return self.db.profile.AnnounceDC_Raid
+end
+
+function WU:SpellAnnouncer_DC_SetSolo(info, value)
+	self.db.profile.AnnounceDC_Solo = value
+	print(L["SpellAnnouncer_SetOption_DC_Solo"](value))
+end
+
+function WU:SpellAnnouncer_DC_SetParty(info, value)
+	self.db.profile.AnnounceDC_Party = value
+	print(L["SpellAnnouncer_SetOption_DC_Party"](value))
+end
+
+function WU:SpellAnnouncer_DC_SetRaid(info, value)
+	self.db.profile.AnnounceDC_Raid = value
+	print(L["SpellAnnouncer_SetOption_DC_Raid"](value))
+end
+
 function WU:GetOptionBorder()
 	return self.db.profile.AppTray_Border
 end
@@ -1528,6 +1651,13 @@ end
 function WU:GetBagFreeSlotCount(bag)
 	slots, _ = GetContainerNumFreeSlots(bag)
 	return slots
+end
+
+function WU:ConcatTables(t1, t2)
+	for _,v in ipairs(t2) do
+		table.insert(t1, v)
+	end
+	return t1
 end
 
 function WU:RefreshConfig()

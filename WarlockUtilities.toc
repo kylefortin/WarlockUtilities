@@ -1,8 +1,8 @@
 ## Title: WarlockUtilities
 ## Notes: Miscellaneous utilities for Warlocks in World of Warcraft Burning Crusade Classic.
-## Version: 2.2.0
+## Version: 3.0.0
 ## Author: |cff027dbfKopernikus-Windseeker|r
-## Interface: 44400
+## Interface: 45327
 ## SavedVariables: WarlockUtilitiesOptionsDB
 ## OptionalDeps:  Ace3
 

@@ -2,6 +2,12 @@
 
 - - -
 
+## Version `3.0.0`  
+- Subscribe to SPELL_UPDATE_COOLDOWN event
+- Add cooldown overlay to StoneManager UI
+- Update Subjugate Demon text
+- Update to WotLK Classic
+
 ## Version `2.2.0`  
 - Add support for Soulwell over Healthstone
 

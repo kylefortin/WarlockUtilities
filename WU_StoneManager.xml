@@ -170,7 +170,7 @@
 					</Anchor>
 				</Anchors>
 				<Frames>
-					<Button name="WU_StoneManager_CreateHealthstone" id="110" inherits="WU_StoneManager_ActionButton_Template" hidden="false">
+					<Button name="WU_StoneManager_CreateHealthstone" id="100" inherits="WU_StoneManager_ActionButton_Template" hidden="false">
 						<NormalTexture file="Interface\ICONS\inv_stone_04"/>
 						<PushedTexture file="Interface\ICONS\inv_stone_04">
 							<Size>
@@ -196,8 +196,22 @@
 								WU:StoneManager_CreateHealthstone(self, button);
 							</PreClick>
 						</Scripts>
+						<Frames>
+							<Cooldown name="WU_StoneManager_CreateHealthstone_Cooldown" id="100" inherits="CooldownFrameTemplate" hidden="false">
+								<Size>
+									<AbsDimension x="40" y="40"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOP" relativeTo="WU_StoneManager_CreateHealthstone" relativePoint="TOP">
+										<Offset>
+											<AbsDimension x="0" y="0"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+							</Cooldown>
+						</Frames>
 					</Button>
-					<Button name="WU_StoneManager_TradeHealthstone" id="140" inherits="WU_StoneManager_ActionButtonSmall_Template" hidden="false">
+					<Button name="WU_StoneManager_TradeHealthstone" id="130" inherits="WU_StoneManager_ActionButtonSmall_Template" hidden="false">
 						<Anchors>
 							<Anchor point="TOP" relativeTo="WU_StoneManager_CreateHealthstone" relativePoint="BOTTOM">
 								<Offset>

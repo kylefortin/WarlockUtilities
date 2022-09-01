@@ -151,6 +151,14 @@ L["SpellAnnouncer_Option_SS_EnableParty_Name"] = "Party"
 L["SpellAnnouncer_Option_SS_EnableParty_Desc"] = "Enable soulstone announces when in party."
 L["SpellAnnouncer_Option_SS_EnableRaid_Name"] = "Raid"
 L["SpellAnnouncer_Option_SS_EnableRaid_Desc"] = "Enable soulstone announces when in raid."
+L["SpellAnnouncer_OptionGroup_DC_Name"] = "Death Coil Announce Options"
+L["SpellAnnouncer_OptionGroup_DC_Desc"] = "Automatic death coil announcing options."
+L["SpellAnnouncer_Option_DC_EnableSolo_Name"] = "Solo"
+L["SpellAnnouncer_Option_DC_EnableSolo_Desc"] = "Enable death coil announces when solo."
+L["SpellAnnouncer_Option_DC_EnableParty_Name"] = "Party"
+L["SpellAnnouncer_Option_DC_EnableParty_Desc"] = "Enable death coil announces when in party."
+L["SpellAnnouncer_Option_DC_EnableRaid_Name"] = "Raid"
+L["SpellAnnouncer_Option_DC_EnableRaid_Desc"] = "Enable death coil announces when in raid."
 L["SpellAnnouncer_SetOption_Summon_Party"] = function(v)
 	if (v) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Summon Announce - Party"
@@ -186,6 +194,27 @@ L["SpellAnnouncer_SetOption_SS_Raid"] = function(v)
 		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Soulstone Announce - Raid"
 	end
 end
+L["SpellAnnouncer_SetOption_DC_Solo"] = function(v)
+	if (v) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Death Coil Announce - Solo"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Death Coil Announce - Solo"
+	end
+end
+L["SpellAnnouncer_SetOption_DC_Party"] = function(v)
+	if (v) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Death Coil Announce - Party"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Death Coil Announce - Party"
+	end
+end
+L["SpellAnnouncer_SetOption_DC_Raid"] = function(v)
+	if (v) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Death Coil Announce - Raid"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Death Coil Announce - Raid"
+	end
+end
 L["AnnounceSummon"] = function(t, d)
 	return "Summoning " .. t .. " to " .. d .. ". Please click."
 end
@@ -195,6 +224,8 @@ end
 L["AnnounceSSEmote"] = function(t)
 	return "stores " .. t .. "'s soul."
 end
+L["AnnounceDC"] = "Yeet!"
+L["AnnounceDCEmote"] = "yeets a green blob into the void."
 L["UnknownDestination"] = " ...somewhere?... "
 L["AppTray"] = "App Tray"
 L["AppTray_Desc_Name"] = "App Tray Options"
@@ -292,7 +323,7 @@ L["SummonDemon"] = function(level, shards, incubus)
 		"Felguard",
 		"Infernal",
 		"Doomguard",
-		"Enslave"
+		"Subjugate"
 	}
 	if (level == 3 and incubus) then
 		text = "Incubus"
