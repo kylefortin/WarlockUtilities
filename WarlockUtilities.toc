@@ -1,8 +1,8 @@
 ## Title: WarlockUtilities
 ## Notes: Miscellaneous utilities for Warlocks in World of Warcraft Burning Crusade Classic.
-## Version: 3.0.0
+## Version: 3.1.0
 ## Author: |cff027dbfKopernikus-Windseeker|r
-## Interface: 45327
+## Interface: 45435
 ## SavedVariables: WarlockUtilitiesOptionsDB
 ## OptionalDeps:  Ace3
 
@@ -18,3 +18,4 @@ WU_StoneManager.xml
 WU_DemonManager.xml
 WU_StatsPanel.xml
 WU_AppTray.xml
+WU_AutoDelete.xml

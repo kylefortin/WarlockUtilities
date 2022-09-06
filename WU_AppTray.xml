@@ -145,7 +145,11 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						WU:ToggleShardManager();
+						if (button == "RightButton") then
+							WU:ShardManager_ExecuteShortcut();
+						else
+							WU:ToggleShardManager();
+						end
 					</OnClick>
 				</Scripts>
 			</Button>

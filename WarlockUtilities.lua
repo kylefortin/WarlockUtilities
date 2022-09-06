@@ -91,6 +91,39 @@ local optionsShardManager = {
 			style = "radio",
 			order = 200,
 			width = "full"
+		},
+		autoDelete = {
+			type = "group",
+			name = L["ShardManager_OptionGroup_AutoDelete_Name"],
+			desc = L["ShardManager_OptionGroup_AutoDelete_Desc"],
+			order = 300,
+			inline = true,
+			args = {
+				enabled = {
+					type = "toggle",
+					name = L["ShardManager_Option_AutoDelete_Enable_Name"],
+					desc = L["ShardManager_Option_AutoDelete_Enable_Desc"],
+					get = "ShardManager_GetAutoDeleteEnabled",
+					set = "ShardManager_SetAutoDeleteEnabled",
+					order = 310,
+					width = "full"
+				},
+				number = {
+					type = "range",
+					min = 1,
+					max = 140,
+					softMin = 1,
+					softMax = 28,
+					step = 1,
+					isPercent = false,
+					name = L["ShardManager_Option_AutoDelete_Number_Name"],
+					desc = L["ShardManager_Option_AutoDelete_Number_Desc"],
+					get = "ShardManager_GetAutoDeleteNumber",
+					set = "ShardManager_SetAutoDeleteNumber",
+					order = 320,
+					width = "full"
+				}
+			}
 		}
 	}
 }
@@ -393,6 +426,8 @@ local defaults = {
 		ShardManager_Bags = {true, true, true, true, true},
 		ShardManager_FillBags = {false, false, false, false, false},
 		ShardManager_Number = 0,
+		ShardManager_AutoDelete = false,
+		ShardManager_AutoDelete_Number = 28,
 		StoneManager_SoulwellEnabled = true,
 		StoneManager_SoulwellLevel = 1,
 		StoneManager_Type = "hs",
@@ -549,6 +584,7 @@ function WU:OnInitialize()
 		local events = {
 			TRADE_SHOW="TradeOpened",
 			TRADE_CLOSED="TradeClosed",
+			BAG_UPDATE="BagUpdate",
 			COMBAT_LOG_EVENT_UNFILTERED=function(event)
 				WU:CombatLogEvent(CombatLogGetCurrentEventInfo())
 			end
@@ -602,8 +638,11 @@ function WU:OnInitialize()
 		ShowUIPanel(WU_AppTray, 1)
 		xmlText = {
 			{WU_ShardManager_Header, L["ShardManager_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
+			{WU_AutoDelete_Header, L["AutoDelete_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
 			{WU_ShardManager_Fill, L["Fill"]},
 			{WU_ShardManager_Delete, L["Clear"]},
+			{WU_ShardManager_Keep, L["Keep"]},
+			{WU_AutoDelete_Delete, L["AutoDelete"]},
 			{WU_ShardManager_Bag1, L["Bag"](1)},
 			{WU_ShardManager_Bag2, L["Bag"](2)},
 			{WU_ShardManager_Bag3, L["Bag"](3)},
@@ -684,6 +723,10 @@ end
 
 function WU:TradeClosed()
 	autoTrading = false
+end
+
+function WU:BagUpdate()
+	WU:ToggleAutoDelete()
 end
 
 function WU:CombatLogEvent(...)
@@ -813,6 +856,8 @@ end
 function WU:ShardManager_ToggleAction()
 	if (self.db.profile.ShardManager_Action == "clear") then
 		self.db.profile.ShardManager_Action = "fill"
+	elseif (self.db.profile.ShardManager_Action == "fill") then
+		self.db.profile.ShardManager_Action = "keep"
 	else
 		self.db.profile.ShardManager_Action = "clear"
 	end
@@ -858,6 +903,23 @@ function WU:ShardManager_SetShardNumber(value)
 	WU:ShardManager_RefreshUI()
 end
 
+function WU:ShardManager_GetAutoDeleteEnabled(info)
+	return self.db.profile.ShardManager_AutoDelete
+end
+
+function WU:ShardManager_SetAutoDeleteEnabled(info, value)
+	self.db.profile.ShardManager_AutoDelete = value
+	print(L["ShardManager_SetOption_AutoDelete"](value))
+end
+
+function WU:ShardManager_GetAutoDeleteNumber(info)
+	return self.db.profile.ShardManager_AutoDelete_Number
+end
+
+function WU:ShardManager_SetAutoDeleteNumber(info, value)
+	self.db.profile.ShardManager_AutoDelete_Number = tonumber(value)
+end
+
 function WU:ShardManager_DecrementShardNumber()
 	self.db.profile.ShardManager_Number = self.db.profile.ShardManager_Number - 1
 	if (self.db.profile.ShardManager_Number < 0) then
@@ -869,6 +931,55 @@ end
 function WU:ShardManager_IncrementShardNumber()
 	self.db.profile.ShardManager_Number = self.db.profile.ShardManager_Number + 1
 	WU:ShardManager_RefreshUI()
+end
+
+function WU:ShardManager_ExecuteShortcut()
+	if (self.db.profile.ShardManager_Action == "keep") then
+		WU:ShardManager_KeepShards()
+	elseif (self.db.profile.ShardManager_Action == "clear") then
+		WU:ShardManager_DeleteShards()
+	else
+		WU:ShardManager_FillShards()
+	end
+end
+
+function WU:ShardManager_KeepShards()
+	if (self.db.profile.ShardManager_Type == "bag") then
+		for b=0,4 do
+			if (not self.db.profile.ShardManager_Bags[b+1]) then
+				for s=1,GetContainerNumSlots(b) do
+					local n = GetContainerItemLink(b, s)
+					local isShard = false
+					if n then
+						isShard = WU:IsItemSoulShard(n)
+					end
+					if isShard then
+						PickupContainerItem(b, s)
+						DeleteCursorItem()
+					end
+				end
+			end
+		end
+	else
+		local kept = 0
+		for b=0,4 do
+			for s=1,GetContainerNumSlots(b) do
+				local n = GetContainerItemLink(b,s)
+				local isShard = false
+				if n then
+					isShard = WU:IsItemSoulShard(n)
+				end
+				if isShard then
+					if kept >= self.db.profile.ShardManager_Number then
+						PickupContainerItem(b, s)
+						DeleteCursorItem()
+					else
+						kept = kept + 1
+					end
+				end
+			end
+		end
+	end
 end
 
 function WU:ShardManager_DeleteShards()
@@ -963,12 +1074,13 @@ function WU:ShardManager_RefreshUI()
 			WU_ShardManager_Toggle_Type:Show()
 			WU_ShardManager_Fill:Hide()
 			WU_ShardManager_FillBags:Hide()
+			WU_ShardManager_Keep:Hide()
 		end
 		if (self.db.profile.ShardManager_Type == "bag") then
 			WU_ShardManager_Toggle_Type:SetText(L["ByBag"])
 			if not InCombatLockdown() then
 				WU_ShardManager_Number:Hide()
-				ShowUIPanel(WU_ShardManager_Bags, 1)
+				WU_ShardManager_Bags:Show()
 			end
 			clearCount = 0
 			for i,v in ipairs(self.db.profile.ShardManager_Bags) do
@@ -985,12 +1097,49 @@ function WU:ShardManager_RefreshUI()
 			WU_ShardManager_Toggle_Type:SetText(L["ByNumber"])
 			if not InCombatLockdown() then
 				WU_ShardManager_Bags:Hide()
-				ShowUIPanel(WU_ShardManager_Number, 1)
+				WU_ShardManager_Number:Show()
 			end
 			if not (WU_ShardManager_NumberInput:HasFocus()) then
 				WU_ShardManager_NumberInput:SetText(self.db.profile.ShardManager_Number)
 			end
 			WU_ShardManager_DeleteShardCount:SetText(L["ShardsToClear"](self.db.profile.ShardManager_Number))
+		end
+	elseif (self.db.profile.ShardManager_Action == "keep") then
+		if not InCombatLockdown() then
+			WU_ShardManager_Toggle_Action:SetText(L["Keep"])
+			WU_ShardManager_Keep:Show()
+			WU_ShardManager_Toggle_Type:Show()
+			WU_ShardManager_Delete:Hide()
+			WU_ShardManager_Fill:Hide()
+			WU_ShardManager_FillBags:Hide()
+		end
+		if (self.db.profile.ShardManager_Type == "bag") then
+			WU_ShardManager_Toggle_Type:SetText(L["ByBag"])
+			if not InCombatLockdown() then
+				WU_ShardManager_Number:Hide()
+				WU_ShardManager_Bags:Show()
+			end
+			clearCount = 0
+			for i,v in ipairs(self.db.profile.ShardManager_Bags) do
+				_G["WU_ShardManager_Bag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagItemCount("Soul Shard", i-1) ..")")
+				if not InCombatLockdown() then
+					_G["WU_ShardManager_Bag" .. i]:SetChecked(v)
+				end
+				if v then
+					clearCount = clearCount + WU:GetBagItemCount("Soul Shard", i-1)
+				end
+			end
+			WU_ShardManager_DeleteShardCount:SetText(L["ShardsToKeep"](clearCount))
+		else
+			WU_ShardManager_Toggle_Type:SetText(L["ByNumber"])
+			if not InCombatLockdown() then
+				WU_ShardManager_Bags:Hide()
+				WU_ShardManager_Number:Show()
+			end
+			if not (WU_ShardManager_NumberInput:HasFocus()) then
+				WU_ShardManager_NumberInput:SetText(self.db.profile.ShardManager_Number)
+			end
+			WU_ShardManager_DeleteShardCount:SetText(L["ShardsToKeep"](self.db.profile.ShardManager_Number))
 		end
 	else
 		for i,v in ipairs(self.db.profile.ShardManager_FillBags) do
@@ -1007,11 +1156,48 @@ function WU:ShardManager_RefreshUI()
 			WU_ShardManager_Bags:Hide()
 			WU_ShardManager_Number:Hide()
 			WU_ShardManager_Delete:Hide()
+			WU_ShardManager_Keep:Hide()
 		end
 	end
 	if InCombatLockdown() then
 		-- start try again timer
 		WU:ShardManager_StartTimer()
+	end
+end
+
+function WU:ToggleAutoDelete()
+	if (self.db.profile.ShardManager_AutoDelete) then
+		if (WU:GetInventoryItemCount("Soul Shard") > self.db.profile.ShardManager_AutoDelete_Number) then
+			if (not InCombatLockdown()) then
+				WU_AutoDelete:Show()
+			end
+		end
+	end
+end
+
+function WU:ExecuteAutoDelete()
+	if (not InCombatLockdown()) then
+		if (self.db.profile.ShardManager_AutoDelete) then
+			local kept = 0
+			for b=0,4 do
+				for s=1,GetContainerNumSlots(b) do
+					local n = GetContainerItemLink(b,s)
+					local isShard = false
+					if n then
+						isShard = WU:IsItemSoulShard(n)
+					end
+					if isShard then
+						if kept >= self.db.profile.ShardManager_AutoDelete_Number then
+							PickupContainerItem(b, s)
+							DeleteCursorItem()
+						else
+							kept = kept + 1
+						end
+					end
+				end
+			end
+		end
+		WU_AutoDelete:Hide()
 	end
 end
 

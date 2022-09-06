@@ -25,10 +25,24 @@ L["ShardManager_OptionGroup_Type_Name"] = "Shard Manager Type"
 L["ShardManager_OptionGroup_Type_Desc"] = "Set whether the Shard Manager searched by bag or by number of shards."
 L["ShardManager_Option_TypeByBag"] = "Manage Shards by Bag"
 L["ShardManager_Option_TypeByNumber"] = "Manage Shards by Number"
+L["ShardManager_Option_AutoDelete_Enable_Name"] = "Enable AutoDelete"
+L["ShardManager_Option_AutoDelete_Enable_Desc"] = "Enabled/disable auto delete of shards. Will keep a minimum of X shards in inventory (specified below)."
+L["ShardManager_Option_AutoDelete_Number_Name"] = "Number of Shards"
+L["ShardManager_Option_AutoDelete_Number_Desc"] = "The number of shards to keep in inventory if autodeleting."
+L["ShardManager_SetOption_AutoDelete"] = function(value)
+	if (value) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: AutoDelete Shards"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: AutoDelete Shards"
+	end
+end
+L["ShardManager_SetOption_AutoDelete_Number"] = function(value)
+	return "|cff7702bfWarlockUtilities:|r AutoDelete - Minimum inventory set to: |cff12ad0cenabled|r" .. value
+end
 L["StoneManager"] = "Stone Manager"
 L["StoneManager_Desc_Name"] = "Stone Manager options."
-L["StoneManager_OptionGroup_Soulwell_Name"] = "Soulwell Options"
-L["StoneManager_OptionGroup_Soulwell_Desc"] = "Soulwell options"
+L["ShardManager_OptionGroup_AutoDelete_Name"] = "AutoDelete"
+L["ShardManager_OptionGroup_AutoDelete_Desc"] = "Auto shard deletion options."
 L["StoneManager_Option_Soulwell_Enable_Name"] = "Enable Soulwell"
 L["StoneManager_Option_Soulwell_Enable_Desc"] = "Enable use of soulwell instead of healthstone, if known and not on cooldown."
 L["StoneManager_OptionGroup_Level_Name"] = "Stone Rank Options"
@@ -260,6 +274,8 @@ end
 --XML
 L["Fill"] = "Fill Bags"
 L["Clear"] = "Clear Shards"
+L["Keep"] = "Keep Shards"
+L["AutoDelete"] = "AutoDelete"
 L["Bag"] = function(bag)
 	return "Bag " .. bag
 end
@@ -271,10 +287,16 @@ end
 L["ShardsToClear"] = function(shards)
 	return "Shards To Clear: " .. shards
 end
+L["ShardsToKeep"] = function(shards)
+	return "Shards To Keep: " .. shards
+end
 L["Trade"] = "Trade"
 L["Use"] = "Use"
 L["ShardManager_FrameHeader"] = function(v)
 	return "Shard Manager v" .. v
+end
+L["AutoDelete_FrameHeader"] = function(v)
+	return "AutoDelete v" .. v
 end
 L["StoneManager_FrameHeader"] = function(v)
 	return "Stone Manager v" .. v

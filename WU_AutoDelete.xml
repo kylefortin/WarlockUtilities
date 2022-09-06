@@ -1,0 +1,93 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Font name="WU_Font_Header" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<FontHeight>
+			<AbsValue val="8"/>
+		</FontHeight>
+		<Color r="0.5" g="0.5" b="0.5"/>
+	</Font>
+	<Font name="WU_Font_EditBox" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<FontHeight>
+			<AbsValue val="10"/>
+		</FontHeight>
+		<Color r="1" g="1" b="1"/>
+	</Font>
+	<Button name="WU_AutoDelete_Button_Template" inherits="UIPanelButtonTemplate" virtual="true">
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp");
+			</OnLoad>
+		</Scripts>
+		<Size>
+			<AbsDimension x="100" y="25"/>
+		</Size>
+		<NormalText name="$parent_Text" inherits="GameFontNormalSmall" justifyH="LEFT">
+			<Size>
+				<AbsDimension x="100" y="10"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors> 
+		</NormalText>
+		<Frames>
+		</Frames>
+	</Button>
+	<Frame name="WU_AutoDelete" frameStrata="DIALOG" toplevel="true" inherits="InsetFrameTemplate3" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
+		<Size>
+			<AbsDimension x="110" y="50"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+        <Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parent_Header" inherits="WU_Font_Header" text="WU_ShardManager_Header" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-7"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+            </Layer>
+        </Layers>
+		<Frames>
+			<Button name="WU_AutoDelete_Delete" id="100" inherits="WU_AutoDelete_Button_Template" hidden="false">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="0" y="-20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						WU:ExecuteAutoDelete();
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton")
+			</OnLoad>
+			<OnDragStart>
+				if IsShiftKeyDown() then
+					self:StartMoving();
+				end
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+</Ui>
+

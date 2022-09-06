@@ -2,6 +2,11 @@
 
 - - -
 
+## Version `3.1.0`
+- Add AutoDelete function
+- Add shortcut feature (right click) to ShardManager in AppTray
+- Add ShardManager option to keep X shards
+
 ## Version `3.0.0`  
 - Subscribe to SPELL_UPDATE_COOLDOWN event
 - Add cooldown overlay to StoneManager UI

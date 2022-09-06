@@ -448,6 +448,20 @@
 					</OnClick>
 				</Scripts>
 			</Button>
+			<Button name="WU_ShardManager_Keep" id="800" inherits="WU_ShardManager_Button_Template" hidden="false">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="WU_ShardManager_Delete" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						WU:ShardManager_KeepShards();
+					</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>
