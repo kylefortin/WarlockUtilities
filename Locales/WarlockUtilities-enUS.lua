@@ -29,6 +29,13 @@ L["ShardManager_Option_AutoDelete_Enable_Name"] = "Enable AutoDelete"
 L["ShardManager_Option_AutoDelete_Enable_Desc"] = "Enabled/disable auto delete of shards. Will keep a minimum of X shards in inventory (specified below)."
 L["ShardManager_Option_AutoDelete_Number_Name"] = "Number of Shards"
 L["ShardManager_Option_AutoDelete_Number_Desc"] = "The number of shards to keep in inventory if autodeleting."
+L["ShardManager_SetOption_Reverse"] = function(value)
+	if (value) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: Reverse Delete"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff9c0909disabled|r: Reverse Delete"
+	end
+end
 L["ShardManager_SetOption_AutoDelete"] = function(value)
 	if (value) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cenabled|r: AutoDelete Shards"

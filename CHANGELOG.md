@@ -2,6 +2,9 @@
 
 - - -
 
+## Version `3.1.1`
+- Add option for reverse delete of shards
+
 ## Version `3.1.0`
 - Add AutoDelete function
 - Add shortcut feature (right click) to ShardManager in AppTray

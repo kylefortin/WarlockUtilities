@@ -92,11 +92,20 @@ local optionsShardManager = {
 			order = 200,
 			width = "full"
 		},
+		reverse = {
+			type = "toggle",
+			name = L["ShardManager_Option_Reverse_Name"],
+			desc = L["ShardManager_Option_Reverse_Desc"],
+			get = "GetOptionShardReverse",
+			set = "SetOptionShardReverse",
+			order = 300,
+			width = "full"
+		},
 		autoDelete = {
 			type = "group",
 			name = L["ShardManager_OptionGroup_AutoDelete_Name"],
 			desc = L["ShardManager_OptionGroup_AutoDelete_Desc"],
-			order = 300,
+			order = 400,
 			inline = true,
 			args = {
 				enabled = {
@@ -105,7 +114,7 @@ local optionsShardManager = {
 					desc = L["ShardManager_Option_AutoDelete_Enable_Desc"],
 					get = "ShardManager_GetAutoDeleteEnabled",
 					set = "ShardManager_SetAutoDeleteEnabled",
-					order = 310,
+					order = 410,
 					width = "full"
 				},
 				number = {
@@ -120,7 +129,7 @@ local optionsShardManager = {
 					desc = L["ShardManager_Option_AutoDelete_Number_Desc"],
 					get = "ShardManager_GetAutoDeleteNumber",
 					set = "ShardManager_SetAutoDeleteNumber",
-					order = 320,
+					order = 420,
 					width = "full"
 				}
 			}
@@ -428,6 +437,7 @@ local defaults = {
 		ShardManager_Number = 0,
 		ShardManager_AutoDelete = false,
 		ShardManager_AutoDelete_Number = 28,
+		ShardManager_Reverse = false,
 		StoneManager_SoulwellEnabled = true,
 		StoneManager_SoulwellLevel = 1,
 		StoneManager_Type = "hs",
@@ -903,6 +913,15 @@ function WU:ShardManager_SetShardNumber(value)
 	WU:ShardManager_RefreshUI()
 end
 
+function WU:GetOptionShardReverse(info)
+	return self.db.profile.ShardManager_Reverse
+end
+
+function WU:SetOptionShardReverse(info, value)
+	self.db.profile.ShardManager_Reverse = value
+	print(L["ShardManager_SetOption_Reverse"](value))
+end
+
 function WU:ShardManager_GetAutoDeleteEnabled(info)
 	return self.db.profile.ShardManager_AutoDelete
 end
@@ -946,8 +965,14 @@ end
 function WU:ShardManager_KeepShards()
 	if (self.db.profile.ShardManager_Type == "bag") then
 		for b=0,4 do
+			if (self.db.profile.ShardManager_Reverse) then
+				b = 4 - b
+			end
 			if (not self.db.profile.ShardManager_Bags[b+1]) then
 				for s=1,GetContainerNumSlots(b) do
+					if (self.db.profile.ShardManager_Reverse) then
+						s = GetContainerNumSlots(b) - s
+					end
 					local n = GetContainerItemLink(b, s)
 					local isShard = false
 					if n then
@@ -963,7 +988,13 @@ function WU:ShardManager_KeepShards()
 	else
 		local kept = 0
 		for b=0,4 do
+			if (self.db.profile.ShardManager_Reverse) then
+				b = 4 - b
+			end
 			for s=1,GetContainerNumSlots(b) do
+				if (self.db.profile.ShardManager_Reverse) then
+					s = GetContainerNumSlots(b) - s
+				end
 				local n = GetContainerItemLink(b,s)
 				local isShard = false
 				if n then
@@ -984,9 +1015,15 @@ end
 
 function WU:ShardManager_DeleteShards()
 	if (self.db.profile.ShardManager_Type == "bag") then
-		for i,v in ipairs(self.db.profile.ShardManager_Bags) do
-			if v then
+		for b=0,4 do
+			if (self.db.profile.ShardManager_Reverse) then
+				b = 4 - b
+			end
+			if (self.db.profile.ShardManager_Bags[b]) then
 				for s=1,GetContainerNumSlots(i-1) do
+					if (self.db.profile.ShardManager_Reverse) then
+						s = GetContainerNumSlots(b) - s
+					end
 					local n = GetContainerItemLink(i-1, s)
 					local isShard = false
 					if n then
@@ -1002,7 +1039,13 @@ function WU:ShardManager_DeleteShards()
 	else
 		local cleared = 0
 		for b=0,4 do
+			if (self.db.profile.ShardManager_Reverse) then
+				b = 4 - b
+			end
 			for s=1,GetContainerNumSlots(b) do
+				if (self.db.profile.ShardManager_Reverse) then
+					s = GetContainerNumSlots(b) - s
+				end
 				local n = GetContainerItemLink(b, s)
 				local isShard = false
 				if n then
@@ -1180,7 +1223,13 @@ function WU:ExecuteAutoDelete()
 		if (self.db.profile.ShardManager_AutoDelete) then
 			local kept = 0
 			for b=0,4 do
+				if (self.db.profile.ShardManager_Reverse) then
+					b = 4 - b
+				end
 				for s=1,GetContainerNumSlots(b) do
+					if (self.db.profile.ShardManager_Reverse) then
+						s = GetContainerNumSlots(b) - s
+					end
 					local n = GetContainerItemLink(b,s)
 					local isShard = false
 					if n then
