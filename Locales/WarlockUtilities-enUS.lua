@@ -25,6 +25,8 @@ L["ShardManager_OptionGroup_Type_Name"] = "Shard Manager Type"
 L["ShardManager_OptionGroup_Type_Desc"] = "Set whether the Shard Manager searched by bag or by number of shards."
 L["ShardManager_Option_TypeByBag"] = "Manage Shards by Bag"
 L["ShardManager_Option_TypeByNumber"] = "Manage Shards by Number"
+L["ShardManager_Option_Reverse_Name"] = "Reverse Delete"
+L["ShardManager_Option_Reverse_Desc"] = "Delete soul shards from last bag to first."
 L["ShardManager_Option_AutoDelete_Enable_Name"] = "Enable AutoDelete"
 L["ShardManager_Option_AutoDelete_Enable_Desc"] = "Enabled/disable auto delete of shards. Will keep a minimum of X shards in inventory (specified below)."
 L["ShardManager_Option_AutoDelete_Number_Name"] = "Number of Shards"
@@ -277,6 +279,7 @@ L["CombatLockdown"] = "Please wait until you are out of combat..."
 L["MissingTradeItem"] = function(item)
 	return "Missing AutoTrade Item: " .. item
 end
+L["HardwareRequired"] = "Hardware interaction is required to execute this function. Run from macro or hotkey."
 
 --XML
 L["Fill"] = "Fill Bags"

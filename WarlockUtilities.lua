@@ -26,6 +26,13 @@ local options = {
 			func = "ToggleShardManager",
 			guiHidden = true
 		},
+		autodelete = {
+			type = "execute",
+			name = L["AutoDelete"],
+			desc = L["SharAutoDeletedManager"],
+			func = "ExecuteAutoDelete",
+			guiHidden = true
+		},
 		stones = {
 			type = "execute",
 			name = L["StoneManager"],
@@ -1220,28 +1227,26 @@ end
 
 function WU:ExecuteAutoDelete()
 	if (not InCombatLockdown()) then
-		if (self.db.profile.ShardManager_AutoDelete) then
-			local kept = 0
-			for b=0,4 do
+		local kept = 0
+		for b=0,4 do
+			if (self.db.profile.ShardManager_Reverse) then
+				b = 4 - b
+			end
+			for s=1,GetContainerNumSlots(b) do
 				if (self.db.profile.ShardManager_Reverse) then
-					b = 4 - b
+					s = GetContainerNumSlots(b) - s
 				end
-				for s=1,GetContainerNumSlots(b) do
-					if (self.db.profile.ShardManager_Reverse) then
-						s = GetContainerNumSlots(b) - s
-					end
-					local n = GetContainerItemLink(b,s)
-					local isShard = false
-					if n then
-						isShard = WU:IsItemSoulShard(n)
-					end
-					if isShard then
-						if kept >= self.db.profile.ShardManager_AutoDelete_Number then
-							PickupContainerItem(b, s)
-							DeleteCursorItem()
-						else
-							kept = kept + 1
-						end
+				local n = GetContainerItemLink(b,s)
+				local isShard = false
+				if n then
+					isShard = WU:IsItemSoulShard(n)
+				end
+				if isShard then
+					if kept >= self.db.profile.ShardManager_AutoDelete_Number then
+						PickupContainerItem(b, s)
+						DeleteCursorItem()
+					else
+						kept = kept + 1
 					end
 				end
 			end
