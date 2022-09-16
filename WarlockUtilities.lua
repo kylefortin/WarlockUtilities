@@ -978,7 +978,7 @@ function WU:ShardManager_KeepShards()
 			if (not self.db.profile.ShardManager_Bags[b+1]) then
 				for s=1,GetContainerNumSlots(b) do
 					if (self.db.profile.ShardManager_Reverse) then
-						s = GetContainerNumSlots(b) - s
+						s = GetContainerNumSlots(b) - (s - 1)
 					end
 					local n = GetContainerItemLink(b, s)
 					local isShard = false
@@ -1029,7 +1029,7 @@ function WU:ShardManager_DeleteShards()
 			if (self.db.profile.ShardManager_Bags[b]) then
 				for s=1,GetContainerNumSlots(i-1) do
 					if (self.db.profile.ShardManager_Reverse) then
-						s = GetContainerNumSlots(b) - s
+						s = GetContainerNumSlots(b) - (s - 1)
 					end
 					local n = GetContainerItemLink(i-1, s)
 					local isShard = false
@@ -1234,7 +1234,7 @@ function WU:ExecuteAutoDelete()
 			end
 			for s=1,GetContainerNumSlots(b) do
 				if (self.db.profile.ShardManager_Reverse) then
-					s = GetContainerNumSlots(b) - s
+					s = GetContainerNumSlots(b) - (s - 1)
 				end
 				local n = GetContainerItemLink(b,s)
 				local isShard = false

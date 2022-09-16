@@ -2,6 +2,9 @@
 
 - - -
 
+## Version `3.1.2`
+- Patch counting error in reverse delete
+
 ## Version `3.1.1`
 - Add option for reverse delete of shards
 - Add command line execution for autodelete
