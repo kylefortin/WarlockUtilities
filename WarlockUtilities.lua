@@ -99,45 +99,54 @@ local optionsShardManager = {
 			order = 200,
 			width = "full"
 		},
-		reverse = {
-			type = "toggle",
-			name = L["ShardManager_Option_Reverse_Name"],
-			desc = L["ShardManager_Option_Reverse_Desc"],
-			get = "GetOptionShardReverse",
-			set = "SetOptionShardReverse",
-			order = 300,
-			width = "full"
-		},
-		autoDelete = {
+		delete = {
 			type = "group",
-			name = L["ShardManager_OptionGroup_AutoDelete_Name"],
-			desc = L["ShardManager_OptionGroup_AutoDelete_Desc"],
-			order = 400,
+			name = L["StoneManager_OptionGroup_Delete_Name"],
+			desc = L["StoneManager_OptionGroup_Delete_Desc"],
+			order = 300,
 			inline = true,
 			args = {
-				enabled = {
+				reverse = {
 					type = "toggle",
-					name = L["ShardManager_Option_AutoDelete_Enable_Name"],
-					desc = L["ShardManager_Option_AutoDelete_Enable_Desc"],
-					get = "ShardManager_GetAutoDeleteEnabled",
-					set = "ShardManager_SetAutoDeleteEnabled",
-					order = 410,
+					name = L["ShardManager_Option_Reverse_Name"],
+					desc = L["ShardManager_Option_Reverse_Desc"],
+					get = "GetOptionShardReverse",
+					set = "SetOptionShardReverse",
+					order = 310,
 					width = "full"
 				},
-				number = {
-					type = "range",
-					min = 1,
-					max = 140,
-					softMin = 1,
-					softMax = 28,
-					step = 1,
-					isPercent = false,
-					name = L["ShardManager_Option_AutoDelete_Number_Name"],
-					desc = L["ShardManager_Option_AutoDelete_Number_Desc"],
-					get = "ShardManager_GetAutoDeleteNumber",
-					set = "ShardManager_SetAutoDeleteNumber",
-					order = 420,
-					width = "full"
+				autoDelete = {
+					type = "group",
+					name = L["ShardManager_OptionGroup_AutoDelete_Name"],
+					desc = L["ShardManager_OptionGroup_AutoDelete_Desc"],
+					order = 320,
+					inline = true,
+					args = {
+						enabled = {
+							type = "toggle",
+							name = L["ShardManager_Option_AutoDelete_Enable_Name"],
+							desc = L["ShardManager_Option_AutoDelete_Enable_Desc"],
+							get = "ShardManager_GetAutoDeleteEnabled",
+							set = "ShardManager_SetAutoDeleteEnabled",
+							order = 321,
+							width = "full"
+						},
+						number = {
+							type = "range",
+							min = 1,
+							max = 140,
+							softMin = 1,
+							softMax = 28,
+							step = 1,
+							isPercent = false,
+							name = L["ShardManager_Option_AutoDelete_Number_Name"],
+							desc = L["ShardManager_Option_AutoDelete_Number_Desc"],
+							get = "ShardManager_GetAutoDeleteNumber",
+							set = "ShardManager_SetAutoDeleteNumber",
+							order = 322,
+							width = "full"
+						}
+					}
 				}
 			}
 		}
@@ -188,7 +197,9 @@ local optionsStoneManager = {
 						L["StoneManager_Option_HS_3"],
 						L["StoneManager_Option_HS_4"],
 						L["StoneManager_Option_HS_5"],
-						L["StoneManager_Option_HS_6"]
+						L["StoneManager_Option_HS_6"],
+						L["StoneManager_Option_HS_7"],
+						L["StoneManager_Option_HS_8"]
 					},
 					get = "GetOptionHSLevel",
 					set = "SetOptionHSLevel",
@@ -205,7 +216,8 @@ local optionsStoneManager = {
 						L["StoneManager_Option_SS_3"],
 						L["StoneManager_Option_SS_4"],
 						L["StoneManager_Option_SS_5"],
-						L["StoneManager_Option_SS_6"]
+						L["StoneManager_Option_SS_6"],
+						L["StoneManager_Option_SS_7"]
 					},
 					get = "GetOptionSSLevel",
 					set = "SetOptionSSLevel",
@@ -476,7 +488,8 @@ local defaults = {
 }
 
 local soulwellLookup = {
-	"29893" --Ritual of Souls (Rank 1)
+	"29893", --Ritual of Souls (Rank 1)
+	"58887" --Ritual of Souls (Rank 2)
 }
 
 local healthFunnelLookup = {
@@ -496,7 +509,9 @@ local hsLookup = {
 	"5699", --Create Healthstone
 	"11729", --Create Healthstone (Greater)
 	"11730", --Create Healthstone (Major)
-	"27230" --Create Healthstone (Master)
+	"27230", --Create Healthstone (Master)
+	"47871", --Create Healthstone (Demonic)
+	"47878" --Create Healthstone (Fel)
 }
 
 local hsItemLookup = {
@@ -505,7 +520,9 @@ local hsItemLookup = {
 	"Healthstone",
 	"Greater Healthstone",
 	"Major Healthstone",
-	"Master Healthstone"
+	"Master Healthstone",
+	"Demonic Healthstone",
+	"Fel Healthstone"
 }
 
 local ssLookup = {
@@ -514,7 +531,8 @@ local ssLookup = {
 	"20755", --Create Soulstone
 	"20756", --Create Soulstone (Greater)
 	"20757", --Create Soulstone (Major)
-	"27238" --Create Soulstone (Master)
+	"27238", --Create Soulstone (Master)
+	"47884" --Create Soulstone (Demonic)
 }
 
 local ssItemLookup = {
@@ -523,7 +541,8 @@ local ssItemLookup = {
 	"Soulstone",
 	"Greater Soulstone",
 	"Major Soulstone",
-	"Master Soulstone"
+	"Master Soulstone",
+	"Demonic Soulstone"
 }
 
 local ssUsageLookup = {
@@ -532,7 +551,8 @@ local ssUsageLookup = {
 	"20763",
 	"20764",
 	"20765",
-	"27239"
+	"27239",
+	"36895"
 }
 
 local summonLookup = {
@@ -543,7 +563,9 @@ local dcLookup = {
 	"6789", --Death Coil (Rank 1)
 	"17925", --Death Coil (Rank 2)
 	"17926", --Death Coil (Rank 3)
-	"27223" --Death Coil (Rank 4)
+	"27223", --Death Coil (Rank 4)
+	"47859", --Death Coil (Rank 5)
+	"47860" --Death Coil (Rank 6)
 }
 
 local demonLookup = {
@@ -554,7 +576,7 @@ local demonLookup = {
 	"30146", --Summon Felguard
 	"1122", --Inferno
 	"18540", --Ritual of Doom
-	"11725" --Ensalve Demon (Rank 3)
+	"11725" --Subjugate Demon (Rank 3)
 }
 
 local demonNameLookup = {
@@ -1000,7 +1022,7 @@ function WU:ShardManager_KeepShards()
 			end
 			for s=1,GetContainerNumSlots(b) do
 				if (self.db.profile.ShardManager_Reverse) then
-					s = GetContainerNumSlots(b) - s
+					s = GetContainerNumSlots(b) - (s - 1)
 				end
 				local n = GetContainerItemLink(b,s)
 				local isShard = false

@@ -2,6 +2,11 @@
 
 - - -
 
+## Version `3.1.3`
+- Patch counting error with shard keep function
+- Add support for new spell ranks
+- Minor update to config menu
+
 ## Version `3.1.2`
 - Patch counting error in reverse delete
 

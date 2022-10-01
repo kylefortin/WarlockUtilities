@@ -50,6 +50,8 @@ L["ShardManager_SetOption_AutoDelete_Number"] = function(value)
 end
 L["StoneManager"] = "Stone Manager"
 L["StoneManager_Desc_Name"] = "Stone Manager options."
+L["StoneManager_OptionGroup_Delete_Name"] = "Shard Delete Options"
+L["StoneManager_OptionGroup_Delete_Desc"] = "Options for shard deletion."
 L["ShardManager_OptionGroup_AutoDelete_Name"] = "AutoDelete"
 L["ShardManager_OptionGroup_AutoDelete_Desc"] = "Auto shard deletion options."
 L["StoneManager_Option_Soulwell_Enable_Name"] = "Enable Soulwell"
@@ -66,12 +68,15 @@ L["StoneManager_Option_HS_3"] = "Normal"
 L["StoneManager_Option_HS_4"] = "Greater"
 L["StoneManager_Option_HS_5"] = "Major"
 L["StoneManager_Option_HS_6"] = "Master"
+L["StoneManager_Option_HS_7"] = "Demonic"
+L["StoneManager_Option_HS_8"] = "Fel"
 L["StoneManager_Option_SS_1"] = "Minor"
 L["StoneManager_Option_SS_2"] = "Lesser"
 L["StoneManager_Option_SS_3"] = "Normal"
 L["StoneManager_Option_SS_4"] = "Greater"
 L["StoneManager_Option_SS_5"] = "Major"
 L["StoneManager_Option_SS_6"] = "Master"
+L["StoneManager_Option_SS_7"] = "Demonic"
 L["StoneManager_OptionGroup_Trading_Name"] = "Trade Options"
 L["StoneManager_OptionGroup_Trading_Desc"] = "Automatic stone trading options."
 L["StoneManager_Option_EnableParty_Name"] = "Party"
@@ -96,8 +101,12 @@ L["StoneManager_SetOption_HSLevel"] = function(value)
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Greater"
 	elseif (value == 5) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Major"
-	else
+	elseif (value == 6) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Master"
+	elseif (value == 7) then
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Demonic"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Healthstone - Rank - Fel"
 	end
 end
 L["StoneManager_SetOption_SSLevel"] = function(value)
@@ -111,8 +120,10 @@ L["StoneManager_SetOption_SSLevel"] = function(value)
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Greater"
 	elseif (value == 5) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Major"
-	else
+	elseif (value == 6) then
 		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Master"
+	else
+		return "|cff7702bfWarlockUtilities:|r Option |cff12ad0cupdated|r: Soulstone - Rank - Demonic"
 	end
 end
 L["StoneManager_SetOption_TradingParty"] = function(value)
