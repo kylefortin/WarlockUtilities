@@ -11,6 +11,7 @@ Embeds.xml
 #@end-no-lib-strip@
 
 Locales\WarlockUtilities-enUS.lua
+Locales\WarlockUtilities-zhCN.lua
 
 WarlockUtilities.lua
 WU_ShardManager.xml
