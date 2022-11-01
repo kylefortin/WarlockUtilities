@@ -18,4 +18,6 @@
 ### [StatsPanel](ReadMe/StatsPanel.md) - a simple frame to show usage statistics on Shard consumption.
 ![Warlock Utilities - Stats Panel](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/Images/StatsPanel.png?raw=true)  
 
+### [SpellAnnouncer](ReadMe/SpellAnnouncer.md) - let your friends know what you're up to!
+
 #### Report issues to me at https://github.com/kylefortin/WarlockUtilities/issues  
