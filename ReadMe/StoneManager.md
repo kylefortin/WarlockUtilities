@@ -27,4 +27,4 @@ You may set the ranks for healthstones and soulstones by selecting a rank name (
 To enable automatic trading (for solo, group or raid) check the box next to the option. This will automatically populate trade windows with a healthstone for each party option.  
 ![Stone Manager - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/Images/StoneManagerConfig.jpg?raw=true)  
 
-[Take Me Home](./README.md)
+[Take Me Home](../README.md)
