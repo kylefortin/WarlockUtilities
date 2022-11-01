@@ -1,6 +1,6 @@
 # WarlockUtilities  
 
-## Shard Manager  
+## App Tray  
 
 ### Toggle Manager Frames  
 
