@@ -11,4 +11,4 @@ Currently announced spells include soulstone (being applied to a player), summon
 
 Configuration settings for the Spell Announcer can be found in the interface menu.  
 You may choose to announce spells based on the type of group you are in (party, raid or solo).  
-![Spell Announcer - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/Images/SpellAnnouncerConfig.png?raw=true)  
+![Spell Announcer - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/Images/SpellAnnouncerConfig.jpg?raw=true)  
