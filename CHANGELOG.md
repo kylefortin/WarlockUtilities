@@ -2,6 +2,11 @@
 
 - - -
 
+## Version `3.2.0`
+- Add shortcut functions for DemonManager and StoneManager
+- Add support for Chinese Simplified (thanks to GitHub user `huahuacn`!)
+- Update readme docs
+
 ## Version `3.1.3`
 - Patch counting error with shard keep function
 - Add support for new spell ranks

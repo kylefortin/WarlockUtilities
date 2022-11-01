@@ -146,7 +146,7 @@
 				<Scripts>
 					<OnClick>
 						if (button == "RightButton") then
-							WU:ShardManager_ExecuteShortcut();
+							WU:ShardManager_ExecuteShortcut(self, button);
 						else
 							WU:ToggleShardManager();
 						end
@@ -175,9 +175,9 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>
-						WU:ToggleStoneManager();
-					</OnClick>
+					<PreClick>
+						WU:StoneManager_PreClick(self,button);
+					</PreClick>
 				</Scripts>
 			</Button>
 			<Button name="WU_AppTray_DemonManager" id="100" inherits="WU_AppTray_Button">
@@ -202,9 +202,9 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>
-						WU:ToggleDemonManager();
-					</OnClick>
+					<PreClick>
+						WU:DemonManager_PreClick(self, button);
+					</PreClick>
 				</Scripts>
 			</Button>
 			<Button name="WU_AppTray_Stats" id="100" inherits="UIPanelInfoButton">

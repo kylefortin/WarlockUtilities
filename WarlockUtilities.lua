@@ -870,6 +870,15 @@ function WU:SetOptionShardType(info, value)
 	end
 end
 
+function WU:GetOptionShardReverse(info)
+	return self.db.profile.ShardManager_Reverse
+end
+
+function WU:SetOptionShardReverse(info, value)
+	self.db.profile.ShardManager_Reverse = value
+	print(L["ShardManager_SetOption_Reverse"](value))
+end
+
 function WU:ToggleShardManager()
 	if not InCombatLockdown() then
 		if WU_ShardManager:IsVisible() then
@@ -940,15 +949,6 @@ function WU:ShardManager_SetShardNumber(value)
 		self.db.profile.ShardManager_Number = value
 	end
 	WU:ShardManager_RefreshUI()
-end
-
-function WU:GetOptionShardReverse(info)
-	return self.db.profile.ShardManager_Reverse
-end
-
-function WU:SetOptionShardReverse(info, value)
-	self.db.profile.ShardManager_Reverse = value
-	print(L["ShardManager_SetOption_Reverse"](value))
 end
 
 function WU:ShardManager_GetAutoDeleteEnabled(info)
@@ -1417,6 +1417,25 @@ function WU:StoneManager_CheckBagsForSSLevel()
 	return not((loc.bag == nil) and (loc.slot == nil))
 end
 
+function WU:StoneManager_PreClick(source, button)
+	if not InCombatLockdown() then
+		if (button == "RightButton") then
+			WU:StoneManager_ExecuteShortcut(source, button);
+		else
+			source:SetAttribute("type", "click")
+			WU:ToggleStoneManager();
+		end
+	end
+end
+
+function WU:StoneManager_ExecuteShortcut(source, button)
+	if (self.db.profile.StoneManager_Type == "hs") then
+		WU:StoneManager_CreateHealthstone(source, button)
+	elseif (self.db.profile.StoneManager_Type == "ss") then
+		WU:StoneManager_CreateSoulstone(source, button)
+	end
+end
+
 function WU:StoneManager_RefreshUI()
 	if (self:TimeLeft(self.StoneManager_Timer) > 0) then
 		WU:StoneManager_StopTimer()
@@ -1570,6 +1589,21 @@ function WU:DemonManager_HealDemon(source, button)
 			source:SetAttribute("spell", self.db.profile.healthFunnel)
 		end
 	end
+end
+
+function WU:DemonManager_PreClick(source, button)
+	if not InCombatLockdown() then
+		if (button == "RightButton") then
+			WU:DemonManager_ExecuteShortcut(source, button);
+		else
+			source:SetAttribute("type", "click")
+			WU:ToggleDemonManager();
+		end
+	end
+end
+
+function WU:DemonManager_ExecuteShortcut(source, button)
+	WU:DemonManager_SummonDemon(source, button)
 end
 
 function WU:DemonManager_RefreshUI()
