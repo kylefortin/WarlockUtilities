@@ -35,3 +35,5 @@ You may toggle between "by bag" and "by number" (which can also be toggle from t
 To have shards kept or cleared in reverse order, check the Reverse Order option. Shards will now be kept or cleared starting at bag slot 5, and will order from last bag slot to first.  
 You may also enable the AutoDelete function, and specify the number of shards. Any number of shards in your bags above this number will trigger the AutoDelete function.  
 ![Shard Manager - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/Images/ShardManagerConfig.jpg?raw=true)  
+
+[Take Me Home](README.md)

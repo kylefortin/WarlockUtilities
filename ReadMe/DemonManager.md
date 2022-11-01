@@ -31,3 +31,5 @@ Make sure your buddy is alive to fight your battles!
 Configuration settings for the Shard Manager can be found in the interface menu.  
 You may enable the use of the Incubus instead of the Succubus by checking the Incubus box.  
 ![Demon Manager - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/Images/DemonManagerConfig.jpg?raw=true)  
+
+[Take Me Home](README.md)
