@@ -10,4 +10,4 @@ Lifetime numbers will only reset when manually done (right click an icon to rese
 Click the info button on the App Tray again to close the frame.  
 ![StatsPanel - Usage](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/Images/StatsPanel.png?raw=true)  
 
-[Take Me Home](../README.md)
+[Take Me Home](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/README.md)

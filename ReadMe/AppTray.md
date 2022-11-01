@@ -25,4 +25,4 @@ You may configure the edge of the screen the App Tray lives on.
 You may also configure an offset on that edge of the screen. 0 offset corresponds with the center of that edge.  
 ![AppTray - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/Images/AppTrayConfig.jpg?raw=true)  
 
-[Take Me Home](../README.md)
+[Take Me Home](https://github.com/kylefortin/WarlockUtilities/blob/3.2.0/README.md)
