@@ -2,6 +2,10 @@
 
 - - -
 
+## Version `3.3.0`
+- Begin framework for DoTManager
+- Update for 3.4.1 client compatibility
+
 ## Version `3.2.0`
 - Add shortcut functions for DemonManager and StoneManager
 - Add support for Chinese Simplified (thanks to GitHub user `huahuacn`!)

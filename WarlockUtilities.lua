@@ -483,7 +483,46 @@ local defaults = {
 		Soulstone_Counter = 0,
 		Soulstone_Session_Counter = 0,
 		Summon_Counter = 0,
-		Summon_Session_Counter = 0
+		Summon_Session_Counter = 0,
+		DoT = {
+			corruption = {sp=0, crit=0, haste=0, start=0},
+			curse = {sp=0, crit=0, haste=0, start=0},
+			ua = {sp=0, crit=0, haste=0, start=0},
+			drain = {sp=0, crit=0, haste=0, start=0}
+		}
+	}
+}
+
+dot_data = {
+	corruption = {
+		base_duration = 18,
+		ticks = 6,
+		base_damage = 180,
+		sp_mod = 0.31
+	},
+	curse = {
+		base_duration = 24,
+		ticks = 12,
+		base_damage = 145,
+		sp_mod = 0.1
+	},
+	doom = {
+		base_duration = 60,
+		ticks = 1,
+		base_damage = 7300,
+		sp_mod = 2.0
+	},
+	ua = {
+		base_duration = 15,
+		ticks = 5,
+		base_damage = 230,
+		sp_mod = 0.25
+	},
+	drain = {
+		base_duration = 15,
+		ticks = 5,
+		base_damage = 142,
+		sp_mod = 0.429
 	}
 }
 
@@ -566,6 +605,51 @@ local dcLookup = {
 	"27223", --Death Coil (Rank 4)
 	"47859", --Death Coil (Rank 5)
 	"47860" --Death Coil (Rank 6)
+}
+
+local corruptionLookup = {
+	"172", --Corruption (Rank 1)
+	"6222", --Corruption (Rank 2)
+	"6223", --Corruption (Rank 3)
+	"7648", --Corruption (Rank 4)
+	"11671", --Corruption (Rank 5)
+	"11672", --Corruption (Rank 6)
+	"25311", --Corruption (Rank 7)
+	"27216", --Corruption (Rank 8)
+	"47812", --Corruption (Rank 9)
+	"47813" --Corruption (Rank 10)
+}
+
+local uaLookup = {
+	"30108", --Unstable Affliction (Rank 1)
+	"30404", --Unstable Affliction (Rank 2)
+	"30405", --Unstable Affliction (Rank 3)
+	"47841", --Unstable Affliction (Rank 4)
+	"47843" --Unstable Affliction (Rank 5)
+}
+
+local curseLookup = {
+	"980", --Curse of Agony (Rank 1)
+	"1014", --Curse of Agony (Rank 2)
+	"6217", --Curse of Agony (Rank 3)
+	"11711", --Curse of Agony (Rank 4)
+	"11712", --Curse of Agony (Rank 5)
+	"11713", --Curse of Agony (Rank 6)
+	"27218", --Curse of Agony (Rank 7)
+	"47863", --Curse of Agony (Rank 8)
+	"47864", --Curse of Agony (Rank 9)
+	"603", --Curse of Doom (Rank 1)
+	"30910", --Curse of Doom (Rank 2)
+	"47867" --Curse of Doom (Rank 3)
+}
+
+local drainLookup = {
+	"1120", --Drain Soul (Rank 1)
+	"8288", --Drain Soul (Rank 2)
+	"8289", --Drain Soul (Rank 3)
+	"11675", --Drain Soul (Rank 4)
+	"27217", --Drain Soul (Rank 5)
+	"47855" --Drain Soul (Rank 6)
 }
 
 local demonLookup = {
@@ -692,6 +776,7 @@ function WU:OnInitialize()
 			{WU_StoneManager_UseSoulstoneTextName, L["Use"]},
 			{WU_DemonManager_Header, L["DemonManager_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
 			{WU_StatsPanel_Header, L["StatsPanel_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
+			{WU_DoTManager_Header, L["DoTManager_FrameHeader"](GetAddOnMetadata("WarlockUtilities", "Version"))},
 			{WU_DemonManager_Sacrifice, L["Sacrifice"]},
 			{WU_DemonManager_Dismiss, L["Dismiss"]},
 			{WU_DemonManager_Heal, L["Heal"]}
@@ -832,6 +917,70 @@ function WU:CombatLogEvent(...)
 					break
 				end
 			end
+			-- Check if spell was corruption
+			-- for _, spellID in ipairs(corruptionLookup) do
+			-- 	local lookupName = GetSpellInfo(spellID)
+			-- 	if (lookupName == select(13, ...)) then
+			-- 		local data = WU:DoTManager_GetSpellModifiers()
+			-- 		self.db.char.DoT.corruption.sp = data.sp
+			-- 		self.db.char.DoT.corruption.crit = data.crit
+			-- 		self.db.char.DoT.corruption.haste = data.haste
+			-- 		self.db.char.DoT.corruption.start = GetServerTime()
+			-- 		if not WU_DoTManager:IsVisible() then
+			-- 			WU_DoTManager:Show()
+			-- 			WU:DoTManager_StartStaticTimer()
+			-- 		end
+			-- 		break
+			-- 	end
+			-- end
+			-- Check if spell was Unstable Affliction
+			-- for _, spellID in ipairs(uaLookup) do
+			-- 	local lookupName = GetSpellInfo(spellID)
+			-- 	if (lookupName == select(13, ...)) then
+			-- 		local data = WU:DoTManager_GetSpellModifiers()
+			-- 		self.db.char.DoT.corruption.sp = data.sp
+			-- 		self.db.char.DoT.corruption.crit = data.crit
+			-- 		self.db.char.DoT.corruption.haste = data.haste
+			-- 		self.db.char.DoT.corruption.start = GetServerTime()
+			-- 		if not WU_DoTManager:IsVisible() then
+			-- 			WU_DoTManager:Show()
+			-- 			WU:DoTManager_StartStaticTimer()
+			-- 		end
+			-- 		break
+			-- 	end
+			-- end
+			-- Check if spell was Curse
+			-- for _, spellID in ipairs(curseLookup) do
+			-- 	local lookupName = GetSpellInfo(spellID)
+			-- 	if (lookupName == select(13, ...)) then
+			-- 		local data = WU:DoTManager_GetSpellModifiers()
+			-- 		self.db.char.DoT.corruption.sp = data.sp
+			-- 		self.db.char.DoT.corruption.crit = data.crit
+			-- 		self.db.char.DoT.corruption.haste = data.haste
+			-- 		self.db.char.DoT.corruption.start = GetServerTime()
+			-- 		if not WU_DoTManager:IsVisible() then
+			-- 			WU_DoTManager:Show()
+			-- 			WU:DoTManager_StartStaticTimer()
+			-- 		end
+			-- 		break
+			-- 	end
+			-- end
+			-- Check if spell was Drain Soul
+			-- for _, spellID in ipairs(drainLookup) do
+			-- 	local lookupName = GetSpellInfo(spellID)
+			-- 	if (lookupName == select(13, ...)) then
+			-- 		local data = WU:DoTManager_GetSpellModifiers()
+			-- 		self.db.char.DoT.corruption.sp = data.sp
+			-- 		self.db.char.DoT.corruption.crit = data.crit
+			-- 		self.db.char.DoT.corruption.haste = data.haste
+			-- 		self.db.char.DoT.corruption.start = GetServerTime()
+			-- 		if not WU_DoTManager:IsVisible() then
+			-- 			WU_DoTManager:Show()
+			-- 			WU:DoTManager_StartStaticTimer()
+			-- 		end
+			-- 		break
+			-- 	end
+			-- end
 		end
 	elseif (event == "SPELL_CAST_START" and isPlayer) then
 		if (srcName == playerName) then
@@ -857,6 +1006,18 @@ function WU:CombatLogEvent(...)
 				WU:DemonManager_RefreshUI()
 			end
 		end
+	-- elseif (event == "PLAYER_REGEN_ENABLED" and isPlayer) then
+	-- 	if (srcName == playerName) then
+	-- 		-- Exited combat, reset DoT trackers
+	-- 		self.db.char.DoT.corruption= {sp=0, crit=0, haste=0, start=0}
+	-- 		self.db.char.DoT.ua= {sp=0, crit=0, haste=0, start=0}
+	-- 		self.db.char.DoT.curse= {sp=0, crit=0, haste=0, start=0}
+	-- 		self.db.char.DoT.drain= {sp=0, crit=0, haste=0, start=0}
+	-- 		if WU_DoTManager:IsVisible() then
+	-- 			WU:DoTManager_StopStaticTimer()
+	-- 			WU_DoTManager:Hide()
+	-- 		end
+	-- 	end
 	end
 end
 
@@ -1138,7 +1299,7 @@ function WU:ShardManager_RefreshUI()
 	if (self:TimeLeft(self.ShardManager_Timer) > 0) then
 		WU:ShardManager_StopTimer()
 	end
-	WU_ShardManager_TotalShardCount:SetText(L["TotalShards"](WU:GetInventoryItemCount("Soul Shard")))
+	WU_ShardManager_TotalShardCount:SetText(L["TotalShards"](WU:GetInventoryItemCount(soulShardID)))
 	if (self.db.profile.ShardManager_Action == "clear") then
 		if not InCombatLockdown() then
 			WU_ShardManager_Toggle_Action:SetText(L["Clear"])
@@ -1156,7 +1317,7 @@ function WU:ShardManager_RefreshUI()
 			end
 			clearCount = 0
 			for i,v in ipairs(self.db.profile.ShardManager_Bags) do
-				_G["WU_ShardManager_Bag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagItemCount("Soul Shard", i-1) ..")")
+				_G["WU_ShardManager_Bag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagItemCount(soulShardID, i-1) ..")")
 				if not InCombatLockdown() then
 					_G["WU_ShardManager_Bag" .. i]:SetChecked(v)
 				end
@@ -1239,7 +1400,7 @@ end
 
 function WU:ToggleAutoDelete()
 	if (self.db.profile.ShardManager_AutoDelete) then
-		if (WU:GetInventoryItemCount("Soul Shard") > self.db.profile.ShardManager_AutoDelete_Number) then
+		if (WU:GetInventoryItemCount(soulShardID) > self.db.profile.ShardManager_AutoDelete_Number) then
 			if (not InCombatLockdown()) then
 				WU_AutoDelete:Show()
 			end
@@ -1623,7 +1784,7 @@ function WU:DemonManager_RefreshUI()
 		elseif (self.db.profile.DemonManager_DemonLevel == 7) then
 			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Demonic Figurine")))
 		else
-			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Soul Shard"), WU:DemonManager_GetIncubus()))
+			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount(soulShardID), WU:DemonManager_GetIncubus()))
 		end
 		if self.db.profile.DemonManager_DemonLevel == 5 then
 			WU_DemonManager_Summon:SetEnabled(WU:SpellKnown(demonLookup[5]))
@@ -1864,6 +2025,57 @@ function WU:StatsPanel_RefreshUI()
 	WU_StatsPanel_Summon_Session_Counter:SetText("Current session: " .. self.db.char.Summon_Session_Counter)
 end
 
+function WU:DoTManager_StartStaticTimer()
+	self.DoTManager_StaticTimer = self:ScheduleRepeatingTimer("DoTManager_RefreshUI", 1)
+end
+
+function WU:DoTManager_StopStaticTimer()
+	self:CancelTimer(self.DoTManager_StaticTimer)
+end
+
+function WU:DoTManager_GetSpellModifiers(school)
+	if (school == nil) then
+		school = 6 -- Default spell school to shadow
+	end
+	return {sp=GetSpellBonusDamage(school), crit=GetSpellCritChance(school), haste=GetCombatRatingBonus(20)/100.0}
+end
+
+function WU:DoTManager_GetCurrentCastData(spell)
+	return self.db.char.DoT[spell]
+end
+
+function WU:DoTManager_GetSpellData(spell)
+	return dot_data[spell]
+end
+
+function WU:DotManager_GetClipDamageData(spell)
+	local cast_data, spell_data, new_mods = WU:DoTManager_GetCurrentCastData(spell), WU:DoTManager_GetSpellData(spell), WU:DoTManager_GetSpellModifiers()
+	-- Calculate base full dps at current mods
+	local current_dps = spell_data.ticks * (spell_data.base_damage + (spell_data.sp_mod * cast_data.sp)) * (1.0 + cast_data.crit) / ((1.0 - cast_data.haste) * spell_data.base_duration)
+	-- Calculate new dps at new mods
+	local new_dps = spell_data.ticks * (spell_data.base_damage + (spell_data.sp_mod * new_mods.sp)) * (1.0 + cast_data.crit) / ((1.0 - new_mods.haste) * spell_data.base_duration)
+	-- Calculate increase in static damage over current
+	local bump_dmg = (new_dps - current_dps) * ((1.0 - new_mods.haste) * spell_data.base_duration)
+	-- Calculate amount of clipped dmg
+	local clip_duration = math.max(((1.0 - cast_data.haste) * spell_data.base_duration) - (GetServerTime() - cast_data.start), 0)
+	local clip_ticks = math.floor(clip_duration / (spell_data.base_duration / spell_data.ticks))
+	local clip_dmg = clip_ticks * (spell_data.base_damage + (spell_data.sp_mod * cast_data.sp)) * (1.0 + cast_data.crit)
+	return {bump=bump_dmg, clip=clip_dmg, percent=(bump_dmg - clip_dmg)/clip_dmg, recommend=bump_dmg > clip_dmg}
+end
+
+function WU:DoTManager_RefreshUI()
+	local map = {corruption=WU_DoTManager_Corruption, ua=WU_DoTManager_UA, curse=WU_DoTManager_Curse, drain=WU_DoTManager_Drain}
+	for i,v in pairs(map) do
+		local data = WU:DotManager_GetClipDamageData(i)
+		v:SetText("" .. data.bump .. "|" .. data.clip .. "|" .. data.percent)
+		if (data.recommend) then
+			v:SetTextColor(0,1,0)
+		else
+			v:SetTextColor(1,0,0)
+		end
+	end
+end
+
 function WU:SpellKnown(id, pet)
 	if (pet) then
 		return IsSpellKnown(id, pet)
@@ -1920,12 +2132,12 @@ function WU:GetInventorySlotLocation(item)
 	return {bag=bag, slot=slot}
 end
 
-function WU:GetInventoryItemCount(item)
+function WU:GetInventoryItemCount(id)
 	local count = 0
 	for b=0,4 do
 		for s=1,GetContainerNumSlots(b) do
-			_, itemCount, _, _, _, _, itemLink = GetContainerItemInfo(b, s)
-			if itemLink and string.find(itemLink, ".*%[" .. item ..  "%].*") then
+			_, itemCount, _, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(b, s)
+			if itemID and tostring(itemID) == id then
 				count = count + itemCount
 			end
 		end
@@ -1933,11 +2145,11 @@ function WU:GetInventoryItemCount(item)
 	return count
 end
 
-function WU:GetBagItemCount(item, bag)
+function WU:GetBagItemCount(itemID, b)
 	local count = 0
-	for s=1,GetContainerNumSlots(bag) do
-		_, itemCount, _, _, _, _, itemLink = GetContainerItemInfo(bag, s)
-		if itemLink and string.find(itemLink, ".*%[" .. item ..  "%].*") then
+	for s=1,GetContainerNumSlots(b) do
+		_, itemCount, _, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(b, s)
+		if itemID and tostring(itemID) == id then
 			count = count + itemCount
 		end
 	end

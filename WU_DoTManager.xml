@@ -1,0 +1,138 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Font name="WU_Font_Header" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<FontHeight>
+			<AbsValue val="8"/>
+		</FontHeight>
+		<Color r="0.5" g="0.5" b="0.5"/>
+	</Font>
+	<Font name="WU_Font_EditBox" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<FontHeight>
+			<AbsValue val="10"/>
+		</FontHeight>
+		<Color r="1" g="1" b="1"/>
+	</Font>
+	<Frame name="WU_DoTManager" frameStrata="TOOLTIP" toplevel="true" inherits="InsetFrameTemplate3" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true">
+		<Size>
+			<AbsDimension x="200" y="200"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parent_Header" inherits="WU_Font_Header" text="WU_DoTManager_Header" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-7"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parent_Icon_Corruption" file="Interface\ICONS\spell_shadow_abominationexplosion">
+					<Size>
+						<AbsDimension x="40" y="40"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="10" y="-20"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parent_Corruption" inherits="WU_Font_EditBox" text="WU_DoTManager_Corruption" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_Icon_Corruption" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="10" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parent_Icon_UA" file="Interface\ICONS\spell_shadow_unstableaffliction_3">
+					<Size>
+						<AbsDimension x="40" y="40"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_Icon_Corruption" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="-10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parent_UA" inherits="WU_Font_EditBox" text="WU_DoTManager_UA" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_Icon_UA" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="10" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parent_Icon_Curse" file="Interface\ICONS\spell_shadow_curseofsargeras">
+					<Size>
+						<AbsDimension x="40" y="40"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_Icon_UA" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="-10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parent_Curse" inherits="WU_Font_EditBox" text="WU_DoTManager_Curse" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_Icon_Curse" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="10" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parent_Icon_Drain" file="Interface\ICONS\spell_shadow_haunting">
+					<Size>
+						<AbsDimension x="40" y="40"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_Icon_Curse" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="-10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parent_Drain" inherits="WU_Font_EditBox" text="WU_DoTManager_Drain" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_Icon_Drain" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="10" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton")
+			</OnLoad>
+			<OnDragStart>
+				if IsShiftKeyDown() then
+					self:StartMoving();
+				end
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+</Ui>
