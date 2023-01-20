@@ -1280,7 +1280,7 @@ function WU:ShardManager_FillShards()
 									if (i == 1) then
 										PutItemInBackpack()
 									else
-										bagNum = {0, 20, 21, 22, 23}
+										bagNum = {0, 31, 32, 33, 34}
 										PutItemInBag(bagNum[i])
 									end
 								end
@@ -2136,9 +2136,9 @@ function WU:GetInventoryItemCount(id)
 	local count = 0
 	for b=0,4 do
 		for s=1,GetContainerNumSlots(b) do
-			_, itemCount, _, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(b, s)
-			if itemID and tostring(itemID) == id then
-				count = count + itemCount
+			local info = C_Container.GetContainerItemInfo(b, s)
+			if info and tostring(info.itemID) == id then
+				count = count + info.stackCount
 			end
 		end
 	end
@@ -2148,9 +2148,9 @@ end
 function WU:GetBagItemCount(itemID, b)
 	local count = 0
 	for s=1,GetContainerNumSlots(b) do
-		_, itemCount, _, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(b, s)
-		if itemID and tostring(itemID) == id then
-			count = count + itemCount
+		local info = C_Container.GetContainerItemInfo(b, s)
+		if info and tostring(info.itemID) == id then
+			count = count + info.stackCount
 		end
 	end
 	return count

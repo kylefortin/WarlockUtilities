@@ -2,6 +2,9 @@
 
 - - -
 
+## Version `3.3.1`
+- Patch for 3.4.1 client compatibility
+
 ## Version `3.3.0`
 - Begin framework for DoTManager
 - Update for 3.4.1 client compatibility

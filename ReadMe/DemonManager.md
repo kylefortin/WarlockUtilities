@@ -8,7 +8,7 @@ To select the demon to summon, scroll the mouse wheel up or down while hovering 
 For demons that require a shard to summon, the number of shards will appear after the name.  
 For demons that require another reagent to summon, the number of that reagent available in inventory will be shown.  
 Click the Summon button to begin summoning your favorite friend!  
-![Demon Manager - Summon](https://github.com/kylefortin/WarlockUtilities/blob/3.3.0/Images/DemonManager.jpg?raw=true)  
+![Demon Manager - Summon](https://github.com/kylefortin/WarlockUtilities/blob/3.3.1/Images/DemonManager.jpg?raw=true)  
 
 ### Sacrifice Demon  
 
@@ -30,6 +30,6 @@ Make sure your buddy is alive to fight your battles!
 
 Configuration settings for the Shard Manager can be found in the interface menu.  
 You may enable the use of the Incubus instead of the Succubus by checking the Incubus box.  
-![Demon Manager - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.3.0/Images/DemonManagerConfig.jpg?raw=true)  
+![Demon Manager - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.3.1/Images/DemonManagerConfig.jpg?raw=true)  
 
-[Take Me Home](https://github.com/kylefortin/WarlockUtilities/blob/3.3.0/README.md)
+[Take Me Home](https://github.com/kylefortin/WarlockUtilities/blob/3.3.1/README.md)
