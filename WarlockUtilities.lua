@@ -1210,17 +1210,17 @@ function WU:ShardManager_DeleteShards()
 				b = 4 - b
 			end
 			if (self.db.profile.ShardManager_Bags[b]) then
-				for s=1,GetContainerNumSlots(i-1) do
+				for s=1,GetContainerNumSlots(b) do
 					if (self.db.profile.ShardManager_Reverse) then
 						s = GetContainerNumSlots(b) - (s - 1)
 					end
-					local n = GetContainerItemLink(i-1, s)
+					local n = GetContainerItemLink(b, s)
 					local isShard = false
 					if n then
 						isShard = WU:IsItemSoulShard(n)
 					end
 					if isShard then
-						PickupContainerItem(i-1, s)
+						PickupContainerItem(b, s)
 						DeleteCursorItem()
 					end
 				end
