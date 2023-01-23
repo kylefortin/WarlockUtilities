@@ -5,7 +5,7 @@
 ### Toggle Manager Frames  
 
 To toggle the various manager frames (Shard, Stone, Demon), simply left click the corresponding icon.  
-![AppTray - Toggle](https://github.com/kylefortin/WarlockUtilities/blob/3.3.2/Images/AppTray.jpg?raw=true)  
+![AppTray - Toggle](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/Images/AppTray.jpg?raw=true)  
 
 ### Execture Manager Shortcuts  
 
@@ -23,6 +23,6 @@ Numbers for nerds!
 
 You may configure the edge of the screen the App Tray lives on.  
 You may also configure an offset on that edge of the screen. 0 offset corresponds with the center of that edge.  
-![AppTray - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.3.2/Images/AppTrayConfig.jpg?raw=true)  
+![AppTray - Configuration](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/Images/AppTrayConfig.jpg?raw=true)  
 
-[Take Me Home](https://github.com/kylefortin/WarlockUtilities/blob/3.3.2/README.md)
+[Take Me Home](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/README.md)

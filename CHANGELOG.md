@@ -3,6 +3,9 @@
 - - -
 
 ## Version `3.3.2`
+- Patch multiple errors in Shard Manager
+
+## Version `3.3.2`
 - Patch error in shard delete 'by bag' function
 
 ## Version `3.3.1`

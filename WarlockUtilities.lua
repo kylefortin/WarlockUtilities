@@ -1206,14 +1206,8 @@ end
 function WU:ShardManager_DeleteShards()
 	if (self.db.profile.ShardManager_Type == "bag") then
 		for b=0,4 do
-			if (self.db.profile.ShardManager_Reverse) then
-				b = 4 - b
-			end
-			if (self.db.profile.ShardManager_Bags[b]) then
+			if (self.db.profile.ShardManager_Bags[b+1]) then
 				for s=1,GetContainerNumSlots(b) do
-					if (self.db.profile.ShardManager_Reverse) then
-						s = GetContainerNumSlots(b) - (s - 1)
-					end
 					local n = GetContainerItemLink(b, s)
 					local isShard = false
 					if n then
@@ -2132,12 +2126,12 @@ function WU:GetInventorySlotLocation(item)
 	return {bag=bag, slot=slot}
 end
 
-function WU:GetInventoryItemCount(id)
+function WU:GetInventoryItemCount(itemID)
 	local count = 0
 	for b=0,4 do
 		for s=1,GetContainerNumSlots(b) do
 			local info = C_Container.GetContainerItemInfo(b, s)
-			if info and tostring(info.itemID) == id then
+			if info and tostring(info.itemID) == itemID then
 				count = count + info.stackCount
 			end
 		end
@@ -2149,7 +2143,7 @@ function WU:GetBagItemCount(itemID, b)
 	local count = 0
 	for s=1,GetContainerNumSlots(b) do
 		local info = C_Container.GetContainerItemInfo(b, s)
-		if info and tostring(info.itemID) == id then
+		if info and tostring(info.itemID) == itemID then
 			count = count + info.stackCount
 		end
 	end
