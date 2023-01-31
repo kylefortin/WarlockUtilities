@@ -675,6 +675,8 @@ local demonNameLookup = {
 }
 
 local soulShardID = "6265"
+local demonicFigurineID = "16583"
+local infernalStoneID = "5565"
 
 local autoTrading = false
 
@@ -1159,11 +1161,11 @@ function WU:ShardManager_KeepShards()
 				b = 4 - b
 			end
 			if (not self.db.profile.ShardManager_Bags[b+1]) then
-				for s=1,GetContainerNumSlots(b) do
+				for s=1,WU:GetBagSlotCount(b) do
 					if (self.db.profile.ShardManager_Reverse) then
-						s = GetContainerNumSlots(b) - (s - 1)
+						s = WU:GetBagSlotCount(b) - (s - 1)
 					end
-					local n = GetContainerItemLink(b, s)
+					local n = C_Container.GetContainerItemLink(b, s)
 					local isShard = false
 					if n then
 						isShard = WU:IsItemSoulShard(n)
@@ -1181,11 +1183,11 @@ function WU:ShardManager_KeepShards()
 			if (self.db.profile.ShardManager_Reverse) then
 				b = 4 - b
 			end
-			for s=1,GetContainerNumSlots(b) do
+			for s=1,WU:GetBagSlotCount(b) do
 				if (self.db.profile.ShardManager_Reverse) then
-					s = GetContainerNumSlots(b) - (s - 1)
+					s = WU:GetBagSlotCount(b) - (s - 1)
 				end
-				local n = GetContainerItemLink(b,s)
+				local n = C_Container.GetContainerItemLink(b,s)
 				local isShard = false
 				if n then
 					isShard = WU:IsItemSoulShard(n)
@@ -1207,8 +1209,8 @@ function WU:ShardManager_DeleteShards()
 	if (self.db.profile.ShardManager_Type == "bag") then
 		for b=0,4 do
 			if (self.db.profile.ShardManager_Bags[b+1]) then
-				for s=1,GetContainerNumSlots(b) do
-					local n = GetContainerItemLink(b, s)
+				for s=1,WU:GetBagSlotCount(b) do
+					local n = C_Container.GetContainerItemLink(b, s)
 					local isShard = false
 					if n then
 						isShard = WU:IsItemSoulShard(n)
@@ -1226,11 +1228,11 @@ function WU:ShardManager_DeleteShards()
 			if (self.db.profile.ShardManager_Reverse) then
 				b = 4 - b
 			end
-			for s=1,GetContainerNumSlots(b) do
+			for s=1,WU:GetBagSlotCount(b) do
 				if (self.db.profile.ShardManager_Reverse) then
-					s = GetContainerNumSlots(b) - s
+					s = WU:GetBagSlotCount(b) - s
 				end
-				local n = GetContainerItemLink(b, s)
+				local n = C_Container.GetContainerItemLink(b, s)
 				local isShard = false
 				if n then
 					isShard = WU:IsItemSoulShard(n)
@@ -1253,7 +1255,7 @@ function WU:ShardManager_FillShards()
 	local attempts = 0
 	local totalSlots = 0
 	for b=0,4 do
-		totalSlots = totalSlots + GetContainerNumSlots(b)
+		totalSlots = totalSlots + WU:GetBagSlotCount(b)
 	end
 
 	for i,v in ipairs(self.db.profile.ShardManager_FillBags) do
@@ -1262,9 +1264,9 @@ function WU:ShardManager_FillShards()
 				for b=0,4 do
 					if not (b == i-1) then
 						if not (bagsComplete[b+1]) then
-							for s=1,GetContainerNumSlots(b) do
+							for s=1,WU:GetBagSlotCount(b) do
 								attempts = attempts + 1
-								n = GetContainerItemLink(b, s)
+								n = C_Container.GetContainerItemLink(b, s)
 								isShard = false
 								if n then
 									isShard = WU:IsItemSoulShard(n)
@@ -1316,7 +1318,7 @@ function WU:ShardManager_RefreshUI()
 					_G["WU_ShardManager_Bag" .. i]:SetChecked(v)
 				end
 				if v then
-					clearCount = clearCount + WU:GetBagItemCount("Soul Shard", i-1)
+					clearCount = clearCount + WU:GetBagItemCount(soulShardID, i-1)
 				end
 			end
 			WU_ShardManager_DeleteShardCount:SetText(L["ShardsToClear"](clearCount))
@@ -1348,12 +1350,12 @@ function WU:ShardManager_RefreshUI()
 			end
 			clearCount = 0
 			for i,v in ipairs(self.db.profile.ShardManager_Bags) do
-				_G["WU_ShardManager_Bag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagItemCount("Soul Shard", i-1) ..")")
+				_G["WU_ShardManager_Bag" .. i .. "Text"]:SetText(L["Bag"](i) .. " (" .. WU:GetBagItemCount(soulShardID, i-1) ..")")
 				if not InCombatLockdown() then
 					_G["WU_ShardManager_Bag" .. i]:SetChecked(v)
 				end
 				if v then
-					clearCount = clearCount + WU:GetBagItemCount("Soul Shard", i-1)
+					clearCount = clearCount + WU:GetBagItemCount(soulShardID, i-1)
 				end
 			end
 			WU_ShardManager_DeleteShardCount:SetText(L["ShardsToKeep"](clearCount))
@@ -1409,11 +1411,11 @@ function WU:ExecuteAutoDelete()
 			if (self.db.profile.ShardManager_Reverse) then
 				b = 4 - b
 			end
-			for s=1,GetContainerNumSlots(b) do
+			for s=1,WU:GetBagSlotCount(b) do
 				if (self.db.profile.ShardManager_Reverse) then
-					s = GetContainerNumSlots(b) - (s - 1)
+					s = WU:GetBagSlotCount(b) - (s - 1)
 				end
-				local n = GetContainerItemLink(b,s)
+				local n = C_Container.GetContainerItemLink(b,s)
 				local isShard = false
 				if n then
 					isShard = WU:IsItemSoulShard(n)
@@ -1774,9 +1776,9 @@ function WU:DemonManager_RefreshUI()
 		if (self.db.profile.DemonManager_DemonLevel == 1) then
 			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel))
 		elseif (self.db.profile.DemonManager_DemonLevel == 6) then
-			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Infernal Stone")))
+			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount(infernalStoneID)))
 		elseif (self.db.profile.DemonManager_DemonLevel == 7) then
-			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount("Demonic Figurine")))
+			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount(demonicFigurineID)))
 		else
 			WU_DemonManager_Summon:SetText(L["SummonDemon"](self.db.profile.DemonManager_DemonLevel, WU:GetInventoryItemCount(soulShardID), WU:DemonManager_GetIncubus()))
 		end
@@ -2110,8 +2112,8 @@ function WU:GetInventorySlotLocation(item)
 	local slot = nil
 	local found = false
 	for b=0,4 do
-		for s=1,GetContainerNumSlots(b) do
-			n = GetContainerItemLink(b, s)
+		for s=1,WU:GetBagSlotCount(b) do
+			n = C_Container.GetContainerItemLink(b, s)
 			if n and string.find(n, ".*%[" .. item ..  "%].*") then
 				bag = b
 				slot = s
@@ -2129,7 +2131,7 @@ end
 function WU:GetInventoryItemCount(itemID)
 	local count = 0
 	for b=0,4 do
-		for s=1,GetContainerNumSlots(b) do
+		for s=1,WU:GetBagSlotCount(b) do
 			local info = C_Container.GetContainerItemInfo(b, s)
 			if info and tostring(info.itemID) == itemID then
 				count = count + info.stackCount
@@ -2141,7 +2143,7 @@ end
 
 function WU:GetBagItemCount(itemID, b)
 	local count = 0
-	for s=1,GetContainerNumSlots(b) do
+	for s=1,WU:GetBagSlotCount(b) do
 		local info = C_Container.GetContainerItemInfo(b, s)
 		if info and tostring(info.itemID) == itemID then
 			count = count + info.stackCount
@@ -2150,8 +2152,12 @@ function WU:GetBagItemCount(itemID, b)
 	return count
 end
 
+function WU:GetBagSlotCount(bag)
+	return C_Container.GetContainerNumSlots(bag)
+end
+
 function WU:GetBagFreeSlotCount(bag)
-	slots, _ = GetContainerNumFreeSlots(bag)
+	slots, _ = C_Container.GetContainerNumFreeSlots(bag)
 	return slots
 end
 

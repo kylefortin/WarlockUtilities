@@ -2,7 +2,12 @@
 
 - - -
 
-## Version `3.3.2`
+## Version `3.3.4`
+- Various bug fixes
+- Add bag slot function
+- Revise lookup for summoning reagents
+
+## Version `3.3.3`
 - Patch multiple errors in Shard Manager
 
 ## Version `3.3.2`

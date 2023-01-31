@@ -1,23 +1,23 @@
 # WarlockUtilities
 
-*Current version is : `3.3.3`*  
+*Current version is : `3.3.4`*  
 
 ## Simple tools for Warlocks.  
-### [Shard Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/ReadMe/ShardManager.md) - clear out excess shards from bags quickly and efficiently.  
-![Warlock Utilities - Shard Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/Images/KeepShardsByNumber.jpg?raw=true)  
+### [Shard Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/ReadMe/ShardManager.md) - clear out excess shards from bags quickly and efficiently.  
+![Warlock Utilities - Shard Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/Images/KeepShardsByNumber.jpg?raw=true)  
 
-### [Stone Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/ReadMe/StoneManager.md) - create and distrubute Healthstones and Soulstones.  
-![Warlock Utilities - Stone Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/Images/StoneManager.jpg?raw=true)  
+### [Stone Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/ReadMe/StoneManager.md) - create and distrubute Healthstones and Soulstones.  
+![Warlock Utilities - Stone Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/Images/StoneManager.jpg?raw=true)  
 
-### [Demon Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/ReadMe/DemonManager.md) - help with summoning (or sacrificing) minions.
-![Warlock Utilities - Demon Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/Images/DemonManager.jpg?raw=true)  
+### [Demon Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/ReadMe/DemonManager.md) - help with summoning (or sacrificing) minions.
+![Warlock Utilities - Demon Manager](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/Images/DemonManager.jpg?raw=true)  
 
-### [AppTray](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/ReadMe/AppTray.md) - a quick and easy menu to launch tools from.  
-![Warlock Utilities - App Menu](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/Images/AppTray.jpg?raw=true)  
+### [AppTray](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/ReadMe/AppTray.md) - a quick and easy menu to launch tools from.  
+![Warlock Utilities - App Menu](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/Images/AppTray.jpg?raw=true)  
 
-### [StatsPanel](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/ReadMe/StatsPanel.md) - a simple frame to show usage statistics on Shard consumption.
-![Warlock Utilities - Stats Panel](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/Images/StatsPanel.png?raw=true)  
+### [StatsPanel](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/ReadMe/StatsPanel.md) - a simple frame to show usage statistics on Shard consumption.
+![Warlock Utilities - Stats Panel](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/Images/StatsPanel.png?raw=true)  
 
-### [SpellAnnouncer](https://github.com/kylefortin/WarlockUtilities/blob/3.3.3/ReadMe/SpellAnnouncer.md) - let your friends know what you're up to!
+### [SpellAnnouncer](https://github.com/kylefortin/WarlockUtilities/blob/3.3.4/ReadMe/SpellAnnouncer.md) - let your friends know what you're up to!
 
 #### Report issues to me at https://github.com/kylefortin/WarlockUtilities/issues  
