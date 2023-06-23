@@ -730,11 +730,6 @@ function WU:OnInitialize()
 			self.db.RegisterCallback(self, k, v)
 		end
 
-		--Profile
-		local optionsProfile = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
-		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(L["WU"] .. "-Profiles", optionsProfile)
-		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["WU"]  .."-Profiles", "Profiles", L["WU"])
-
 		--Options frames
 		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(L["WU"], options)
 		self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["WU"], L["WU"])
@@ -758,6 +753,11 @@ function WU:OnInitialize()
 		for i,v in ipairs(blizzOptions) do
 			LibStub("AceConfigDialog-3.0"):AddToBlizOptions(v[1], v[2], L["WU"])
 		end
+
+		--Profile
+		local optionsProfile = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
+		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(L["WU"] .. "-Profiles", optionsProfile)
+		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["WU"]  .."-Profiles", "Profiles", L["WU"])
 
 		--XML
 		ShowUIPanel(WU_AppTray, 1)

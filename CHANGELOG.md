@@ -2,6 +2,9 @@
 
 - - -
 
+## Version `3.4.0`
+- Update initialize script to patch UI load error
+
 ## Version `3.3.4`
 - Various bug fixes
 - Add bag slot function
