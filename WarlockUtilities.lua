@@ -1,6 +1,12 @@
 WU = LibStub("AceAddon-3.0"):NewAddon("WarlockUtilities", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0", "AceComm-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("WarlockUtilities", true)
 
+function WU:IsClassicEra()
+	local client_version = GetBuildInfo()
+	local primary_version = string.sub(client_version, 1, 2)
+	return primary_version == "1."
+end
+
 --set options
 local options = {
 	name = L["WU"],
@@ -153,109 +159,197 @@ local optionsShardManager = {
 	}
 }
 
-local optionsStoneManager = {
-	name = L["StoneManager"],
-	handler = WU,
-	type = "group",
-	args = {
-		desc = {
-			type = "description",
-			name = L["StoneManager_Desc_Name"],
-			order = 100
-		},
-		soulwell = {
-			type = "group",
-			name = L["StoneManager_OptionGroup_Soulwell_Name"],
-			desc = L["StoneManager_OptionGroup_Soulwell_Desc"],
-			order = 150,
-			inline = true,
-			args = {
-				enable = {
-					type = "toggle",
-					name = L["StoneManager_Option_Soulwell_Enable_Name"],
-					desc = L["StoneManager_Option_Soulwell_Enable_Desc"],
-					get = "StoneManager_GetSoulwellEnabled",
-					set = "StoneManager_SetSoulwellEnabled",
-					order = 100,
-					width = "full"
-				},
-			}
-		},
-		level = {
-			type = "group",
-			name = L["StoneManager_OptionGroup_Level_Name"],
-			desc = L["StoneManager_OptionGroup_Level_Desc"],
-			order = 200,
-			inline = true,
-			args = {
-				hs = {
-					type = "select",
-					name = L["StoneManager_Option_HS_Name"],
-					desc = L["StoneManager_Option_HS_Desc"],
-					values = {L["StoneManager_Option_HS_1"],
-						L["StoneManager_Option_HS_2"],
-						L["StoneManager_Option_HS_3"],
-						L["StoneManager_Option_HS_4"],
-						L["StoneManager_Option_HS_5"],
-						L["StoneManager_Option_HS_6"],
-						L["StoneManager_Option_HS_7"],
-						L["StoneManager_Option_HS_8"]
+local optionsStoneManager = nil
+if (WU:IsClassicEra()) then
+	optionsStoneManager = {
+		name = L["StoneManager"],
+		handler = WU,
+		type = "group",
+		args = {
+			desc = {
+				type = "description",
+				name = L["StoneManager_Desc_Name"],
+				order = 100
+			},
+			level = {
+				type = "group",
+				name = L["StoneManager_OptionGroup_Level_Name"],
+				desc = L["StoneManager_OptionGroup_Level_Desc"],
+				order = 200,
+				inline = true,
+				args = {
+					hs = {
+						type = "select",
+						name = L["StoneManager_Option_HS_Name"],
+						desc = L["StoneManager_Option_HS_Desc"],
+						values = {
+							L["StoneManager_Option_HS_1"],
+							L["StoneManager_Option_HS_2"],
+							L["StoneManager_Option_HS_3"],
+							L["StoneManager_Option_HS_4"],
+							L["StoneManager_Option_HS_5"]
+						},
+						get = "GetOptionHSLevel",
+						set = "SetOptionHSLevel",
+						style = "radio",
+						order = 201,
+						width = "full"
 					},
-					get = "GetOptionHSLevel",
-					set = "SetOptionHSLevel",
-					style = "radio",
-					order = 201,
-					width = "full"
-				},
-				ss = {
-					type = "select",
-					name = L["StoneManager_Option_SS_Name"],
-					desc = L["StoneManager_Option_SS_Desc"],
-					values = {L["StoneManager_Option_SS_1"],
-						L["StoneManager_Option_SS_2"],
-						L["StoneManager_Option_SS_3"],
-						L["StoneManager_Option_SS_4"],
-						L["StoneManager_Option_SS_5"],
-						L["StoneManager_Option_SS_6"],
-						L["StoneManager_Option_SS_7"]
-					},
-					get = "GetOptionSSLevel",
-					set = "SetOptionSSLevel",
-					style = "radio",
-					order = 202,
-					width = "full"
+					ss = {
+						type = "select",
+						name = L["StoneManager_Option_SS_Name"],
+						desc = L["StoneManager_Option_SS_Desc"],
+						values = {
+							L["StoneManager_Option_SS_1"],
+							L["StoneManager_Option_SS_2"],
+							L["StoneManager_Option_SS_3"],
+							L["StoneManager_Option_SS_4"],
+							L["StoneManager_Option_SS_5"]
+						},
+						get = "GetOptionSSLevel",
+						set = "SetOptionSSLevel",
+						style = "radio",
+						order = 202,
+						width = "full"
+					}
 				}
-			}
-		},
-		trade = {
-			type = "group",
-			name = L["StoneManager_OptionGroup_Trading_Name"],
-			desc = L["StoneManager_OptionGroup_Trading_Desc"],
-			order = 300,
-			inline = true,
-			args = {
-				enableParty = {
-					type = "toggle",
-					name = L["StoneManager_Option_EnableParty_Name"],
-					desc = L["StoneManager_Option_EnableParty_Desc"],
-					get = "StoneManager_GetTradingParty",
-					set = "StoneManager_SetTradingParty",
-					order = 310,
-					width = "full"
-				},
-				enableRaid = {
-					type = "toggle",
-					name = L["StoneManager_Option_EnableRaid_Name"],
-					desc = L["StoneManager_Option_EnableRaid_Desc"],
-					get = "StoneManager_GetTradingRaid",
-					set = "StoneManager_SetTradingRaid",
-					order = 320,
-					width = "full"
+			},
+			trade = {
+				type = "group",
+				name = L["StoneManager_OptionGroup_Trading_Name"],
+				desc = L["StoneManager_OptionGroup_Trading_Desc"],
+				order = 300,
+				inline = true,
+				args = {
+					enableParty = {
+						type = "toggle",
+						name = L["StoneManager_Option_EnableParty_Name"],
+						desc = L["StoneManager_Option_EnableParty_Desc"],
+						get = "StoneManager_GetTradingParty",
+						set = "StoneManager_SetTradingParty",
+						order = 310,
+						width = "full"
+					},
+					enableRaid = {
+						type = "toggle",
+						name = L["StoneManager_Option_EnableRaid_Name"],
+						desc = L["StoneManager_Option_EnableRaid_Desc"],
+						get = "StoneManager_GetTradingRaid",
+						set = "StoneManager_SetTradingRaid",
+						order = 320,
+						width = "full"
+					}
 				}
 			}
 		}
 	}
-}
+else
+	optionsStoneManager = {
+		name = L["StoneManager"],
+		handler = WU,
+		type = "group",
+		args = {
+			desc = {
+				type = "description",
+				name = L["StoneManager_Desc_Name"],
+				order = 100
+			},
+			soulwell = {
+				type = "group",
+				name = L["StoneManager_OptionGroup_Soulwell_Name"],
+				desc = L["StoneManager_OptionGroup_Soulwell_Desc"],
+				order = 150,
+				inline = true,
+				args = {
+					enable = {
+						type = "toggle",
+						name = L["StoneManager_Option_Soulwell_Enable_Name"],
+						desc = L["StoneManager_Option_Soulwell_Enable_Desc"],
+						get = "StoneManager_GetSoulwellEnabled",
+						set = "StoneManager_SetSoulwellEnabled",
+						order = 100,
+						width = "full"
+					},
+				}
+			},
+			level = {
+				type = "group",
+				name = L["StoneManager_OptionGroup_Level_Name"],
+				desc = L["StoneManager_OptionGroup_Level_Desc"],
+				order = 200,
+				inline = true,
+				args = {
+					hs = {
+						type = "select",
+						name = L["StoneManager_Option_HS_Name"],
+						desc = L["StoneManager_Option_HS_Desc"],
+						values = {
+							L["StoneManager_Option_HS_1"],
+							L["StoneManager_Option_HS_2"],
+							L["StoneManager_Option_HS_3"],
+							L["StoneManager_Option_HS_4"],
+							L["StoneManager_Option_HS_5"],
+							L["StoneManager_Option_HS_6"],
+							L["StoneManager_Option_HS_7"],
+							L["StoneManager_Option_HS_8"]
+						},
+						get = "GetOptionHSLevel",
+						set = "SetOptionHSLevel",
+						style = "radio",
+						order = 201,
+						width = "full"
+					},
+					ss = {
+						type = "select",
+						name = L["StoneManager_Option_SS_Name"],
+						desc = L["StoneManager_Option_SS_Desc"],
+						values = {
+							L["StoneManager_Option_SS_1"],
+							L["StoneManager_Option_SS_2"],
+							L["StoneManager_Option_SS_3"],
+							L["StoneManager_Option_SS_4"],
+							L["StoneManager_Option_SS_5"],
+							L["StoneManager_Option_SS_6"],
+							L["StoneManager_Option_SS_7"]
+						},
+						get = "GetOptionSSLevel",
+						set = "SetOptionSSLevel",
+						style = "radio",
+						order = 202,
+						width = "full"
+					}
+				}
+			},
+			trade = {
+				type = "group",
+				name = L["StoneManager_OptionGroup_Trading_Name"],
+				desc = L["StoneManager_OptionGroup_Trading_Desc"],
+				order = 300,
+				inline = true,
+				args = {
+					enableParty = {
+						type = "toggle",
+						name = L["StoneManager_Option_EnableParty_Name"],
+						desc = L["StoneManager_Option_EnableParty_Desc"],
+						get = "StoneManager_GetTradingParty",
+						set = "StoneManager_SetTradingParty",
+						order = 310,
+						width = "full"
+					},
+					enableRaid = {
+						type = "toggle",
+						name = L["StoneManager_Option_EnableRaid_Name"],
+						desc = L["StoneManager_Option_EnableRaid_Desc"],
+						get = "StoneManager_GetTradingRaid",
+						set = "StoneManager_SetTradingRaid",
+						order = 320,
+						width = "full"
+					}
+				}
+			}
+		}
+	}
+end
 
 local optionsDemonManager = {
 	name = L["DemonManager"],
@@ -457,11 +551,11 @@ local defaults = {
 		ShardManager_AutoDelete = false,
 		ShardManager_AutoDelete_Number = 28,
 		ShardManager_Reverse = false,
-		StoneManager_SoulwellEnabled = true,
+		StoneManager_SoulwellEnabled = false,
 		StoneManager_SoulwellLevel = 1,
 		StoneManager_Type = "hs",
-		StoneManager_HSLevel = 6,
-		StoneManager_SSLevel = 6,
+		StoneManager_HSLevel = 1,
+		StoneManager_SSLevel = 1,
 		StoneManager_TradingRaid = true,
 		StoneManager_TradingParty = true,
 		DemonManager_DemonLevel = 1,
@@ -674,6 +768,7 @@ local demonNameLookup = {
 	"Subjugate Demon"
 }
 
+
 local soulShardID = "6265"
 local demonicFigurineID = "16583"
 local infernalStoneID = "5565"
@@ -740,7 +835,7 @@ function WU:OnInitialize()
 			{L["WU"] .. "-SpellAnnouncer", optionsSpellAnnouncer},
 			{L["WU"] .. "-AppTray", optionsAppTray}
 		}
-		for i,v in ipairs(optionTables) do
+		for _,v in ipairs(optionTables) do
 			LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(v[1], v[2])
 		end
 		local blizzOptions = {
@@ -750,7 +845,7 @@ function WU:OnInitialize()
 			{L["WU"] .. "-SpellAnnouncer", L["SpellAnnouncer"]},
 			{L["WU"] .. "-AppTray", L["AppTray"]}
 		}
-		for i,v in ipairs(blizzOptions) do
+		for _,v in ipairs(blizzOptions) do
 			LibStub("AceConfigDialog-3.0"):AddToBlizOptions(v[1], v[2], L["WU"])
 		end
 
@@ -783,7 +878,7 @@ function WU:OnInitialize()
 			{WU_DemonManager_Dismiss, L["Dismiss"]},
 			{WU_DemonManager_Heal, L["Heal"]}
 		}
-		for i,v in ipairs(xmlText) do
+		for i,_ in ipairs(xmlText) do
 			xmlText[i][1]:SetText(xmlText[i][2])
 		end
 
@@ -919,70 +1014,6 @@ function WU:CombatLogEvent(...)
 					break
 				end
 			end
-			-- Check if spell was corruption
-			-- for _, spellID in ipairs(corruptionLookup) do
-			-- 	local lookupName = GetSpellInfo(spellID)
-			-- 	if (lookupName == select(13, ...)) then
-			-- 		local data = WU:DoTManager_GetSpellModifiers()
-			-- 		self.db.char.DoT.corruption.sp = data.sp
-			-- 		self.db.char.DoT.corruption.crit = data.crit
-			-- 		self.db.char.DoT.corruption.haste = data.haste
-			-- 		self.db.char.DoT.corruption.start = GetServerTime()
-			-- 		if not WU_DoTManager:IsVisible() then
-			-- 			WU_DoTManager:Show()
-			-- 			WU:DoTManager_StartStaticTimer()
-			-- 		end
-			-- 		break
-			-- 	end
-			-- end
-			-- Check if spell was Unstable Affliction
-			-- for _, spellID in ipairs(uaLookup) do
-			-- 	local lookupName = GetSpellInfo(spellID)
-			-- 	if (lookupName == select(13, ...)) then
-			-- 		local data = WU:DoTManager_GetSpellModifiers()
-			-- 		self.db.char.DoT.corruption.sp = data.sp
-			-- 		self.db.char.DoT.corruption.crit = data.crit
-			-- 		self.db.char.DoT.corruption.haste = data.haste
-			-- 		self.db.char.DoT.corruption.start = GetServerTime()
-			-- 		if not WU_DoTManager:IsVisible() then
-			-- 			WU_DoTManager:Show()
-			-- 			WU:DoTManager_StartStaticTimer()
-			-- 		end
-			-- 		break
-			-- 	end
-			-- end
-			-- Check if spell was Curse
-			-- for _, spellID in ipairs(curseLookup) do
-			-- 	local lookupName = GetSpellInfo(spellID)
-			-- 	if (lookupName == select(13, ...)) then
-			-- 		local data = WU:DoTManager_GetSpellModifiers()
-			-- 		self.db.char.DoT.corruption.sp = data.sp
-			-- 		self.db.char.DoT.corruption.crit = data.crit
-			-- 		self.db.char.DoT.corruption.haste = data.haste
-			-- 		self.db.char.DoT.corruption.start = GetServerTime()
-			-- 		if not WU_DoTManager:IsVisible() then
-			-- 			WU_DoTManager:Show()
-			-- 			WU:DoTManager_StartStaticTimer()
-			-- 		end
-			-- 		break
-			-- 	end
-			-- end
-			-- Check if spell was Drain Soul
-			-- for _, spellID in ipairs(drainLookup) do
-			-- 	local lookupName = GetSpellInfo(spellID)
-			-- 	if (lookupName == select(13, ...)) then
-			-- 		local data = WU:DoTManager_GetSpellModifiers()
-			-- 		self.db.char.DoT.corruption.sp = data.sp
-			-- 		self.db.char.DoT.corruption.crit = data.crit
-			-- 		self.db.char.DoT.corruption.haste = data.haste
-			-- 		self.db.char.DoT.corruption.start = GetServerTime()
-			-- 		if not WU_DoTManager:IsVisible() then
-			-- 			WU_DoTManager:Show()
-			-- 			WU:DoTManager_StartStaticTimer()
-			-- 		end
-			-- 		break
-			-- 	end
-			-- end
 		end
 	elseif (event == "SPELL_CAST_START" and isPlayer) then
 		if (srcName == playerName) then

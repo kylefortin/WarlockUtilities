@@ -2,6 +2,9 @@
 
 - - -
 
+## Version `3.4.1`
+- Add compatibility for Classic Era client
+
 ## Version `3.4.0`
 - Update initialize script to patch UI load error
 
