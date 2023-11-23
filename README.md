@@ -1,5 +1,7 @@
 # WarlockUtilities
 
+*This addon is no longer being actively maintained.*
+
 *Current version is : `3.4.1`*  
 
 ## Simple tools for Warlocks.  
